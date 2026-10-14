@@ -1,6 +1,7 @@
 // Renders the "Planes y precios" section from _dev/pricing.json into index.html, and the
 // privacy page from _dev/templates/privacidad.html into privacidad.html (PF2). Both read
 // _dev/site-config.json for the WhatsApp number, the contact email and the controller.
+// W0: the build also writes the footer email and the founders' Background lists from site-config.json.
 //
 //   node build-pricing.mjs            write the section between the pricing markers, and privacidad.html
 //   node build-pricing.mjs --check    fail if index.html or privacidad.html differs from the data (EOL-normalised)
@@ -172,6 +173,12 @@ export function validateConfig(c) {
   req(/^\d{4}-\d{2}-\d{2}$/.test(c.privacyPolicyDate) && !Number.isNaN(Date.parse(c.privacyPolicyDate)),
     'privacyPolicyDate must be a date as YYYY-MM-DD');
   req(c.apiBaseUrl === null || filled(c.apiBaseUrl), 'apiBaseUrl must be null or an address');
+  // W0: up to three lines per founder, only as JD gave them in the kickoff; [] means no Background list.
+  const founders = c.founders;
+  req(founders && typeof founders === 'object' && !Array.isArray(founders), 'founders is required (a name -> lines object)');
+  for (const [name, lines] of Object.entries(founders || {})) {
+    req(Array.isArray(lines) && lines.length <= 3 && lines.every(filled), `founders.${name}: up to three non-empty lines`);
+  }
   return errors;
 }
 
@@ -412,6 +419,41 @@ export function applyToIndex(htmlLF, sectionHTML) {
   return html.slice(0, s + START.length) + '\n' + sectionHTML + '\n  ' + html.slice(e);
 }
 
+// ---------- config values outside the pricing block (W0) ----------
+
+export const BG_START = '<!-- founder-background:start -->';
+export const BG_END = '<!-- founder-background:end -->';
+// The footer's address before W0; it stays while contactEmail is PENDIENTE (the release check blocks that).
+export const CURRENT_FOOTER_EMAIL = 'garydmendez25@gmail.com';
+
+export const footerEmail = (config) => (isPending(config.contactEmail) ? CURRENT_FOOTER_EMAIL : config.contactEmail);
+
+function backgroundBlock(lines) {
+  if (!lines.length) return '';
+  const items = lines.map((l) => `              <li>${esc(l)}</li>`).join('\n');
+  return `          <div class="member-block">\n            <h4>Background</h4>\n            <ul>\n${items}\n            </ul>\n          </div>\n`;
+}
+
+// Writes the footer email and each founder's Background list (between the markers in their card).
+export function applySiteConfig(htmlLF, config) {
+  const email = esc(footerEmail(config));
+  if (!FOOTER_EMAIL_LINK.test(htmlLF)) throw new Error('index.html: footer email link not found');
+  let html = htmlLF.replace(FOOTER_EMAIL_LINK, `<a href="mailto:${email}" class="footer-email">${email}</a>`);
+  const names = Object.keys(config.founders || {});
+  const seen = new Set();
+  // Within one card only: a card without markers is never matched across into the next.
+  const inCard = '(?:(?!</article>)[\\s\\S])*?';
+  const marked = new RegExp(`(<article class="member-card">${inCard}<h3>([^<]*)</h3>${inCard}${BG_START}\\n)${inCard}( *${BG_END})`, 'g');
+  html = html.replace(marked, (_, head, name, end) => {
+    if (!names.includes(name)) throw new Error(`site-config.json: founders has no entry for "${name}"`);
+    seen.add(name);
+    return head + backgroundBlock(config.founders[name]) + end;
+  });
+  const missing = names.filter((n) => !seen.has(n));
+  if (missing.length) throw new Error(`index.html: no founder card with markers for ${missing.join(', ')}`);
+  return html;
+}
+
 // Static wiring outside the markers that the section depends on.
 export function wiringProblems(htmlLF) {
   const problems = [];
@@ -539,7 +581,13 @@ function main(argv) {
   }
   const raw = readFileSync(INDEX_PATH, 'utf8');
   const current = toLF(raw);
-  const next = applyToIndex(current, renderSection(data, config));
+  let next;
+  try {
+    next = applySiteConfig(applyToIndex(current, renderSection(data, config)), config);
+  } catch (e) {
+    console.error('site-config.json is invalid:\n  - ' + e.message);
+    return 1;
+  }
   const privacyRaw = existsSync(PRIVACY_PATH) ? readFileSync(PRIVACY_PATH, 'utf8') : null;
   const privacyCurrent = privacyRaw === null ? null : toLF(privacyRaw);
   const privacyNext = renderPrivacy(readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8'), config, sharedChrome(next));
@@ -584,6 +632,6 @@ function main(argv) {
   return failed ? 1 : 0;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   process.exitCode = main(process.argv.slice(2));
 }

@@ -1261,3 +1261,24 @@ html.js .pricing-panel.is-active {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* W0 */
+
+.future-tag--status {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-dim);
+}
+
+/* Roadmap cards are information, not links: no pointer, no lift. */
+article.future-card {
+  cursor: default;
+}
+
+article.future-card:hover {
+  border-color: var(--border);
+  transform: none;
+}

@@ -11,5 +11,11 @@
     "city": "PENDIENTE",
     "address": "PENDIENTE"
   },
-  "apiBaseUrl": null
+  "apiBaseUrl": null,
+  "founders": {
+    "Gary D. Mendez": [],
+    "Jesus David Garcia": [],
+    "Daniel Rengifo": [],
+    "David Andres Ramirez": []
+  }
 }
