@@ -1,15 +1,15 @@
 {
   "planRequestMode": "whatsapp",
-  "whatsappNumber": "PENDIENTE",
-  "contactEmail": "PENDIENTE",
+  "whatsappNumber": "573192788238",
+  "contactEmail": "garydmendez@gtl-ai.com",
   "replyTime": "Le respondemos el mismo día hábil.",
-  "privacyPolicyVersion": "0.1",
-  "privacyPolicyDate": "2026-10-16",
+  "privacyPolicyVersion": "1.0",
+  "privacyPolicyDate": "2026-10-15",
   "controller": {
     "name": "GTL AI (sociedad en constitución)",
     "nit": "en trámite",
-    "city": "PENDIENTE",
-    "address": "PENDIENTE"
+    "city": "Bogotá",
+    "address": "Cra 47 #104B-15"
   },
   "apiBaseUrl": null,
   "founders": {

@@ -184,22 +184,27 @@ test('the hero buttons go to #planes and #team', () => {
 
 const footerLink = (html) => html.match(/<a href="mailto:([^"]*)" class="footer-email">([^<]*)<\/a>/).slice(1);
 
-test('while contactEmail is PENDIENTE, the footer keeps today\'s address (index and privacy page)', () => {
-  assert.equal(config.contactEmail, 'PENDIENTE');
-  assert.equal(footerEmail(config), CURRENT_FOOTER_EMAIL);
+test('the footer carries contactEmail from the config (index and privacy page); PENDIENTE would keep the old address', () => {
+  // PQ1 set the address; the pre-PQ1 one must be gone from both pages.
+  assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
+  assert.equal(footerEmail(config), config.contactEmail);
+  assert.deepEqual(footerLink(index), [config.contactEmail, config.contactEmail]);
+  assert.deepEqual(footerLink(privacy), [config.contactEmail, config.contactEmail]);
+  assert.doesNotMatch(index + privacy, /garydmendez25/);
   assert.equal(CURRENT_FOOTER_EMAIL, 'garydmendez25@gmail.com');
-  assert.deepEqual(footerLink(index), [CURRENT_FOOTER_EMAIL, CURRENT_FOOTER_EMAIL]);
-  assert.deepEqual(footerLink(privacy), [CURRENT_FOOTER_EMAIL, CURRENT_FOOTER_EMAIL]);
+  assert.equal(footerEmail({ ...config, contactEmail: 'PENDIENTE' }), CURRENT_FOOTER_EMAIL);
 });
 
-test('once contactEmail is set, the build writes it to the footer link and its text', () => {
+test('the build writes whatever contactEmail is set to the footer link and its text', () => {
   const set = { ...config, contactEmail: 'hola@example.com' };
   assert.equal(footerEmail(set), 'hola@example.com');
   const html = applySiteConfig(index, set);
   assert.deepEqual(footerLink(html), ['hola@example.com', 'hola@example.com']);
-  assert.doesNotMatch(html, /garydmendez25/);
-  // Back to PENDIENTE gives today's page again.
+  assert.doesNotMatch(html, /garydmendez25|garydmendez@/);
+  // Back to the committed config gives the committed page again.
   assert.equal(applySiteConfig(html, config), index);
+  // PENDIENTE (pre-PQ1) writes the old address.
+  assert.deepEqual(footerLink(applySiteConfig(index, { ...config, contactEmail: 'PENDIENTE' })), [CURRENT_FOOTER_EMAIL, CURRENT_FOOTER_EMAIL]);
 });
 
 test('pricing:check passes, so the committed pages are what the build writes from the config', () => {

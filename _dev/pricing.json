@@ -5,11 +5,10 @@
     "ivaLabel": "+ IVA",
     "minimumTermMonths": 12,
     "updated": "2026-10-13",
-    "eyebrow": { "text": "Planes", "copyStatus": "PENDIENTE-COPY" },
+    "eyebrow": { "text": "Planes" },
     "heading": { "text": "Planes y precios" },
     "subtitle": {
-      "text": "Una puesta en marcha única para poner su negocio en línea y una mensualidad que lo mantiene funcionando, seguro y al día.",
-      "copyStatus": "PENDIENTE-COPY"
+      "text": "Una puesta en marcha única para poner su negocio en línea y una mensualidad que lo mantiene funcionando, seguro y al día."
     },
     "labels": {
       "monthly": "Mensualidad",
@@ -33,214 +32,216 @@
     {
       "code": "agenda",
       "name": "Agenda",
-      "for": { "text": "Página web con agenda en línea para consultorios y centros de salud y bienestar.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Página web con agenda en línea para consultorios y centros de salud y bienestar." },
       "tiers": [
         {
           "code": "esencial", "name": "Esencial",
-          "suits": { "text": "Para un profesional independiente.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para un profesional independiente." },
           "setup": { "amount": 2500000 }, "monthly": { "amount": 199000 },
           "includes": ["Agenda en línea", "1 sede", "1 profesional", "1 cambio pequeño al mes"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         },
         {
           "code": "crece", "name": "Crece",
-          "suits": { "text": "Para consultorios con equipo.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para consultorios con equipo." },
           "setup": { "amount": 4000000 }, "monthly": { "amount": 350000 },
-          "includesLead": { "text": "Todo lo de Esencial, y además:", "copyStatus": "PENDIENTE-COPY" },
+          "includesLead": { "text": "Todo lo de Esencial, y además:" },
           "includes": ["Hasta 5 profesionales", "Recordatorios por WhatsApp", "Anticipos en línea", "Gestión de su Perfil de Empresa en Google", "2 cambios al mes", "Informe mensual de resultados"],
-          "highlight": true, "status": "propuesta"
+          "highlight": true, "status": "confirmado"
         },
         {
           "code": "pro", "name": "Pro",
-          "suits": { "text": "Para varias sedes y más pacientes.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para varias sedes y más pacientes." },
           "setup": { "amount": 6500000 }, "monthly": { "amount": 590000 },
-          "includesLead": { "text": "Todo lo de Crece, y además:", "copyStatus": "PENDIENTE-COPY" },
-          "includes": ["Varias sedes", "Facturación electrónica DIAN incluida", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
-          "highlight": false, "status": "propuesta"
+          "includesLead": { "text": "Todo lo de Crece, y además:" },
+          "includes": ["Varias sedes", "Facturación electrónica DIAN incluida (próximamente)", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
+          "highlight": false, "status": "confirmado"
         }
       ]
     },
     {
       "code": "presencia",
       "name": "Presencia",
-      "for": { "text": "Una página web profesional para cualquier negocio.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Una página web profesional para cualquier negocio." },
       "tiers": [
         {
           "code": "esencial", "name": "Esencial",
-          "suits": { "text": "Para empezar con lo esencial.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para empezar con lo esencial." },
           "setup": { "amount": 1200000 }, "monthly": { "amount": 79000 },
           "includes": ["Sitio de una página con la plantilla de su sector", "Botón de WhatsApp", "Ubicación en Google Maps", "1 cambio pequeño al mes"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         },
         {
           "code": "crece", "name": "Crece",
-          "suits": { "text": "Para negocios que quieren crecer.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para negocios que quieren crecer." },
           "setup": { "amount": 1900000 }, "monthly": { "amount": 149000 },
-          "includesLead": { "text": "Todo lo de Esencial, y además:", "copyStatus": "PENDIENTE-COPY" },
+          "includesLead": { "text": "Todo lo de Esencial, y además:" },
           "includes": ["Hasta 5 páginas", "Formulario de contacto", "Gestión de su Perfil de Empresa en Google", "SEO local básico", "2 cambios al mes", "Informe mensual de visitas"],
-          "highlight": true, "status": "propuesta"
+          "highlight": true, "status": "confirmado"
         },
         {
           "code": "pro", "name": "Pro",
-          "suits": { "text": "Para varias sedes y más contenido.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para varias sedes y más contenido." },
           "setup": { "amount": 2900000 }, "monthly": { "amount": 249000 },
-          "includesLead": { "text": "Todo lo de Crece, y además:", "copyStatus": "PENDIENTE-COPY" },
-          "includes": ["Hasta 10 páginas y blog", "Varias sedes", "Panel de métricas", "Facturación electrónica DIAN incluida", "Soporte prioritario", "4 cambios al mes"],
-          "highlight": false, "status": "propuesta"
+          "includesLead": { "text": "Todo lo de Crece, y además:" },
+          "includes": ["Hasta 10 páginas y blog", "Varias sedes", "Panel de métricas", "Facturación electrónica DIAN incluida (próximamente)", "Soporte prioritario", "4 cambios al mes"],
+          "highlight": false, "status": "confirmado"
         }
       ]
     },
     {
       "code": "pedidos",
       "name": "Pedidos",
-      "for": { "text": "Pedidos en línea para restaurantes.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Pedidos en línea para restaurantes." },
       "tiers": [
         {
           "code": "esencial", "name": "Esencial",
-          "suits": { "text": "Para empezar a vender en línea.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para empezar a vender en línea." },
           "setup": { "amount": 2000000 }, "monthly": { "amount": 199000 },
           "includes": ["Menú o catálogo en línea", "Pedidos por WhatsApp", "1 sede", "1 cambio pequeño al mes"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         },
         {
           "code": "crece", "name": "Crece",
-          "suits": { "text": "Para restaurantes que quieren crecer.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para restaurantes que quieren crecer." },
           "setup": { "amount": 3500000 }, "monthly": { "amount": 349000 },
-          "includesLead": { "text": "Todo lo de Esencial, y además:", "copyStatus": "PENDIENTE-COPY" },
+          "includesLead": { "text": "Todo lo de Esencial, y además:" },
           "includes": ["Pedidos en línea con pago", "Avisos de pedido por WhatsApp", "Gestión de su Perfil de Empresa en Google", "2 cambios al mes", "Informe mensual de ventas"],
-          "highlight": true, "status": "propuesta"
+          "highlight": true, "status": "confirmado"
         },
         {
           "code": "pro", "name": "Pro",
-          "suits": { "text": "Para varias sedes y más pedidos.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para varias sedes y más pedidos." },
           "setup": { "amount": 6000000 }, "monthly": { "amount": 590000 },
-          "includesLead": { "text": "Todo lo de Crece, y además:", "copyStatus": "PENDIENTE-COPY" },
-          "includes": ["Varias sedes", "Facturación electrónica DIAN incluida", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
-          "highlight": false, "status": "propuesta"
+          "includesLead": { "text": "Todo lo de Crece, y además:" },
+          "includes": ["Varias sedes", "Facturación electrónica DIAN incluida (próximamente)", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
+          "highlight": false, "status": "confirmado"
         }
       ]
     },
     {
       "code": "reservas",
       "name": "Reservas",
-      "for": { "text": "Reservas directas para fincas y alojamientos.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Reservas directas para fincas y alojamientos." },
       "tiers": [
         {
           "code": "esencial", "name": "Esencial",
-          "suits": { "text": "Para empezar a recibir reservas directas.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para empezar a recibir reservas directas." },
           "setup": { "amount": 2500000 }, "monthly": { "amount": 249000 },
           "includes": ["Calendario de disponibilidad", "Solicitudes de reserva", "1 propiedad o tipo de unidad", "1 cambio pequeño al mes"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         },
         {
           "code": "crece", "name": "Crece",
-          "suits": { "text": "Para alojamientos que quieren crecer.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para alojamientos que quieren crecer." },
           "setup": { "amount": 4500000 }, "monthly": { "amount": 399000 },
-          "includesLead": { "text": "Todo lo de Esencial, y además:", "copyStatus": "PENDIENTE-COPY" },
+          "includesLead": { "text": "Todo lo de Esencial, y además:" },
           "includes": ["Hasta 5 unidades", "Anticipos en línea", "Mensajes a huéspedes por WhatsApp", "Gestión de su Perfil de Empresa en Google", "2 cambios al mes", "Informe mensual de ocupación"],
-          "highlight": true, "status": "propuesta"
+          "highlight": true, "status": "confirmado"
         },
         {
           "code": "pro", "name": "Pro",
-          "suits": { "text": "Para varias propiedades y más reservas.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para varias propiedades y más reservas." },
           "setup": { "amount": 7000000 }, "monthly": { "amount": 690000 },
-          "includesLead": { "text": "Todo lo de Crece, y además:", "copyStatus": "PENDIENTE-COPY" },
-          "includes": ["Varias propiedades", "Facturación electrónica DIAN incluida", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
-          "highlight": false, "status": "propuesta"
+          "includesLead": { "text": "Todo lo de Crece, y además:" },
+          "includes": ["Varias propiedades", "Facturación electrónica DIAN incluida (próximamente)", "Panel de métricas", "Soporte prioritario", "4 cambios al mes"],
+          "highlight": false, "status": "confirmado"
         }
       ]
     },
     {
       "code": "comunidad",
       "name": "Comunidad",
-      "for": { "text": "Un portal para conjuntos residenciales y edificios.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Un portal para conjuntos residenciales y edificios." },
       "tiers": [
         {
           "code": "esencial", "name": "Esencial",
-          "suits": { "text": "Para empezar a gestionar el conjunto en línea.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para empezar a gestionar el conjunto en línea." },
           "setup": { "amount": 1500000 }, "monthly": { "perUnit": 2500, "minimum": 250000 },
           "includes": ["Portal del conjunto", "Avisos y documentos", "Reserva de zonas comunes", "1 cambio pequeño al mes"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         },
         {
           "code": "crece", "name": "Crece",
-          "suits": { "text": "Para conjuntos que quieren hacer todo en línea.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para conjuntos que quieren hacer todo en línea." },
           "setup": { "amount": 2500000 }, "monthly": { "perUnit": 3500, "minimum": 350000 },
-          "includesLead": { "text": "Todo lo de Esencial, y además:", "copyStatus": "PENDIENTE-COPY" },
+          "includesLead": { "text": "Todo lo de Esencial, y además:" },
           "includes": ["Solicitudes en línea (PQRS)", "Avisos por WhatsApp", "2 cambios al mes", "Informe mensual"],
-          "highlight": true, "status": "propuesta"
+          "highlight": true, "status": "confirmado"
         },
         {
           "code": "pro", "name": "Pro",
-          "suits": { "text": "Para varias torres o conjuntos.", "copyStatus": "PENDIENTE-COPY" },
+          "suits": { "text": "Para varias torres o conjuntos." },
           "setup": { "text": "A cotizar" }, "monthly": { "text": "A cotizar" },
           "includes": ["Para varias torres o conjuntos"],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         }
       ]
     },
     {
       "code": "a-medida",
       "name": "A medida",
-      "for": { "text": "Software a la medida de su negocio.", "copyStatus": "PENDIENTE-COPY" },
+      "for": { "text": "Software a la medida de su negocio." },
       "tiers": [
         {
           "code": "proyecto",
-          "title": { "text": "Proyecto a medida", "copyStatus": "PENDIENTE-COPY" },
+          "title": { "text": "Proyecto a medida" },
           "price": {
             "from": 15000000,
             "prefix": "Desde",
             "suffix": "por proyecto"
           },
-          "text": { "text": "Definimos el alcance con usted y le enviamos una propuesta escrita.", "copyStatus": "PENDIENTE-COPY" },
-          "hourlyLine": { "text": "Para clientes en Estados Unidos también trabajamos por horas.", "copyStatus": "PENDIENTE-COPY" },
-          "button": { "text": "Cotizar mi proyecto", "copyStatus": "PENDIENTE-COPY" },
+          "text": { "text": "Definimos el alcance con usted y le enviamos una propuesta escrita." },
+          "hourlyLine": { "text": "Para clientes en Estados Unidos también trabajamos por horas." },
+          "button": { "text": "Cotizar mi proyecto" },
           "includes": [],
-          "highlight": false, "status": "propuesta"
+          "highlight": false, "status": "confirmado"
         }
       ]
     }
   ],
   "addons": {
-    "heading": { "text": "Complementos", "copyStatus": "PENDIENTE-COPY" },
-    "subtitle": { "text": "Agréguelos a cualquier plan.", "copyStatus": "PENDIENTE-COPY" },
+    "heading": { "text": "Complementos" },
+    "subtitle": { "text": "Agréguelos a cualquier plan." },
     "items": [
-      { "code": "dian", "name": "Facturación electrónica DIAN", "shortName": { "text": "Facturación DIAN", "copyStatus": "PENDIENTE-COPY" }, "monthly": 79000, "status": "propuesta" },
-      { "code": "recepcionista-ia", "name": "Recepcionista IA (asistente por WhatsApp)", "shortName": { "text": "Recepcionista IA", "copyStatus": "PENDIENTE-COPY" }, "monthly": 149000, "status": "propuesta" },
-      { "code": "metricas", "name": "Panel de métricas", "monthly": 99000, "status": "propuesta" },
-      { "code": "redes", "name": "Contenido para redes sociales (4 publicaciones al mes)", "shortName": { "text": "Contenido para redes", "copyStatus": "PENDIENTE-COPY" }, "monthly": 290000, "status": "propuesta" },
-      { "code": "whatsapp-extra", "name": "Mensajes adicionales de marketing por WhatsApp", "rule": "Costo + 30 %", "status": "propuesta" },
-      { "code": "pagos", "name": "Pagos con tarjeta y QR", "rule": "Tarifa de la pasarela, al costo", "status": "propuesta" }
+      { "code": "dian", "name": "Facturación electrónica DIAN", "shortName": { "text": "Facturación DIAN" }, "monthly": 79000, "badge": "Próximamente", "note": "Disponible próximamente; aún no se puede contratar.", "status": "confirmado" },
+      { "code": "recepcionista-ia", "name": "Recepcionista IA (asistente por WhatsApp)", "shortName": { "text": "Recepcionista IA" }, "monthly": 149000, "status": "confirmado" },
+      { "code": "metricas", "name": "Panel de métricas", "monthly": 99000, "status": "confirmado" },
+      { "code": "redes", "name": "Contenido para redes sociales (4 publicaciones al mes)", "shortName": { "text": "Contenido para redes" }, "monthly": 290000, "status": "confirmado" },
+      { "code": "whatsapp-extra", "name": "Mensajes adicionales de marketing por WhatsApp", "rule": "Costo + 30 %", "status": "confirmado" },
+      { "code": "pagos", "name": "Pagos con tarjeta y QR", "rule": "Tarifa de la pasarela, al costo", "status": "confirmado" }
     ]
   },
   "bundles": {
-    "heading": { "text": "Paquetes por sector", "copyStatus": "PENDIENTE-COPY" },
-    "subtitle": { "text": "Un plan y sus complementos, a un precio menor.", "copyStatus": "PENDIENTE-COPY" },
+    "heading": { "text": "Paquetes por sector" },
+    "subtitle": { "text": "Un plan y sus complementos, a un precio menor." },
     "items": [
       {
         "code": "clinica-completa", "name": "Clínica Completa",
         "parts": [{ "type": "plan", "package": "agenda", "tier": "crece" }, { "type": "addon", "code": "dian" }, { "type": "addon", "code": "recepcionista-ia" }],
-        "bundleMonthly": 490000, "status": "propuesta"
+        "note": "La facturación electrónica DIAN se activará cuando esté disponible.",
+        "bundleMonthly": 490000, "status": "confirmado"
       },
       {
         "code": "finca-directa", "name": "Finca Directa",
         "parts": [{ "type": "plan", "package": "reservas", "tier": "crece" }, { "type": "addon", "code": "redes" }],
-        "bundleMonthly": 590000, "status": "propuesta"
+        "bundleMonthly": 590000, "status": "confirmado"
       },
       {
         "code": "restaurante-propio", "name": "Restaurante Propio",
         "parts": [{ "type": "plan", "package": "pedidos", "tier": "crece" }, { "type": "addon", "code": "dian" }, { "type": "addon", "code": "redes" }],
-        "bundleMonthly": 620000, "status": "propuesta"
+        "note": "La facturación electrónica DIAN se activará cuando esté disponible.",
+        "bundleMonthly": 620000, "status": "confirmado"
       },
       {
         "code": "conjunto-conectado", "name": "Conjunto Conectado",
-        "parts": [{ "type": "plan", "package": "comunidad", "tier": "crece" }, { "type": "extra", "name": { "text": "una Asamblea Virtual al año", "copyStatus": "PENDIENTE-COPY" } }],
+        "parts": [{ "type": "plan", "package": "comunidad", "tier": "crece" }, { "type": "extra", "name": { "text": "una Asamblea Virtual al año" } }],
         "priceText": {
-          "base": { "text": "Precio de Comunidad Crece", "copyStatus": "PENDIENTE-COPY" },
+          "base": { "text": "Precio de Comunidad Crece" },
           "amount": 300000,
-          "unit": { "text": "por asamblea", "copyStatus": "PENDIENTE-COPY" }
+          "unit": { "text": "por asamblea" }
         },
-        "status": "propuesta"
+        "status": "confirmado"
       }
     ]
   },
@@ -257,25 +258,25 @@
   },
   "trust": {
     "items": [
-      { "text": "Su dominio y sus datos son suyos.", "copyStatus": "PENDIENTE-COPY" },
-      { "text": "Sin comisión por cita, pedido ni reserva.", "copyStatus": "PENDIENTE-COPY" },
-      { "text": "Usted trabaja directamente con el equipo que construye su sitio.", "copyStatus": "PENDIENTE-COPY" }
+      { "text": "Su dominio y sus datos son suyos." },
+      { "text": "Sin comisión por cita, pedido ni reserva." },
+      { "text": "Usted trabaja directamente con el equipo que construye su sitio." }
     ]
   },
   "faq": {
-    "heading": { "text": "Preguntas frecuentes", "copyStatus": "PENDIENTE-COPY" },
+    "heading": { "text": "Preguntas frecuentes" },
     "items": [
-      { "q": "¿Qué cubre la puesta en marcha?", "a": "El diseño, la configuración y la puesta en marcha de su sitio con la plantilla de su sector: sus servicios, horarios, fotos y textos, la conexión de su dominio y las pruebas antes del lanzamiento.", "copyStatus": "PENDIENTE-COPY" },
-      { "q": "¿Qué incluye la mensualidad?", "a": "Hosting, actualizaciones de seguridad, una copia de seguridad mensual, soporte y los cambios mensuales incluidos en su plan.", "copyStatus": "PENDIENTE-COPY" },
-      { "q": "¿De quién son el dominio y los datos?", "a": "Suyos. El dominio queda a nombre de su negocio y puede pedir una copia de sus datos cuando quiera.", "copyStatus": "PENDIENTE-COPY" },
-      { "q": "¿Puedo cambiar de plan?", "a": "Sí. Puede subir de plan cuando quiera y el cambio se refleja en la siguiente mensualidad. Para bajar de plan, escríbanos y lo revisamos según su permanencia.", "copyStatus": "PENDIENTE-COPY" },
-      { "q": "¿Cómo se paga?", "a": "Antes de empezar, usted hace un solo pago con la puesta en marcha y su primera mensualidad. Después, la mensualidad se paga el día 1 de cada mes.", "copyStatus": "PENDIENTE-COPY" },
-      { "q": "¿Los precios incluyen IVA?", "a": "No. Todos los precios están en pesos colombianos y no incluyen IVA (19 %).", "copyStatus": "PENDIENTE-COPY" }
+      { "q": "¿Qué cubre la puesta en marcha?", "a": "El diseño, la configuración y la puesta en marcha de su sitio con la plantilla de su sector: sus servicios, horarios, fotos y textos, la conexión de su dominio y las pruebas antes del lanzamiento." },
+      { "q": "¿Qué incluye la mensualidad?", "a": "Hosting, actualizaciones de seguridad, una copia de seguridad mensual, soporte y los cambios mensuales incluidos en su plan." },
+      { "q": "¿De quién son el dominio y los datos?", "a": "Suyos. El dominio queda a nombre de su negocio y puede pedir una copia de sus datos cuando quiera." },
+      { "q": "¿Puedo cambiar de plan?", "a": "Sí. Puede subir de plan cuando quiera y el cambio se refleja en la siguiente mensualidad. Para bajar de plan, escríbanos y lo revisamos según su permanencia." },
+      { "q": "¿Cómo se paga?", "a": "Antes de empezar, usted hace un solo pago con la puesta en marcha y su primera mensualidad. Después, la mensualidad se paga el día 1 de cada mes." },
+      { "q": "¿Los precios incluyen IVA?", "a": "No. Todos los precios están en pesos colombianos y no incluyen IVA (19 %)." }
     ]
   },
   "closingCta": {
-    "heading": { "text": "¿No sabe cuál elegir?", "copyStatus": "PENDIENTE-COPY" },
-    "text": { "text": "Cuéntenos sobre su negocio y le recomendamos el plan indicado.", "copyStatus": "PENDIENTE-COPY" },
-    "button": { "text": "Hablar con nosotros", "copyStatus": "PENDIENTE-COPY" }
+    "heading": { "text": "¿No sabe cuál elegir?" },
+    "text": { "text": "Cuéntenos sobre su negocio y le recomendamos el plan indicado." },
+    "button": { "text": "Hablar con nosotros" }
   }
 }

@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { footerEmail, loadConfig } from '../build-pricing.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const before = JSON.parse(readFileSync(join(here, 'fixtures', 'sections-before.json'), 'utf8'));
@@ -40,8 +41,8 @@ test.describe('placement and existing content', () => {
     }, SECTIONS);
     // The one accepted header change: the "Planes" link between About and Team.
     expect(now.header).toBe(before.header.replace('About Team', 'About Planes Team'));
-    // The one accepted footer change (PF2): the "Privacidad" link after the email.
-    expect(now.footer).toBe(before.footer.replace('garydmendez25@gmail.com', 'garydmendez25@gmail.com Privacidad'));
+    // The two accepted footer changes: the email from the config (W0) and the "Privacidad" link after it (PF2).
+    expect(now.footer).toBe(before.footer.replace('garydmendez25@gmail.com', `${footerEmail(loadConfig())} Privacidad`));
     for (const key of ['hero', 'about', 'team', 'future']) expect(now[key], key).toBe(before[key]);
   });
 

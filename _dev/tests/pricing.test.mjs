@@ -92,12 +92,34 @@ test('computed bundle list prices are 578.000, 689.000 and 718.000; bundle price
   assert.equal(bundleListPrice(data, cc), null);
 });
 
-test('every price is "propuesta" until PQ1', () => {
+test('every price is "confirmado" (PQ1, JD 2026-10-14)', () => {
   const statuses = [];
   for (const p of data.packages) for (const t of p.tiers) statuses.push(t.status);
   for (const a of data.addons.items) statuses.push(a.status);
   for (const b of data.bundles.items) statuses.push(b.status);
-  assert.ok(statuses.every((s) => s === 'propuesta'));
+  assert.equal(statuses.length, 16 + 6 + 4);
+  assert.ok(statuses.every((s) => s === 'confirmado'), statuses.join());
+});
+
+// PQ1: the DIAN add-on is not available yet. The data says so in three places; the prices stay.
+test('DIAN is marked "Próximamente": the add-on badge and line, the Pro tiers and the two bundles that include it', () => {
+  const dian = data.addons.items.find((a) => a.code === 'dian');
+  assert.equal(dian.badge, 'Próximamente');
+  assert.equal(dian.note, 'Disponible próximamente; aún no se puede contratar.');
+  assert.equal(dian.monthly, 79000);
+  for (const code of ['agenda', 'presencia', 'pedidos', 'reservas']) {
+    assert.ok(tier(code, 'pro').includes.includes('Facturación electrónica DIAN incluida (próximamente)'), code);
+  }
+  for (const b of data.bundles.items) {
+    const hasDian = b.parts.some((p) => p.type === 'addon' && p.code === 'dian');
+    assert.equal(b.note, hasDian ? 'La facturación electrónica DIAN se activará cuando esté disponible.' : undefined, b.code);
+  }
+  const html = renderSection(data);
+  assert.equal((html.match(/<span class="addon-badge">Próximamente<\/span>/g) || []).length, 1);
+  assert.equal((html.match(/<span class="addon-note">Disponible próximamente; aún no se puede contratar\.<\/span>/g) || []).length, 1);
+  assert.equal((html.match(/<p class="bundle-note">La facturación electrónica DIAN se activará cuando esté disponible\.<\/p>/g) || []).length, 2);
+  assert.equal((html.match(/DIAN incluida \(próximamente\)/g) || []).length, 4);
+  assert.ok(html.includes('Facturación electrónica DIAN <span class="addon-badge">Próximamente</span></span><span class="addon-price" data-price><span class="price-amount">$79.000</span>'));
 });
 
 test('the formatter gives es-CO amounts without Intl', () => {
@@ -138,19 +160,26 @@ test('index.html has its wiring and no price outside the generated block', () =>
   assert.equal(outsideMarkers(index).match(/\$\d/g), null);
 });
 
-test('--release fails and lists every propuesta price and PENDIENTE-COPY text', () => {
+test('--release passes on the committed data (PQ1), and lists a propuesta price or a draft text by path', () => {
   const r = run('--release');
-  assert.equal(r.status, 1);
-  const items = releaseItems(data);
-  assert.ok(items.length > 0);
-  for (const item of items) assert.ok(r.stderr.includes(item), `missing from output: ${item}`);
-  assert.match(r.stderr, /propuesta\s+packages\[agenda\]\.tiers\[crece\]/);
-  assert.match(r.stderr, /PENDIENTE-COPY\s+faq/);
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /Release check passed/);
+  assert.deepEqual(releaseItems(data), []);
+  const draft = structuredClone(data);
+  draft.packages.find((p) => p.code === 'agenda').tiers.find((t) => t.code === 'crece').status = 'propuesta';
+  draft.faq.heading = { text: 'Preguntas frecuentes', copyStatus: 'PENDIENTE-COPY' };
+  const items = releaseItems(draft);
+  assert.ok(items.some((i) => /^propuesta\s+packages\[agenda\]\.tiers\[crece\]$/.test(i)), items.join('\n'));
+  assert.ok(items.some((i) => /^PENDIENTE-COPY\s+faq\.heading$/.test(i)), items.join('\n'));
+  assert.equal(items.length, 2);
 });
 
 test('no draft marker reaches the page', () => {
   assert.ok(!index.includes('PENDIENTE'));
   assert.ok(!/data-status|copyStatus/.test(index));
+  // PQ1: no status word either. "propuesta" survives only inside Appendix B's A medida sentence.
+  assert.doesNotMatch(index, /TBD|PLACEHOLDER/);
+  assert.deepEqual(index.match(/propuesta[^<]*/g), ['propuesta escrita.']);
 });
 
 // ---------- copy (step 8): register, fidelity to Appendix B, field-level draft markers ----------
@@ -198,8 +227,11 @@ const APPENDIX_B = [
   'Todo lo de Esencial, y además:', 'Todo lo de Crece, y además:', 'Solicitar este plan',
   'Sitio de una página con la plantilla de su sector', 'Botón de WhatsApp', 'Ubicación en Google Maps', '1 cambio pequeño al mes',
   'Hasta 5 páginas', 'Formulario de contacto', 'Gestión de su Perfil de Empresa en Google', 'SEO local básico', '2 cambios al mes',
-  'Informe mensual de visitas', 'Hasta 10 páginas y blog', 'Varias sedes', 'Panel de métricas', 'Facturación electrónica DIAN incluida',
+  'Informe mensual de visitas', 'Hasta 10 páginas y blog', 'Varias sedes', 'Panel de métricas',
   'Soporte prioritario', '4 cambios al mes',
+  // PQ1, the "DIAN" block: the add-on is marked Próximamente wherever it appears.
+  'Facturación electrónica DIAN incluida (próximamente)', 'Próximamente', 'Disponible próximamente; aún no se puede contratar.',
+  'La facturación electrónica DIAN se activará cuando esté disponible.',
   'Agenda en línea', '1 sede', '1 profesional', 'Hasta 5 profesionales', 'Recordatorios por WhatsApp', 'Anticipos en línea',
   'Informe mensual de resultados',
   'Menú o catálogo en línea', 'Pedidos por WhatsApp', 'Pedidos en línea con pago', 'Avisos de pedido por WhatsApp', 'Informe mensual de ventas',
@@ -292,8 +324,26 @@ test('draft markers sit on fields: no object holding a confirmed field carries c
   for (const [k, v] of Object.entries(data.meta.labels)) plain(v, `meta.labels.${k}`);
 });
 
-test('every draft field is listed by the release check at field level', () => {
-  const items = new Set(releaseItems(data).filter((i) => i.startsWith('PENDIENTE-COPY')).map((i) => i.replace(/^PENDIENTE-COPY\s+/, '')));
+test('every draft field is listed by the release check at field level (on a draft copy of the data; the committed data has none)', () => {
+  // Mark every text field the way PF1 shipped it, then check each one is listed by its path.
+  const draft = structuredClone(data);
+  const mark = (obj, key) => { obj[key] = { text: txt(obj[key]), copyStatus: 'PENDIENTE-COPY' }; };
+  mark(draft.meta, 'eyebrow'); mark(draft.meta, 'subtitle');
+  mark(draft.addons, 'heading'); mark(draft.addons, 'subtitle'); mark(draft.bundles, 'heading'); mark(draft.bundles, 'subtitle');
+  mark(draft.faq, 'heading'); mark(draft.closingCta, 'heading'); mark(draft.closingCta, 'text'); mark(draft.closingCta, 'button');
+  const cc = draft.bundles.items.find((b) => b.code === 'conjunto-conectado');
+  mark(cc.priceText, 'base'); mark(cc.priceText, 'unit'); mark(cc.parts[1], 'name');
+  const am = draft.packages.find((p) => p.code === 'a-medida').tiers[0];
+  for (const k of ['title', 'text', 'hourlyLine', 'button']) mark(am, k);
+  for (const p of draft.packages) {
+    mark(p, 'for');
+    if (p.code === 'a-medida') continue;
+    for (const t of p.tiers) { mark(t, 'suits'); if (t.includesLead) mark(t, 'includesLead'); }
+  }
+  draft.trust.items.forEach((_, i) => { draft.trust.items[i] = { text: txt(draft.trust.items[i]), copyStatus: 'PENDIENTE-COPY' }; });
+  draft.faq.items.forEach((f) => { f.copyStatus = 'PENDIENTE-COPY'; });
+  assert.deepEqual(releaseItems(data).filter((i) => i.startsWith('PENDIENTE-COPY')), []);
+  const items = new Set(releaseItems(draft).filter((i) => i.startsWith('PENDIENTE-COPY')).map((i) => i.replace(/^PENDIENTE-COPY\s+/, '')));
   const expected = ['meta.eyebrow', 'meta.subtitle', 'addons.heading', 'addons.subtitle', 'bundles.heading', 'bundles.subtitle',
     'faq.heading', 'closingCta.heading', 'closingCta.text', 'closingCta.button',
     'bundles.items[conjunto-conectado].priceText.base', 'bundles.items[conjunto-conectado].priceText.unit',

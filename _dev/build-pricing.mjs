@@ -327,6 +327,8 @@ function bundleCard(b, data, config) {
     '<article class="bundle-card">',
     `<h4>${esc(b.name)}</h4>`,
     `<p class="bundle-contents">${contents}</p>`,
+    // PQ1: a note under the contents line, e.g. a part that is not yet available.
+    ...(b.note ? [`<p class="bundle-note">${esc(b.note)}</p>`] : []),
     price,
     `<a class="btn btn-ghost" ${requestAttrs(config, requestMessage.bundle(b))} data-bundle="${esc(b.code)}">${esc(L.requestBundle)}${newTab}</a>`,
     '</article>',
@@ -337,7 +339,10 @@ function addonRow(a, data) {
   const value = a.rule
     ? `<span class="addon-rule">${esc(a.rule)}</span>`
     : `<span class="price-amount">${formatCOP(a.monthly)}</span> <span class="price-unit">${esc(data.meta.labels.perMonth)} ${esc(data.meta.ivaLabel)}</span>`;
-  return `<li class="addon"><span class="addon-name">${esc(a.name)}</span><span class="addon-price" data-price>${value}</span></li>`;
+  // PQ1: an add-on not yet available carries a badge ("Próximamente") after its name and a line under its price.
+  const badge = a.badge ? ` <span class="addon-badge">${esc(a.badge)}</span>` : '';
+  const note = a.note ? `<span class="addon-note">${esc(a.note)}</span>` : '';
+  return `<li class="addon"><span class="addon-name">${esc(a.name)}${badge}</span><span class="addon-price" data-price>${value}</span>${note}</li>`;
 }
 
 export function renderSection(data, config = loadConfig()) {

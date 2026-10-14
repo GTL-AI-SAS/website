@@ -27,7 +27,16 @@ const TEST_CONFIG = {
   whatsappNumber: '573001234567',
   contactEmail: 'privacidad@example.com',
   controller: { ...config.controller, city: 'Medellín', address: 'Calle 10 # 43-12' },
+  privacyPolicyVersion: '0.1',
+  privacyPolicyDate: '2026-10-16',
   apiBaseUrl: null,
+};
+// The config as PF2 shipped it, before PQ1 filled in JD's values.
+const PENDING_CONFIG = {
+  ...TEST_CONFIG,
+  whatsappNumber: 'PENDIENTE',
+  contactEmail: 'PENDIENTE',
+  controller: { ...config.controller, city: 'PENDIENTE', address: 'PENDIENTE' },
 };
 
 // The contract's four messages, written out independently of the generator.
@@ -76,8 +85,9 @@ test('the four message kinds read exactly as the contract writes them', () => {
 });
 
 for (const [label, cfg, base] of [
-  ['the committed config (number PENDIENTE)', config, 'https://wa.me/?text='],
-  ['a real number', TEST_CONFIG, 'https://wa.me/573001234567?text='],
+  ['the committed config', config, `https://wa.me/${config.whatsappNumber}?text=`],
+  ['a number still PENDIENTE (dev only)', PENDING_CONFIG, 'https://wa.me/?text='],
+  ['a test number', TEST_CONFIG, 'https://wa.me/573001234567?text='],
 ]) {
   test(`every button gets its wa.me link and message, with ${label}`, () => {
     const links = requestLinks(renderSection(data, cfg));
@@ -141,11 +151,21 @@ test('links are fully percent-encoded and carry no personal data', () => {
 
 // ---------- the config ----------
 
-test('the committed config is valid and keeps PENDIENTE for what JD has not given', () => {
+// PQ1: JD's inputs (2026-10-14), written out independently of site-config.json.
+test('the committed config is valid and holds JD\'s PQ1 inputs', () => {
   assert.deepEqual(validateConfig(config), []);
   assert.equal(config.planRequestMode, 'whatsapp');
   assert.equal(config.apiBaseUrl, null);
+  assert.equal(config.whatsappNumber, '573192788238');
+  assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
+  assert.equal(config.controller.city, 'Bogotá');
+  assert.equal(config.controller.address, 'Cra 47 #104B-15');
+  assert.equal(config.privacyPolicyVersion, '1.0');
+  assert.equal(config.privacyPolicyDate, '2026-10-15');
+  assert.equal(formatDateEs(config.privacyPolicyDate), '15 de octubre de 2026');
+  assert.equal(formatWhatsApp(config.whatsappNumber), '+57 319 278 8238');
   assert.deepEqual(validateConfig(TEST_CONFIG), []);
+  assert.deepEqual(validateConfig(PENDING_CONFIG), []);
 });
 
 test('the config validator rejects malformed values', () => {
@@ -161,9 +181,10 @@ test('the config validator rejects malformed values', () => {
 });
 
 test('release items: PENDIENTE and missing values fail; test values with apiBaseUrl null pass', () => {
-  assert.deepEqual(configReleaseItems(config).map((i) => i.split(/\s+/)), [
+  assert.deepEqual(configReleaseItems(PENDING_CONFIG).map((i) => i.split(/\s+/)), [
     ['PENDIENTE', 'whatsappNumber'], ['PENDIENTE', 'contactEmail'], ['PENDIENTE', 'controller.city'],
     ['PENDIENTE', 'controller.address']]);
+  assert.deepEqual(configReleaseItems(config), []);
   assert.deepEqual(configReleaseItems(TEST_CONFIG), []);
   const missing = { ...TEST_CONFIG, contactEmail: undefined, controller: { name: 'x', nit: 'y' } };
   assert.deepEqual(configReleaseItems(missing).map((i) => i.split(/\s+/)), [['missing', 'contactEmail'], ['missing', 'controller.city'],
@@ -241,13 +262,17 @@ test('the privacy page reuses the site header and footer with links to index.htm
   assert.ok(privacy.includes('<a aria-current="page" href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>'));
 });
 
-test('privacy release items: the draft marker and PENDIENTE values are caught; a clean page passes', () => {
-  const items = privacyReleaseItems(privacy);
+test('privacy release items: the draft marker and PENDIENTE values are caught; the committed page passes', () => {
+  // PQ1 deleted the marker line from the template; it must not come back.
+  assert.doesNotMatch(template, /PENDIENTE/);
+  assert.match(template, /^<!DOCTYPE html>\r?\n<html lang="es-CO">/);
+  assert.deepEqual(privacyReleaseItems(privacy), []);
+  const draftTemplate = '<!DOCTYPE html>\n<!-- PENDIENTE-COPY: draft text -->\n' + template.replace(/^<!DOCTYPE html>\r?\n/, '');
+  const items = privacyReleaseItems(renderPrivacy(draftTemplate, PENDING_CONFIG, chrome));
   assert.ok(items.some((i) => /PENDIENTE-COPY: draft text/.test(i)), 'draft marker not reported');
   assert.ok(items.some((i) => /con domicilio en PENDIENTE/.test(i)));
-  const approved = template.replace(/^<!-- PENDIENTE-COPY:.*\n/m, '');
-  assert.deepEqual(privacyReleaseItems(renderPrivacy(approved, TEST_CONFIG, chrome)), []);
-  const handEdited = renderPrivacy(approved, TEST_CONFIG, chrome).replace('Medellín', 'PENDIENTE');
+  assert.deepEqual(privacyReleaseItems(renderPrivacy(template, TEST_CONFIG, chrome)), []);
+  const handEdited = renderPrivacy(template, TEST_CONFIG, chrome).replace('Medellín', 'PENDIENTE');
   assert.equal(privacyReleaseItems(handEdited).length, 1);
 });
 
@@ -280,13 +305,11 @@ test('index.html has one "Privacidad" link, in the footer, and the check require
   assert.ok(applyToIndex(index.replace(`\n    ${FOOTER_LINK}`, ''), renderSection(data, config)).includes(FOOTER_LINK));
 });
 
-test('--release lists the PENDIENTE config values and every PENDIENTE line of privacidad.html', () => {
+test('--release passes with the committed config and pages (PQ1)', () => {
   const r = run('--release');
-  assert.equal(r.status, 1);
-  assert.match(r.stderr, /PENDIENTE\s+whatsappNumber/);
-  assert.match(r.stderr, /PENDIENTE\s+contactEmail/);
-  assert.match(r.stderr, /PENDIENTE\s+controller\.city/);
-  assert.match(r.stderr, /PENDIENTE\s+controller\.address/);
-  for (const item of privacyReleaseItems(privacy)) assert.ok(r.stderr.includes(item), `missing from output: ${item}`);
-  assert.doesNotMatch(r.stderr, /apiBaseUrl/);
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /Release check passed/);
+  assert.equal(r.stderr, '');
+  assert.doesNotMatch(r.stdout, /FAILED|apiBaseUrl/);
+  assert.ok(!privacy.includes('PENDIENTE'));
 });

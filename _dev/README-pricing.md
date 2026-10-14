@@ -26,6 +26,8 @@ npx --prefix _dev playwright install chromium firefox webkit
    - Draft text is marked per field: `"suits": { "text": "…", "copyStatus": "PENDIENTE-COPY" }`.
      Once JD approves it, remove its `"copyStatus"` (keeping `{ "text": "…" }` or a plain string is fine).
      Never put `copyStatus` on a tier, package or block object; a unit test rejects it.
+   - An add-on that is not available yet (PQ1: DIAN) carries `"badge": "Próximamente"` and a `"note"` line; a bundle may
+     carry a `"note"` under its contents line. Delete them once the add-on is available.
    - Every text addresses the buyer as *usted*; a unit test rejects tú forms (tu, puedes, escríbenos, …).
 2. Regenerate the section:
    ```powershell
