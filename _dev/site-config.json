@@ -1,0 +1,15 @@
+{
+  "planRequestMode": "whatsapp",
+  "whatsappNumber": "PENDIENTE",
+  "contactEmail": "PENDIENTE",
+  "replyTime": "Le respondemos el mismo día hábil.",
+  "privacyPolicyVersion": "0.1",
+  "privacyPolicyDate": "2026-10-16",
+  "controller": {
+    "name": "GTL AI (sociedad en constitución)",
+    "nit": "en trámite",
+    "city": "PENDIENTE",
+    "address": "PENDIENTE"
+  },
+  "apiBaseUrl": null
+}

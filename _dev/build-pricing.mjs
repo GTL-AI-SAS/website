@@ -1,16 +1,21 @@
-// Renders the "Planes y precios" section from _dev/pricing.json into index.html.
+// Renders the "Planes y precios" section from _dev/pricing.json into index.html, and the
+// privacy page from _dev/templates/privacidad.html into privacidad.html (PF2). Both read
+// _dev/site-config.json for the WhatsApp number, the contact email and the controller.
 //
-//   node build-pricing.mjs            write the section between the pricing markers
-//   node build-pricing.mjs --check    fail if index.html differs from the data (EOL-normalised)
-//   node build-pricing.mjs --release  --check, plus fail while any price is "propuesta"
-//                                     or any text is "PENDIENTE-COPY" (lists each one)
-import { readFileSync, writeFileSync } from 'node:fs';
+//   node build-pricing.mjs            write the section between the pricing markers, and privacidad.html
+//   node build-pricing.mjs --check    fail if index.html or privacidad.html differs from the data (EOL-normalised)
+//   node build-pricing.mjs --release  --check, plus fail while any price is "propuesta", any text is
+//                                     "PENDIENTE-COPY", or a config value or privacidad.html is PENDIENTE
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const DATA_PATH = join(here, 'pricing.json');
 export const INDEX_PATH = join(here, '..', 'index.html');
+export const CONFIG_PATH = join(here, 'site-config.json');
+export const PRIVACY_TEMPLATE_PATH = join(here, 'templates', 'privacidad.html');
+export const PRIVACY_PATH = join(here, '..', 'privacidad.html');
 
 export const START = '<!-- pricing:start -->';
 export const END = '<!-- pricing:end -->';
@@ -20,7 +25,10 @@ const JS_TAG = '<script src="pricing.js" defer onerror="document.documentElement
 const OLD_JS_TAG = '<script src="pricing.js" defer></script>';
 const NAV_LINK = '<a href="#planes">Planes</a>';
 const DRAFT = 'PENDIENTE-COPY';
+const PENDING = 'PENDIENTE';
 const THREE_TIERS = ['esencial', 'crece', 'pro'];
+const FOOTER_EMAIL_LINK = /<a href="mailto:[^"]*" class="footer-email">[^<]*<\/a>/;
+export const FOOTER_LINK = '<a href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>';
 
 // es-CO thousands separator without Intl, so output never depends on locale data.
 export function formatCOP(n) {
@@ -134,6 +142,81 @@ export function validate(data) {
   return errors;
 }
 
+// ---------- site config (PF2) ----------
+
+export function loadConfig(path = CONFIG_PATH) {
+  return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+const filled = (v) => typeof v === 'string' && v.trim() !== '';
+const isPending = (v) => typeof v === 'string' && v.includes(PENDING);
+// The four values JD still has to give; each may be PENDIENTE until the release.
+const RELEASE_VALUES = [['whatsappNumber', (c) => c.whatsappNumber], ['contactEmail', (c) => c.contactEmail],
+  ['controller.city', (c) => c.controller && c.controller.city],
+  ['controller.address', (c) => c.controller && c.controller.address]];
+
+// Problems that stop any build. PENDIENTE is allowed here; only the release check rejects it.
+export function validateConfig(c) {
+  const errors = [];
+  const req = (cond, msg) => { if (!cond) errors.push(msg); };
+  req(c.planRequestMode === 'whatsapp' || c.planRequestMode === 'form', 'planRequestMode must be "whatsapp" or "form"');
+  req(c.planRequestMode !== 'form', 'planRequestMode "form" needs PF2 Pass B, which is not built yet');
+  for (const [path, get] of RELEASE_VALUES) req(filled(get(c)), `${path} is required (use "${PENDING}" until it is known)`);
+  req(!filled(c.whatsappNumber) || c.whatsappNumber === PENDING || /^[1-9]\d{7,14}$/.test(c.whatsappNumber),
+    'whatsappNumber: digits only, with the country code (for example 573001234567)');
+  req(!filled(c.contactEmail) || c.contactEmail === PENDING || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.contactEmail),
+    'contactEmail is not an email address');
+  req(c.controller && filled(c.controller.name) && filled(c.controller.nit), 'controller: name and nit are required');
+  req(filled(c.replyTime), 'replyTime is required');
+  req(filled(c.privacyPolicyVersion), 'privacyPolicyVersion is required');
+  req(/^\d{4}-\d{2}-\d{2}$/.test(c.privacyPolicyDate) && !Number.isNaN(Date.parse(c.privacyPolicyDate)),
+    'privacyPolicyDate must be a date as YYYY-MM-DD');
+  req(c.apiBaseUrl === null || filled(c.apiBaseUrl), 'apiBaseUrl must be null or an address');
+  return errors;
+}
+
+// What the release check adds for the config: values still PENDIENTE or missing, and the API address in form mode.
+export function configReleaseItems(c) {
+  const items = [];
+  for (const [path, get] of RELEASE_VALUES) {
+    const v = get(c);
+    if (!filled(v)) items.push(`missing         ${path}`);
+    else if (isPending(v)) items.push(`PENDIENTE       ${path}`);
+  }
+  if (c.planRequestMode === 'form' && !(typeof c.apiBaseUrl === 'string' && /^https:\/\/[^\s/]+/.test(c.apiBaseUrl))) {
+    items.push('not https://    apiBaseUrl (required in form mode)');
+  }
+  return items;
+}
+
+// Every PENDIENTE left in the generated privacy page, by line (a hand edit is caught too).
+export function privacyReleaseItems(htmlLF) {
+  return htmlLF.split('\n').flatMap((l, i) => (l.includes(PENDING) ? [`PENDIENTE       privacidad.html line ${i + 1}: ${l.trim()}`] : []));
+}
+
+// ---------- plan requests: WhatsApp links (PF2) ----------
+
+const SITE_TAG = '(gtl-ai.com)';
+// One builder per kind. Names come from pricing.json; messages never carry personal data.
+export const requestMessage = {
+  plan: (pkg, tier) => `Hola, quiero información del plan ${pkg.name} · ${tier.name} ${SITE_TAG}`,
+  bundle: (bundle) => `Hola, quiero información del paquete ${bundle.name} ${SITE_TAG}`,
+  custom: () => `Hola, quiero cotizar un proyecto a medida ${SITE_TAG}`,
+  general: () => `Hola, quiero ayuda para elegir un plan ${SITE_TAG}`,
+};
+
+// While the number is PENDIENTE, wa.me without a number still opens WhatsApp with the text (dev only;
+// the release check fails on it).
+export function whatsappLink(config, message) {
+  const number = config.whatsappNumber === PENDING ? '' : config.whatsappNumber;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
+const requestAttrs = (config, message) => `href="${esc(whatsappLink(config, message))}" target="_blank" rel="noopener"`;
+// Inside every link that opens a new tab (WCAG G201); the visible label does not change.
+export const NEW_TAB_TEXT = '(abre WhatsApp en una pestaña nueva)';
+const newTab = ` <span class="visually-hidden">${NEW_TAB_TEXT}</span>`;
+
 // ---------- rendering ----------
 
 // The setup fee: its own label line (like "Mensualidad"), then the value (step 8, N1).
@@ -158,7 +241,7 @@ function priceMonthly(t, L, iva) {
   return `<div class="price-block" data-price>\n<p class="price-label">${esc(L.monthly)}</p>\n${body}\n</div>`;
 }
 
-function tierCard(pkg, t, data) {
+function tierCard(pkg, t, data, config) {
   const L = data.meta.labels;
   const iva = data.meta.ivaLabel;
   const id = `tier-${pkg.code}-${t.code}`;
@@ -175,13 +258,13 @@ function tierCard(pkg, t, data) {
   if (t.includesLead) lines.push(`<p class="tier-lead">${esc(txt(t.includesLead))}</p>`);
   lines.push(
     `<ul class="tier-list">\n${t.includes.map((i) => `<li>${esc(i)}</li>`).join('\n')}\n</ul>`,
-    `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} tier-cta" href="#contact" data-package="${esc(pkg.code)}" data-tier="${esc(t.code)}">${esc(L.requestPlan)}</a>`,
+    `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} tier-cta" ${requestAttrs(config, requestMessage.plan(pkg, t))} data-package="${esc(pkg.code)}" data-tier="${esc(t.code)}">${esc(L.requestPlan)}${newTab}</a>`,
     '</article>',
   );
   return lines.join('\n');
 }
 
-function customCard(pkg, t, data) {
+function customCard(pkg, t, data, config) {
   const iva = data.meta.ivaLabel;
   const id = `tier-${pkg.code}-${t.code}`;
   return [
@@ -192,14 +275,14 @@ function customCard(pkg, t, data) {
     `</div>`,
     `<p class="tier-suits">${esc(txt(t.text))}</p>`,
     `<p class="tier-suits">${esc(txt(t.hourlyLine))}</p>`,
-    `<a class="btn btn-primary tier-cta" href="#contact" data-package="${esc(pkg.code)}" data-tier="${esc(t.code)}">${esc(txt(t.button))}</a>`,
+    `<a class="btn btn-primary tier-cta" ${requestAttrs(config, requestMessage.custom())} data-package="${esc(pkg.code)}" data-tier="${esc(t.code)}">${esc(txt(t.button))}${newTab}</a>`,
     '</article>',
   ].join('\n');
 }
 
-function panel(pkg, data, active) {
+function panel(pkg, data, active, config) {
   const custom = pkg.code === 'a-medida';
-  const cards = pkg.tiers.map((t) => (custom ? customCard(pkg, t, data) : tierCard(pkg, t, data))).join('\n');
+  const cards = pkg.tiers.map((t) => (custom ? customCard(pkg, t, data, config) : tierCard(pkg, t, data, config))).join('\n');
   return [
     `<div class="pricing-panel${active ? ' is-active' : ''}" id="panel-${pkg.code}" data-package="${esc(pkg.code)}">`,
     `<h3 class="package-name" id="package-${pkg.code}">${esc(pkg.name)}</h3>`,
@@ -218,7 +301,7 @@ function partLabel(data, part) {
   return txt(part.name);
 }
 
-function bundleCard(b, data) {
+function bundleCard(b, data, config) {
   const iva = data.meta.ivaLabel;
   const L = data.meta.labels;
   const contents = b.parts.map((p) => esc(partLabel(data, p))).join(' + ');
@@ -238,7 +321,7 @@ function bundleCard(b, data) {
     `<h4>${esc(b.name)}</h4>`,
     `<p class="bundle-contents">${contents}</p>`,
     price,
-    `<a class="btn btn-ghost" href="#contact" data-bundle="${esc(b.code)}">${esc(L.requestBundle)}</a>`,
+    `<a class="btn btn-ghost" ${requestAttrs(config, requestMessage.bundle(b))} data-bundle="${esc(b.code)}">${esc(L.requestBundle)}${newTab}</a>`,
     '</article>',
   ].join('\n');
 }
@@ -250,12 +333,12 @@ function addonRow(a, data) {
   return `<li class="addon"><span class="addon-name">${esc(a.name)}</span><span class="addon-price" data-price>${value}</span></li>`;
 }
 
-export function renderSection(data) {
+export function renderSection(data, config = loadConfig()) {
   const m = data.meta;
   const tabs = data.packages
     .map((p, i) => `<button type="button" class="pricing-tab${i === 0 ? ' is-active' : ''}" id="tab-${p.code}" data-tab="${esc(p.code)}">${esc(p.name)}</button>`)
     .join('\n');
-  const panels = data.packages.map((p, i) => panel(p, data, i === 0)).join('\n');
+  const panels = data.packages.map((p, i) => panel(p, data, i === 0, config)).join('\n');
   const body = [
     '<section id="planes" class="pricing" lang="es-CO" aria-labelledby="planes-title">',
     '<div class="container">',
@@ -278,7 +361,7 @@ export function renderSection(data) {
     '<div class="pricing-block">',
     `<h3>${esc(txt(data.bundles.heading))}</h3>`,
     `<p class="block-sub">${esc(txt(data.bundles.subtitle))}</p>`,
-    `<div class="bundle-grid">\n${data.bundles.items.map((b) => bundleCard(b, data)).join('\n')}\n</div>`,
+    `<div class="bundle-grid">\n${data.bundles.items.map((b) => bundleCard(b, data, config)).join('\n')}\n</div>`,
     '</div>',
     '<div class="pricing-block pricing-split">',
     '<div class="pay-terms">',
@@ -294,7 +377,7 @@ export function renderSection(data) {
     '<div class="pricing-cta">',
     `<h3>${esc(txt(data.closingCta.heading))}</h3>`,
     `<p>${esc(txt(data.closingCta.text))}</p>`,
-    `<a class="btn btn-primary" href="#contact" data-general="true">${esc(txt(data.closingCta.button))}</a>`,
+    `<a class="btn btn-primary" ${requestAttrs(config, requestMessage.general())} data-general="true">${esc(txt(data.closingCta.button))}${newTab}</a>`,
     '</div>',
     '</div>',
     '</section>',
@@ -321,6 +404,8 @@ export function applyToIndex(htmlLF, sectionHTML) {
     html = html.replace('</head>', `${JS_TAG}\n</head>`);
   }
   html = html.replace(OLD_JS_TAG, JS_TAG);
+  // PF2: the footer's "Privacidad" link, after the email (the one change outside the markers).
+  if (!html.includes(FOOTER_LINK)) html = html.replace(FOOTER_EMAIL_LINK, (a) => `${a}\n    ${FOOTER_LINK}`);
   const s = html.indexOf(START);
   const e = html.indexOf(END);
   if (s < 0 || e < s) throw new Error('index.html: pricing markers are missing or out of order');
@@ -334,6 +419,7 @@ export function wiringProblems(htmlLF) {
   else if (htmlLF.indexOf(HEAD_SCRIPT) > htmlLF.indexOf('href="style.css"')) problems.push('head script must come before the stylesheet');
   if (!htmlLF.includes(JS_TAG)) problems.push('pricing.js script tag is missing');
   if (!htmlLF.includes(NAV_LINK)) problems.push('"Planes" header link is missing');
+  if (!footerOf(htmlLF).includes(FOOTER_LINK)) problems.push('"Privacidad" footer link is missing');
   return problems;
 }
 
@@ -341,6 +427,68 @@ export function outsideMarkers(htmlLF) {
   const s = htmlLF.indexOf(START);
   const e = htmlLF.indexOf(END);
   return htmlLF.slice(0, s) + htmlLF.slice(e + END.length);
+}
+
+// ---------- the privacy page (PF2) ----------
+
+const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+// "2026-10-16" -> "16 de octubre de 2026", without Intl.
+export function formatDateEs(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${d} de ${MONTHS[m - 1]} de ${y}`;
+}
+
+// "573001234567" -> "+57 300 123 4567"; other countries get "+" and the digits.
+export function formatWhatsApp(number) {
+  if (number === PENDING) return PENDING;
+  const co = number.match(/^57(\d{3})(\d{3})(\d{4})$/);
+  return co ? `+57 ${co[1]} ${co[2]} ${co[3]}` : `+${number}`;
+}
+
+const headerOf = (htmlLF) => (htmlLF.match(/<header class="site-header">[\s\S]*?<\/header>/) || [''])[0];
+const footerOf = (htmlLF) => (htmlLF.match(/<footer [^>]*class="site-footer"[\s\S]*?<\/footer>/) || [''])[0];
+
+// The site's header and footer, taken from index.html so they are never typed twice. On the
+// privacy page their in-page links point to index.html, they keep the home page's English
+// (lang="en"), and the "Privacidad" link marks the current page.
+export function sharedChrome(indexLF) {
+  const header = headerOf(indexLF);
+  const footer = footerOf(indexLF);
+  if (!header || !footer) throw new Error('index.html: site header or footer not found');
+  const relink = (s) => s.replace(/href="#"/g, 'href="index.html"').replace(/href="#([^"]+)"/g, 'href="index.html#$1"');
+  return {
+    header: relink(header).replace('<header class="site-header">', '<header class="site-header" lang="en">'),
+    footer: relink(footer).replace(/<footer /, '<footer lang="en" ').replace(FOOTER_LINK, FOOTER_LINK.replace('<a ', '<a aria-current="page" ')),
+  };
+}
+
+// Fills the template: {{key}} takes a value from the map (already HTML), and the
+// <!-- form -->…<!-- /form --> parts stay only in form mode. An unknown key is an error.
+export function renderPrivacy(template, config, chrome) {
+  const formMode = config.planRequestMode === 'form';
+  const email = config.contactEmail;
+  const number = config.whatsappNumber;
+  const values = {
+    header: chrome.header,
+    footer: chrome.footer,
+    'controller.name': esc(config.controller.name),
+    'controller.nit': esc(config.controller.nit),
+    'controller.city': esc(config.controller.city),
+    'controller.address': esc(config.controller.address),
+    contactEmail: email === PENDING ? PENDING : `<a href="mailto:${esc(email)}">${esc(email)}</a>`,
+    whatsapp: number === PENDING ? PENDING : `<a href="https://wa.me/${esc(number)}">${esc(formatWhatsApp(number))}</a>`,
+    privacyPolicyVersion: esc(config.privacyPolicyVersion),
+    privacyPolicyDate: esc(formatDateEs(config.privacyPolicyDate)),
+  };
+  const html = toLF(template)
+    .replace(/<!-- form -->([\s\S]*?)<!-- \/form -->/g, (_, inner) => (formMode ? inner : ''))
+    .replace(/\{\{([\w.]+)\}\}/g, (_, key) => {
+      if (!(key in values)) throw new Error(`privacidad template: unknown value {{${key}}}`);
+      return values[key];
+    });
+  if (/<!-- \/?form -->|\{\{/.test(html)) throw new Error('privacidad template: unbalanced form block or placeholder');
+  return html;
 }
 
 // Every price still "propuesta" and every draft field still "PENDIENTE-COPY", by field path,
@@ -363,6 +511,17 @@ export function releaseItems(data) {
   return items;
 }
 
+// The first line that differs between a file and what the data generates.
+function reportDiff(name, current, next) {
+  const a = current.split('\n');
+  const b = next.split('\n');
+  const line = a.findIndex((l, i) => l !== b[i]);
+  const at = line < 0 ? a.length : line;
+  console.error(`${name} differs from the data (first difference at line ${at + 1}):`);
+  console.error(`  ${name}: ${(a[at] || '').trim()}`);
+  console.error(`  expected:   ${(b[at] || '').trim()}`);
+}
+
 function main(argv) {
   const check = argv.includes('--check') || argv.includes('--release');
   const release = argv.includes('--release');
@@ -372,14 +531,26 @@ function main(argv) {
     console.error('pricing.json is invalid:\n  - ' + errors.join('\n  - '));
     return 1;
   }
+  const config = loadConfig();
+  const configErrors = validateConfig(config);
+  if (configErrors.length) {
+    console.error('site-config.json is invalid:\n  - ' + configErrors.join('\n  - '));
+    return 1;
+  }
   const raw = readFileSync(INDEX_PATH, 'utf8');
   const current = toLF(raw);
-  const next = applyToIndex(current, renderSection(data));
+  const next = applyToIndex(current, renderSection(data, config));
+  const privacyRaw = existsSync(PRIVACY_PATH) ? readFileSync(PRIVACY_PATH, 'utf8') : null;
+  const privacyCurrent = privacyRaw === null ? null : toLF(privacyRaw);
+  const privacyNext = renderPrivacy(readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8'), config, sharedChrome(next));
 
   if (!check) {
     const eol = raw.includes('\r\n') ? '\r\n' : '\n';
     if (next !== current) writeFileSync(INDEX_PATH, next.replace(/\n/g, eol));
-    console.log(next === current ? 'index.html already up to date.' : 'index.html updated from pricing.json.');
+    console.log(next === current ? 'index.html already up to date.' : 'index.html updated from pricing.json and site-config.json.');
+    const privacyEol = privacyRaw && privacyRaw.includes('\r\n') ? '\r\n' : '\n';
+    if (privacyNext !== privacyCurrent) writeFileSync(PRIVACY_PATH, privacyNext.replace(/\n/g, privacyEol));
+    console.log(privacyNext === privacyCurrent ? 'privacidad.html already up to date.' : 'privacidad.html updated from its template and site-config.json.');
     return 0;
   }
 
@@ -388,27 +559,26 @@ function main(argv) {
     console.error('index.html has no pricing markers. Run: npm --prefix _dev run pricing:build');
     return 1;
   }
-  if (next !== current) {
-    const a = current.split('\n');
-    const b = next.split('\n');
-    const line = a.findIndex((l, i) => l !== b[i]);
-    console.error(`index.html differs from pricing.json (first difference at line ${line + 1}):`);
-    console.error(`  index.html: ${(a[line] || '').trim()}`);
-    console.error(`  expected:   ${(b[line] || '').trim()}`);
-    failed = true;
-  }
+  if (next !== current) { reportDiff('index.html', current, next); failed = true; }
   for (const p of wiringProblems(current)) { console.error(`index.html: ${p}`); failed = true; }
   const stray = outsideMarkers(current).match(/\$\d[\d.]*/g);
   if (stray) { console.error(`index.html has prices outside the generated block: ${stray.join(', ')}`); failed = true; }
-  if (!failed) console.log('pricing:check passed — index.html matches pricing.json.');
+  if (privacyCurrent === null) {
+    console.error('privacidad.html is missing. Run: npm --prefix _dev run pricing:build');
+    failed = true;
+  } else if (privacyNext !== privacyCurrent) {
+    reportDiff('privacidad.html', privacyCurrent, privacyNext);
+    failed = true;
+  }
+  if (!failed) console.log('pricing:check passed — index.html and privacidad.html match pricing.json and site-config.json.');
 
   if (release) {
-    const items = releaseItems(data);
+    const items = [...releaseItems(data), ...configReleaseItems(config), ...privacyReleaseItems(privacyCurrent || '')];
     if (items.length) {
       console.error(`\nRelease check FAILED: ${items.length} item(s) still pending.\n  ${items.join('\n  ')}`);
       failed = true;
     } else if (!failed) {
-      console.log('Release check passed: every price is confirmado and no text is PENDIENTE-COPY.');
+      console.log('Release check passed: every price is confirmado, no text is PENDIENTE-COPY and the config is complete.');
     }
   }
   return failed ? 1 : 0;

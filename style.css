@@ -1162,7 +1162,7 @@ html.js .pricing-panel.is-active {
 /* Header at phone widths (PF1, JD 2026-10-13): hide Roadmap below 480 px, tighten the nav below 400 px. */
 
 @media (max-width: 479px) {
-  .nav a[href="#future"] {
+  .nav a[href$="#future"] {
     display: none;
   }
 }
@@ -1199,4 +1199,65 @@ html.js .pricing-panel.is-active {
     padding: 9px 4px;
     text-align: center;
   }
+}
+
+/* Privacy page and its footer link (PF2). */
+
+.footer-privacy {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.footer-privacy:hover {
+  color: var(--accent);
+}
+
+.legal {
+  padding: 72px 0 96px;
+}
+
+.legal-inner {
+  max-width: 760px;
+}
+
+.legal h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin-bottom: 40px;
+}
+
+.legal section + section {
+  margin-top: 32px;
+}
+
+.legal h2 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.legal p,
+.legal li {
+  color: var(--text-dim);
+  max-width: 68ch;
+  overflow-wrap: anywhere;
+}
+
+.legal p + p,
+.legal p + ul {
+  margin-top: 12px;
+}
+
+.legal ul {
+  padding-left: 1.25em;
+}
+
+.legal li + li {
+  margin-top: 6px;
+}
+
+.legal a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

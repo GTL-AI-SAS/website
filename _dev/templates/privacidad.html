@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- PENDIENTE-COPY: draft text from the PF2 contract's Appendix, for JD's approval in PQ1. Delete this line from _dev/templates/privacidad.html once approved. -->
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de tratamiento de datos personales — GTL AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+{{header}}
+
+<main>
+
+  <article class="legal" aria-labelledby="legal-title">
+    <div class="container legal-inner">
+      <p class="eyebrow">Privacidad</p>
+      <h1 id="legal-title">Política de tratamiento de datos personales</h1>
+
+      <section id="responsable" aria-labelledby="h-responsable">
+        <h2 id="h-responsable">1. Responsable</h2>
+        <p>{{controller.name}}, NIT {{controller.nit}}, con domicilio en {{controller.city}}, Colombia, y dirección {{controller.address}}.</p>
+        <p>Correo: <span data-config="contactEmail">{{contactEmail}}</span>. Teléfono y WhatsApp: <span data-config="whatsapp">{{whatsapp}}</span>.</p>
+      </section>
+
+      <section id="datos" aria-labelledby="h-datos">
+        <h2 id="h-datos">2. Qué datos recibimos</h2>
+        <p>Cuando usted nos escribe por WhatsApp desde este sitio, recibimos su número, su nombre de perfil y lo que nos cuente en la conversación.</p>
+        <!-- form --><p data-form-only>Cuando usa el formulario de solicitud, recibimos su nombre, el nombre de su negocio, su teléfono o correo, su ciudad, su mensaje y el plan que le interesa.</p>
+        <!-- /form --><p>No pedimos datos sensibles; por favor no los incluya.</p>
+      </section>
+
+      <section id="finalidades" aria-labelledby="h-finalidades">
+        <h2 id="h-finalidades">3. Para qué los usamos</h2>
+        <p>Para responder su solicitud, enviarle información y propuestas de nuestros planes, y hacer seguimiento comercial. No vendemos sus datos ni los usamos para otros fines sin pedirle autorización.</p>
+      </section>
+
+      <section id="autorizacion" aria-labelledby="h-autorizacion">
+        <h2 id="h-autorizacion">4. Autorización</h2>
+        <p>Tratamos sus datos con su autorización, que usted nos da al escribirnos por WhatsApp desde este sitio<!-- form --><span data-form-only> o al marcar la casilla de autorización del formulario</span><!-- /form -->.</p>
+      </section>
+
+      <section id="encargados" aria-labelledby="h-encargados">
+        <h2 id="h-encargados">5. Quién más los maneja</h2>
+        <p>Usamos proveedores que tratan datos por cuenta nuestra: WhatsApp (Meta) para las conversaciones, GitHub Pages para alojar este sitio (puede registrar datos técnicos, como su dirección IP) y nuestro proveedor de correo electrónico para recibir y responder sus solicitudes.<!-- form --><span data-form-only> Para el formulario usamos además un proveedor de servidor.</span><!-- /form --></p>
+        <p>Algunos de estos proveedores están fuera de Colombia, por lo que sus datos pueden almacenarse en otros países, con las medidas de seguridad de esos proveedores.</p>
+      </section>
+
+      <section id="derechos" aria-labelledby="h-derechos">
+        <h2 id="h-derechos">6. Sus derechos</h2>
+        <p>Según la Ley 1581 de 2012, usted puede:</p>
+        <ul>
+          <li>conocer, actualizar y corregir sus datos;</li>
+          <li>acceder a ellos en forma gratuita;</li>
+          <li>pedir prueba de su autorización;</li>
+          <li>saber cómo los hemos usado;</li>
+          <li>revocar la autorización o pedir que los borremos, cuando no haya un deber legal o contractual de conservarlos;</li>
+          <li>presentar quejas ante la Superintendencia de Industria y Comercio (SIC).</li>
+        </ul>
+      </section>
+
+      <section id="ejercer" aria-labelledby="h-ejercer">
+        <h2 id="h-ejercer">7. Cómo ejercerlos</h2>
+        <p>Escríbanos a {{contactEmail}} con su nombre, cómo contactarle y su solicitud.</p>
+        <p>Respondemos las consultas en un máximo de 10 días hábiles; si necesitamos más tiempo, le informamos antes el motivo y la nueva fecha, que no superará 5 días hábiles adicionales. Respondemos los reclamos en un máximo de 15 días hábiles, prorrogables hasta por 8 días hábiles más, también con aviso previo del motivo.</p>
+      </section>
+
+      <section id="conservacion" aria-labelledby="h-conservacion">
+        <h2 id="h-conservacion">8. Cuánto tiempo los guardamos</h2>
+        <p>Hasta 24 meses desde nuestro último contacto, salvo que usted se convierta en cliente o la ley nos pida guardarlos más tiempo.</p>
+      </section>
+
+      <section id="vigencia" aria-labelledby="h-vigencia">
+        <h2 id="h-vigencia">9. Vigencia</h2>
+        <p>Versión <span data-config="privacyPolicyVersion">{{privacyPolicyVersion}}</span>, vigente desde el <span data-config="privacyPolicyDate">{{privacyPolicyDate}}</span>. Si cambia, publicaremos la nueva versión en esta página.</p>
+      </section>
+    </div>
+  </article>
+
+</main>
+
+{{footer}}
+
+</body>
+</html>

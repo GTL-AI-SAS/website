@@ -40,7 +40,9 @@ test.describe('placement and existing content', () => {
     }, SECTIONS);
     // The one accepted header change: the "Planes" link between About and Team.
     expect(now.header).toBe(before.header.replace('About Team', 'About Planes Team'));
-    for (const key of ['hero', 'about', 'team', 'future', 'footer']) expect(now[key], key).toBe(before[key]);
+    // The one accepted footer change (PF2): the "Privacidad" link after the email.
+    expect(now.footer).toBe(before.footer.replace('garydmendez25@gmail.com', 'garydmendez25@gmail.com Privacidad'));
+    for (const key of ['hero', 'about', 'team', 'future']) expect(now[key], key).toBe(before[key]);
   });
 
   test('the request buttons carry their PF2 data attributes', async ({ page }) => {
