@@ -7,7 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css">
+<script src="pricing.js" defer onerror="document.documentElement.classList.remove('js')"></script>
 </head>
 <body>
 
@@ -16,6 +18,7 @@
     <a href="#" class="logo">GTL<span>AI</span></a>
     <nav class="nav">
       <a href="#about">About</a>
+      <a href="#planes">Planes</a>
       <a href="#team">Team</a>
       <a href="#future">Roadmap</a>
       <a href="#contact" class="nav-cta">Get in Touch</a>
@@ -43,6 +46,478 @@
       <p>GTL AI was founded to close the gap between what AI can do in a lab and what it can do for real businesses and people. Our founding team brings together experience in operations, finance, data, and engineering — united by a shared conviction that the next wave of AI products has to be trustworthy, useful, and built to last.</p>
     </div>
   </section>
+
+  <!-- pricing:start -->
+  <section id="planes" class="pricing" lang="es-CO" aria-labelledby="planes-title">
+  <div class="container">
+  <div class="pricing-head">
+  <p class="eyebrow">Planes</p>
+  <h2 id="planes-title">Planes y precios</h2>
+  <p class="section-sub">Una puesta en marcha única para poner su negocio en línea y una mensualidad que lo mantiene funcionando, seguro y al día.</p>
+  </div>
+  <div class="pricing-tabs" data-tabs data-label="Paquetes">
+  <button type="button" class="pricing-tab is-active" id="tab-agenda" data-tab="agenda">Agenda</button>
+  <button type="button" class="pricing-tab" id="tab-presencia" data-tab="presencia">Presencia</button>
+  <button type="button" class="pricing-tab" id="tab-pedidos" data-tab="pedidos">Pedidos</button>
+  <button type="button" class="pricing-tab" id="tab-reservas" data-tab="reservas">Reservas</button>
+  <button type="button" class="pricing-tab" id="tab-comunidad" data-tab="comunidad">Comunidad</button>
+  <button type="button" class="pricing-tab" id="tab-a-medida" data-tab="a-medida">A medida</button>
+  </div>
+  <div class="pricing-panel is-active" id="panel-agenda" data-package="agenda">
+  <h3 class="package-name" id="package-agenda">Agenda</h3>
+  <p class="package-for">Página web con agenda en línea para consultorios y centros de salud y bienestar.</p>
+  <div class="tier-grid">
+  <article class="tier-card" aria-labelledby="tier-agenda-esencial">
+  <h4 class="tier-name" id="tier-agenda-esencial">Esencial</h4>
+  <p class="tier-suits">Para un profesional independiente.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$199.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
+  </div>
+  <ul class="tier-list">
+  <li>Agenda en línea</li>
+  <li>1 sede</li>
+  <li>1 profesional</li>
+  <li>1 cambio pequeño al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="agenda" data-tier="esencial">Solicitar este plan</a>
+  </article>
+  <article class="tier-card is-highlight" aria-labelledby="tier-agenda-crece">
+  <p class="tier-badge">Más elegido</p>
+  <h4 class="tier-name" id="tier-agenda-crece">Crece</h4>
+  <p class="tier-suits">Para consultorios con equipo.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$350.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$4.000.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Esencial, y además:</p>
+  <ul class="tier-list">
+  <li>Hasta 5 profesionales</li>
+  <li>Recordatorios por WhatsApp</li>
+  <li>Anticipos en línea</li>
+  <li>Gestión de su Perfil de Empresa en Google</li>
+  <li>2 cambios al mes</li>
+  <li>Informe mensual de resultados</li>
+  </ul>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="agenda" data-tier="crece">Solicitar este plan</a>
+  </article>
+  <article class="tier-card" aria-labelledby="tier-agenda-pro">
+  <h4 class="tier-name" id="tier-agenda-pro">Pro</h4>
+  <p class="tier-suits">Para varias sedes y más pacientes.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$6.500.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Crece, y además:</p>
+  <ul class="tier-list">
+  <li>Varias sedes</li>
+  <li>Facturación electrónica DIAN incluida</li>
+  <li>Panel de métricas</li>
+  <li>Soporte prioritario</li>
+  <li>4 cambios al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="agenda" data-tier="pro">Solicitar este plan</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-panel" id="panel-presencia" data-package="presencia">
+  <h3 class="package-name" id="package-presencia">Presencia</h3>
+  <p class="package-for">Una página web profesional para cualquier negocio.</p>
+  <div class="tier-grid">
+  <article class="tier-card" aria-labelledby="tier-presencia-esencial">
+  <h4 class="tier-name" id="tier-presencia-esencial">Esencial</h4>
+  <p class="tier-suits">Para empezar con lo esencial.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$79.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$1.200.000</strong> + IVA</p>
+  </div>
+  <ul class="tier-list">
+  <li>Sitio de una página con la plantilla de su sector</li>
+  <li>Botón de WhatsApp</li>
+  <li>Ubicación en Google Maps</li>
+  <li>1 cambio pequeño al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="presencia" data-tier="esencial">Solicitar este plan</a>
+  </article>
+  <article class="tier-card is-highlight" aria-labelledby="tier-presencia-crece">
+  <p class="tier-badge">Más elegido</p>
+  <h4 class="tier-name" id="tier-presencia-crece">Crece</h4>
+  <p class="tier-suits">Para negocios que quieren crecer.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$149.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$1.900.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Esencial, y además:</p>
+  <ul class="tier-list">
+  <li>Hasta 5 páginas</li>
+  <li>Formulario de contacto</li>
+  <li>Gestión de su Perfil de Empresa en Google</li>
+  <li>SEO local básico</li>
+  <li>2 cambios al mes</li>
+  <li>Informe mensual de visitas</li>
+  </ul>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="presencia" data-tier="crece">Solicitar este plan</a>
+  </article>
+  <article class="tier-card" aria-labelledby="tier-presencia-pro">
+  <h4 class="tier-name" id="tier-presencia-pro">Pro</h4>
+  <p class="tier-suits">Para varias sedes y más contenido.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$249.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$2.900.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Crece, y además:</p>
+  <ul class="tier-list">
+  <li>Hasta 10 páginas y blog</li>
+  <li>Varias sedes</li>
+  <li>Panel de métricas</li>
+  <li>Facturación electrónica DIAN incluida</li>
+  <li>Soporte prioritario</li>
+  <li>4 cambios al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="presencia" data-tier="pro">Solicitar este plan</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-panel" id="panel-pedidos" data-package="pedidos">
+  <h3 class="package-name" id="package-pedidos">Pedidos</h3>
+  <p class="package-for">Pedidos en línea para restaurantes.</p>
+  <div class="tier-grid">
+  <article class="tier-card" aria-labelledby="tier-pedidos-esencial">
+  <h4 class="tier-name" id="tier-pedidos-esencial">Esencial</h4>
+  <p class="tier-suits">Para empezar a vender en línea.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$199.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$2.000.000</strong> + IVA</p>
+  </div>
+  <ul class="tier-list">
+  <li>Menú o catálogo en línea</li>
+  <li>Pedidos por WhatsApp</li>
+  <li>1 sede</li>
+  <li>1 cambio pequeño al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="pedidos" data-tier="esencial">Solicitar este plan</a>
+  </article>
+  <article class="tier-card is-highlight" aria-labelledby="tier-pedidos-crece">
+  <p class="tier-badge">Más elegido</p>
+  <h4 class="tier-name" id="tier-pedidos-crece">Crece</h4>
+  <p class="tier-suits">Para restaurantes que quieren crecer.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$349.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$3.500.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Esencial, y además:</p>
+  <ul class="tier-list">
+  <li>Pedidos en línea con pago</li>
+  <li>Avisos de pedido por WhatsApp</li>
+  <li>Gestión de su Perfil de Empresa en Google</li>
+  <li>2 cambios al mes</li>
+  <li>Informe mensual de ventas</li>
+  </ul>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="pedidos" data-tier="crece">Solicitar este plan</a>
+  </article>
+  <article class="tier-card" aria-labelledby="tier-pedidos-pro">
+  <h4 class="tier-name" id="tier-pedidos-pro">Pro</h4>
+  <p class="tier-suits">Para varias sedes y más pedidos.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$6.000.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Crece, y además:</p>
+  <ul class="tier-list">
+  <li>Varias sedes</li>
+  <li>Facturación electrónica DIAN incluida</li>
+  <li>Panel de métricas</li>
+  <li>Soporte prioritario</li>
+  <li>4 cambios al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="pedidos" data-tier="pro">Solicitar este plan</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-panel" id="panel-reservas" data-package="reservas">
+  <h3 class="package-name" id="package-reservas">Reservas</h3>
+  <p class="package-for">Reservas directas para fincas y alojamientos.</p>
+  <div class="tier-grid">
+  <article class="tier-card" aria-labelledby="tier-reservas-esencial">
+  <h4 class="tier-name" id="tier-reservas-esencial">Esencial</h4>
+  <p class="tier-suits">Para empezar a recibir reservas directas.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$249.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
+  </div>
+  <ul class="tier-list">
+  <li>Calendario de disponibilidad</li>
+  <li>Solicitudes de reserva</li>
+  <li>1 propiedad o tipo de unidad</li>
+  <li>1 cambio pequeño al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="reservas" data-tier="esencial">Solicitar este plan</a>
+  </article>
+  <article class="tier-card is-highlight" aria-labelledby="tier-reservas-crece">
+  <p class="tier-badge">Más elegido</p>
+  <h4 class="tier-name" id="tier-reservas-crece">Crece</h4>
+  <p class="tier-suits">Para alojamientos que quieren crecer.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$399.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$4.500.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Esencial, y además:</p>
+  <ul class="tier-list">
+  <li>Hasta 5 unidades</li>
+  <li>Anticipos en línea</li>
+  <li>Mensajes a huéspedes por WhatsApp</li>
+  <li>Gestión de su Perfil de Empresa en Google</li>
+  <li>2 cambios al mes</li>
+  <li>Informe mensual de ocupación</li>
+  </ul>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="reservas" data-tier="crece">Solicitar este plan</a>
+  </article>
+  <article class="tier-card" aria-labelledby="tier-reservas-pro">
+  <h4 class="tier-name" id="tier-reservas-pro">Pro</h4>
+  <p class="tier-suits">Para varias propiedades y más reservas.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$690.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$7.000.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Crece, y además:</p>
+  <ul class="tier-list">
+  <li>Varias propiedades</li>
+  <li>Facturación electrónica DIAN incluida</li>
+  <li>Panel de métricas</li>
+  <li>Soporte prioritario</li>
+  <li>4 cambios al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="reservas" data-tier="pro">Solicitar este plan</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-panel" id="panel-comunidad" data-package="comunidad">
+  <h3 class="package-name" id="package-comunidad">Comunidad</h3>
+  <p class="package-for">Un portal para conjuntos residenciales y edificios.</p>
+  <div class="tier-grid">
+  <article class="tier-card" aria-labelledby="tier-comunidad-esencial">
+  <h4 class="tier-name" id="tier-comunidad-esencial">Esencial</h4>
+  <p class="tier-suits">Para empezar a gestionar el conjunto en línea.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$2.500</span> <span class="price-unit">por unidad al mes + IVA</span></p>
+  <p class="price-min">Mínimo <span class="nowrap">$250.000 / mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$1.500.000</strong> + IVA</p>
+  </div>
+  <ul class="tier-list">
+  <li>Portal del conjunto</li>
+  <li>Avisos y documentos</li>
+  <li>Reserva de zonas comunes</li>
+  <li>1 cambio pequeño al mes</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="comunidad" data-tier="esencial">Solicitar este plan</a>
+  </article>
+  <article class="tier-card is-highlight" aria-labelledby="tier-comunidad-crece">
+  <p class="tier-badge">Más elegido</p>
+  <h4 class="tier-name" id="tier-comunidad-crece">Crece</h4>
+  <p class="tier-suits">Para conjuntos que quieren hacer todo en línea.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount">$3.500</span> <span class="price-unit">por unidad al mes + IVA</span></p>
+  <p class="price-min">Mínimo <span class="nowrap">$350.000 / mes + IVA</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
+  </div>
+  <p class="tier-lead">Todo lo de Esencial, y además:</p>
+  <ul class="tier-list">
+  <li>Solicitudes en línea (PQRS)</li>
+  <li>Avisos por WhatsApp</li>
+  <li>2 cambios al mes</li>
+  <li>Informe mensual</li>
+  </ul>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="comunidad" data-tier="crece">Solicitar este plan</a>
+  </article>
+  <article class="tier-card" aria-labelledby="tier-comunidad-pro">
+  <h4 class="tier-name" id="tier-comunidad-pro">Pro</h4>
+  <p class="tier-suits">Para varias torres o conjuntos.</p>
+  <div class="price-block" data-price>
+  <p class="price-label">Mensualidad</p>
+  <p class="price-main"><span class="price-amount price-text">A cotizar</span></p>
+  </div>
+  <div class="price-setup" data-price>
+  <p class="price-label">Puesta en marcha (pago único)</p>
+  <p class="price-setup-value"><strong>A cotizar</strong></p>
+  </div>
+  <ul class="tier-list">
+  <li>Para varias torres o conjuntos</li>
+  </ul>
+  <a class="btn btn-ghost tier-cta" href="#contact" data-package="comunidad" data-tier="pro">Solicitar este plan</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-panel" id="panel-a-medida" data-package="a-medida">
+  <h3 class="package-name" id="package-a-medida">A medida</h3>
+  <p class="package-for">Software a la medida de su negocio.</p>
+  <div class="tier-grid tier-grid-single">
+  <article class="tier-card tier-card-custom" aria-labelledby="tier-a-medida-proyecto">
+  <h4 class="tier-name" id="tier-a-medida-proyecto">Proyecto a medida</h4>
+  <div class="price-block" data-price>
+  <p class="price-main"><span class="price-from">Desde</span> <span class="price-amount">$15.000.000</span> <span class="price-unit">por proyecto + IVA</span></p>
+  </div>
+  <p class="tier-suits">Definimos el alcance con usted y le enviamos una propuesta escrita.</p>
+  <p class="tier-suits">Para clientes en Estados Unidos también trabajamos por horas.</p>
+  <a class="btn btn-primary tier-cta" href="#contact" data-package="a-medida" data-tier="proyecto">Cotizar mi proyecto</a>
+  </article>
+  </div>
+  </div>
+  <p class="pricing-common">Todos los planes incluyen su propio dominio, hosting, actualizaciones de seguridad, una copia de seguridad mensual y soporte.</p>
+  <p class="pricing-note">Permanencia mínima de 12 meses · Precios en COP + IVA (19 %)</p>
+  <div class="pricing-block">
+  <h3>Complementos</h3>
+  <p class="block-sub">Agréguelos a cualquier plan.</p>
+  <ul class="addon-list">
+  <li class="addon"><span class="addon-name">Facturación electrónica DIAN</span><span class="addon-price" data-price><span class="price-amount">$79.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
+  <li class="addon"><span class="addon-name">Recepcionista IA (asistente por WhatsApp)</span><span class="addon-price" data-price><span class="price-amount">$149.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
+  <li class="addon"><span class="addon-name">Panel de métricas</span><span class="addon-price" data-price><span class="price-amount">$99.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
+  <li class="addon"><span class="addon-name">Contenido para redes sociales (4 publicaciones al mes)</span><span class="addon-price" data-price><span class="price-amount">$290.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
+  <li class="addon"><span class="addon-name">Mensajes adicionales de marketing por WhatsApp</span><span class="addon-price" data-price><span class="addon-rule">Costo + 30 %</span></span></li>
+  <li class="addon"><span class="addon-name">Pagos con tarjeta y QR</span><span class="addon-price" data-price><span class="addon-rule">Tarifa de la pasarela, al costo</span></span></li>
+  </ul>
+  </div>
+  <div class="pricing-block">
+  <h3>Paquetes por sector</h3>
+  <p class="block-sub">Un plan y sus complementos, a un precio menor.</p>
+  <div class="bundle-grid">
+  <article class="bundle-card">
+  <h4>Clínica Completa</h4>
+  <p class="bundle-contents">Agenda Crece + Facturación DIAN + Recepcionista IA</p>
+  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$578.000</s> <span class="price-amount">$490.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  <a class="btn btn-ghost" href="#contact" data-bundle="clinica-completa">Solicitar este paquete</a>
+  </article>
+  <article class="bundle-card">
+  <h4>Finca Directa</h4>
+  <p class="bundle-contents">Reservas Crece + Contenido para redes</p>
+  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$689.000</s> <span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  <a class="btn btn-ghost" href="#contact" data-bundle="finca-directa">Solicitar este paquete</a>
+  </article>
+  <article class="bundle-card">
+  <h4>Restaurante Propio</h4>
+  <p class="bundle-contents">Pedidos Crece + Facturación DIAN + Contenido para redes</p>
+  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$718.000</s> <span class="price-amount">$620.000</span> <span class="price-unit">/ mes + IVA</span></p>
+  <a class="btn btn-ghost" href="#contact" data-bundle="restaurante-propio">Solicitar este paquete</a>
+  </article>
+  <article class="bundle-card">
+  <h4>Conjunto Conectado</h4>
+  <p class="bundle-contents">Comunidad Crece + una Asamblea Virtual al año</p>
+  <p class="bundle-price bundle-price-text" data-price><span class="bundle-base">Precio de Comunidad Crece</span>
+  <span class="bundle-plus">+</span> <span class="price-amount">$300.000</span> <span class="price-unit">por asamblea + IVA</span></p>
+  <a class="btn btn-ghost" href="#contact" data-bundle="conjunto-conectado">Solicitar este paquete</a>
+  </article>
+  </div>
+  </div>
+  <div class="pricing-block pricing-split">
+  <div class="pay-terms">
+  <h3>Forma de pago</h3>
+  <ol class="pay-list">
+  <li>Usted paga una puesta en marcha única y una mensualidad.</li>
+  <li>El pago inicial, que es la puesta en marcha más su primera mensualidad, se paga completo antes de empezar.</li>
+  <li>Después, la mensualidad se paga el día 1 de cada mes.</li>
+  <li>La mensualidad cubre hosting, seguridad, copias de seguridad, los cambios mensuales de su plan y soporte.</li>
+  <li>Permanencia mínima de 12 meses.</li>
+  <li>Precios en pesos colombianos (COP) + IVA (19 %).</li>
+  </ol>
+  </div>
+  <ul class="trust-list">
+  <li>Su dominio y sus datos son suyos.</li>
+  <li>Sin comisión por cita, pedido ni reserva.</li>
+  <li>Usted trabaja directamente con el equipo que construye su sitio.</li>
+  </ul>
+  </div>
+  <div class="pricing-block">
+  <h3>Preguntas frecuentes</h3>
+  <div class="faq-list">
+  <details class="faq-item">
+  <summary>¿Qué cubre la puesta en marcha?</summary>
+  <p>El diseño, la configuración y la puesta en marcha de su sitio con la plantilla de su sector: sus servicios, horarios, fotos y textos, la conexión de su dominio y las pruebas antes del lanzamiento.</p>
+  </details>
+  <details class="faq-item">
+  <summary>¿Qué incluye la mensualidad?</summary>
+  <p>Hosting, actualizaciones de seguridad, una copia de seguridad mensual, soporte y los cambios mensuales incluidos en su plan.</p>
+  </details>
+  <details class="faq-item">
+  <summary>¿De quién son el dominio y los datos?</summary>
+  <p>Suyos. El dominio queda a nombre de su negocio y puede pedir una copia de sus datos cuando quiera.</p>
+  </details>
+  <details class="faq-item">
+  <summary>¿Puedo cambiar de plan?</summary>
+  <p>Sí. Puede subir de plan cuando quiera y el cambio se refleja en la siguiente mensualidad. Para bajar de plan, escríbanos y lo revisamos según su permanencia.</p>
+  </details>
+  <details class="faq-item">
+  <summary>¿Cómo se paga?</summary>
+  <p>Antes de empezar, usted hace un solo pago con la puesta en marcha y su primera mensualidad. Después, la mensualidad se paga el día 1 de cada mes.</p>
+  </details>
+  <details class="faq-item">
+  <summary>¿Los precios incluyen IVA?</summary>
+  <p>No. Todos los precios están en pesos colombianos y no incluyen IVA (19 %).</p>
+  </details>
+  </div>
+  </div>
+  <div class="pricing-cta">
+  <h3>¿No sabe cuál elegir?</h3>
+  <p>Cuéntenos sobre su negocio y le recomendamos el plan indicado.</p>
+  <a class="btn btn-primary" href="#contact" data-general="true">Hablar con nosotros</a>
+  </div>
+  </div>
+  </section>
+  <!-- pricing:end -->
 
   <section id="team" class="team">
     <div class="container">

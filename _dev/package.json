@@ -1,0 +1,20 @@
+{
+  "name": "gtl-ai-site-dev",
+  "private": true,
+  "type": "module",
+  "description": "Development tooling for gtl-ai.com. Nothing here is published by GitHub Pages.",
+  "scripts": {
+    "pricing:build": "node build-pricing.mjs",
+    "pricing:check": "node build-pricing.mjs --check",
+    "pricing:release-check": "node build-pricing.mjs --release",
+    "test:unit": "node --test \"tests/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "serve": "serve -l 4174 .."
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.0",
+    "serve": "14.2.6"
+  }
+}
