@@ -4,6 +4,7 @@ import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { footerEmail, loadConfig } from '../build-pricing.mjs';
+import { waitForFonts } from './helpers.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const before = JSON.parse(readFileSync(join(here, 'fixtures', 'sections-before.json'), 'utf8'));
@@ -17,8 +18,7 @@ const SECTIONS = {
 async function open(page, width = 1440) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
-  // Polled from Node: with JavaScript disabled, Firefox never settles a promise returned to evaluate().
-  await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe('loaded');
+  await waitForFonts(page);
 }
 
 test.describe('placement and existing content', () => {

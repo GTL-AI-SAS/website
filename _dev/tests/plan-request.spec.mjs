@@ -1,13 +1,18 @@
 // PF2 Pass A: the WhatsApp request links and the privacy page, in the browser.
+// Pass B: in form mode the same links stay on every button (and work without JavaScript); with JavaScript the
+// script announces the dialog instead of WhatsApp, and the dialog adds three new-tab links of its own.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { FORM_NOTICE_TEXT, NEW_TAB_TEXT_GENERIC } from '../build-pricing.mjs';
+import { waitForFonts } from './helpers.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = JSON.parse(readFileSync(join(here, '..', 'pricing.json'), 'utf8'));
 const config = JSON.parse(readFileSync(join(here, '..', 'site-config.json'), 'utf8'));
+const FORM = config.planRequestMode === 'form';
 
 // Expected links, built here from the data and the config (not from the generator).
 const SITE = '(gtl-ai.com)';
@@ -35,12 +40,16 @@ const homeAt = (hash) => new RegExp(`/(index(\\.html)?)?#${hash}$`);
 async function open(page, path = '/', width = 1440) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto(path);
-  await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe('loaded');
+  await waitForFonts(page);
 }
 
-async function checkEveryLink(page) {
+// js: whether plan-request.js has run. In form mode it swaps each button's notice for "(abre un formulario)" and
+// adds aria-haspopup="dialog"; href, target and rel never change.
+async function checkEveryLink(page, js) {
+  const buttonNotice = FORM && js ? FORM_NOTICE_TEXT : NEW_TAB_TEXT;
   expect(BUTTONS).toHaveLength(21);
-  await expect(page.locator('#planes a[href^="https://wa.me/"]')).toHaveCount(21);
+  // The 21 buttons and, in form mode, the dialog's two WhatsApp links (static general-enquiry href, step 8, N4).
+  await expect(page.locator('#planes a[href^="https://wa.me/"]')).toHaveCount(FORM ? 23 : 21);
   for (const b of BUTTONS) {
     const link = page.locator(b.selector);
     await expect(link, b.selector).toHaveCount(1);
@@ -49,24 +58,32 @@ async function checkEveryLink(page) {
     expect(new URL(href).searchParams.get('text'), b.selector).toBe(b.text);
     await expect(link, b.selector).toHaveAttribute('target', '_blank');
     await expect(link, b.selector).toHaveAttribute('rel', 'noopener');
-    // The new tab is announced, hidden from sight.
+    if (FORM) await expect(link, b.selector).toHaveAttribute('data-request', /^(plan|custom|bundle|general)$/);
+    if (FORM && js) await expect(link, b.selector).toHaveAttribute('aria-haspopup', 'dialog');
+    else expect(await link.getAttribute('aria-haspopup'), b.selector).toBeNull();
+    // What happens on activation is announced, hidden from sight.
     const notice = link.locator('.visually-hidden');
-    await expect(notice, b.selector).toHaveText(NEW_TAB_TEXT);
-    // Links in inactive tabs are hidden and have no accessible name; the visible ones announce the new tab.
+    await expect(notice, b.selector).toHaveText(buttonNotice);
+    // Links in inactive tabs are hidden and have no accessible name; the visible ones announce it.
     if (await link.isVisible()) {
-      await expect(link, b.selector).toHaveAccessibleName(new RegExp(`${NEW_TAB_TEXT.replace(/[()]/g, '\\$&')}$`));
+      await expect(link, b.selector).toHaveAccessibleName(new RegExp(`${buttonNotice.replace(/[()]/g, '\\$&')}$`));
     }
   }
-  // Every link that opens a new tab, anywhere on the page, carries the notice.
+  // Every link that opens a new tab, anywhere on the page, carries a notice: the 21 buttons and, in form mode, the
+  // dialog's two WhatsApp links and its privacy link.
   const blank = page.locator('a[target="_blank"]');
-  expect(await blank.count()).toBe(21);
-  for (const a of await blank.all()) await expect(a.locator('.visually-hidden')).toHaveText(NEW_TAB_TEXT);
+  expect(await blank.count()).toBe(FORM ? 24 : 21);
+  for (const a of await blank.all()) {
+    const expected = (await a.getAttribute('data-request')) !== null ? buttonNotice
+      : (await a.getAttribute('data-request-whatsapp')) !== null ? NEW_TAB_TEXT : NEW_TAB_TEXT_GENERIC;
+    await expect(a.locator('.visually-hidden')).toHaveText(expected);
+  }
 }
 
 test.describe('WhatsApp request links', () => {
   test('every button has its link and message (with JavaScript)', async ({ page }) => {
     await open(page);
-    await checkEveryLink(page);
+    await checkEveryLink(page, true);
   });
 
   test.describe('without JavaScript', () => {
@@ -76,7 +93,7 @@ test.describe('WhatsApp request links', () => {
       // Stand in for wa.me so nothing leaves the machine.
       await context.route('https://wa.me/**', (r) => r.fulfill({ contentType: 'text/html', body: '<title>wa.me</title>' }));
       await open(page);
-      await checkEveryLink(page);
+      await checkEveryLink(page, false);
       for (const b of BUTTONS) {
         const link = page.locator(b.selector);
         const href = await link.getAttribute('href');
@@ -121,11 +138,17 @@ test.describe('privacy page', () => {
     await expect(page.locator('#encargados')).toContainText('nuestro proveedor de correo electrónico');
   });
 
-  test('the form paragraphs are absent in WhatsApp mode', async ({ page }) => {
-    expect(config.planRequestMode).toBe('whatsapp');
+  test(`the form paragraphs are ${FORM ? 'present in form mode and name Railway and Resend' : 'absent in WhatsApp mode'}`, async ({ page }) => {
     await open(page, '/privacidad.html');
-    await expect(page.locator('[data-form-only]')).toHaveCount(0);
-    await expect(page.locator('main')).not.toContainText('formulario');
+    await expect(page.locator('[data-form-only]')).toHaveCount(FORM ? 3 : 0);
+    if (FORM) {
+      await expect(page.locator('#datos')).toContainText('Cuando usa el formulario de solicitud');
+      await expect(page.locator('#autorizacion')).toContainText('al marcar la casilla de autorización del formulario');
+      await expect(page.locator('#encargados')).toContainText('Railway, que aloja el servidor y la base de datos donde se guardan sus solicitudes');
+      await expect(page.locator('#encargados')).toContainText('Resend, que nos envía los correos de aviso de cada solicitud');
+    } else {
+      await expect(page.locator('main')).not.toContainText('formulario');
+    }
   });
 
   for (const [name, hash] of [['About', 'about'], ['Planes', 'planes'], ['Team', 'team'], ['Roadmap', 'future'], ['Get in Touch', 'contact']]) {

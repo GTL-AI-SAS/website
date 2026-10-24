@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { waitForFonts } from './helpers.mjs';
 
 // W0: hero buttons, roadmap cards, the founder cards, axe on the whole page, and no horizontal scroll.
 const WIDTHS = [360, 390, 768, 1440];
@@ -7,7 +8,7 @@ const WIDTHS = [360, 390, 768, 1440];
 async function open(page, width = 1440) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
-  await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe('loaded');
+  await waitForFonts(page);
 }
 
 test.describe('W0 current-site hotfix', () => {

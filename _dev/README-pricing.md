@@ -8,7 +8,8 @@ The "Planes y precios" section on the home page is generated from one data file.
 
 Everything under `_dev/` is development tooling. GitHub Pages (Jekyll) does not publish
 folders that start with `_`, so none of it goes live. The site itself stays plain static
-files (`index.html`, `style.css`, `pricing.js`) with no build step on GitHub Pages.
+files (`index.html`, `privacidad.html`, `style.css`, `pricing.js`, `plan-request.js` and the generated
+`site-config.js`) with no build step on GitHub Pages.
 
 ## One-time setup (PowerShell, from the repository root)
 
@@ -39,7 +40,9 @@ npx --prefix _dev playwright install chromium firefox webkit
    npm --prefix _dev run test:e2e
    ```
    The end-to-end tests run in Chromium, Firefox and WebKit, on port 4174. Port 4174 must be free:
-   the tests never reuse a server that is already running there.
+   the tests never reuse a server that is already running there. The form tests (`plan-request-form.spec.mjs`)
+   simulate the API with Playwright route interception on the site's own origin; no request ever reaches
+   `api.gtl-ai.com`, and the real origin is blocked and asserted untouched.
    `tests/pricing.test.mjs` holds its own copy of the approved figures. When a figure changes
    on purpose, update that copy in the same commit.
 4. Review the diff and commit `pricing.json` and `index.html` together.
@@ -56,8 +59,9 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
 
 | Command | What it does |
 |---|---|
-| `npm --prefix _dev run pricing:check` | Fails if `index.html` or `privacidad.html` differs from what `pricing.json`, `site-config.json` and the privacy template generate (line endings normalised), if the head script, `pricing.js` tag, "Planes" link or footer "Privacidad" link is missing, or if a price appears outside the generated block. A hand edit to either page is caught. |
+| `npm --prefix _dev run pricing:check` | Fails if `index.html`, `privacidad.html` or `site-config.js` differs from what `pricing.json`, `site-config.json` and the privacy template generate (line endings normalised), if the head script, `pricing.js` tag, "Planes" link or footer "Privacidad" link is missing, or if a price appears outside the generated block. A hand edit to any of the three files is caught. |
 | `npm --prefix _dev run pricing:release-check` | Runs the check above, then lists every price still `propuesta`, every draft field still `PENDIENTE-COPY` by its path (for example `packages[agenda].tiers[crece].suits`), every config value still `PENDIENTE` or missing (`whatsappNumber`, `contactEmail`, `controller.city`, `controller.address`), every line of `privacidad.html` that still contains `PENDIENTE`, and, in form mode only, an `apiBaseUrl` that is not `https://`. It fails while any remain. |
+| `npm --prefix _dev run links` | Checks every `href`/`src` in the built pages: anchors have their id, local files exist (`site-config.js`, `plan-request.js`, `privacidad.html`, …). |
 
 ## Before merging to `main` (by hand, since there is no CI)
 
@@ -74,9 +78,17 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
 - `pricing.js` adds the tab roles and keyboard support. Without JavaScript, every package is listed.
   If `pricing.js` fails to load (`onerror` on its tag) or throws (its `try`/`catch`), the `js` class is
   removed and the page falls back to that same full list.
-- The request buttons carry `data-package`/`data-tier`, `data-bundle` or `data-general`. In WhatsApp mode (PF2) each one
+- The request buttons carry `data-package`/`data-tier`, `data-bundle` or `data-general`. In every mode each one
   is a plain `https://wa.me/<number>?text=<message>` link written at build time (`target="_blank" rel="noopener"`),
   so it works without JavaScript.
+- **Form mode (PF2 Pass B, on today).** The build also writes `data-request` on each button, a `<dialog>` with the
+  request form and two `<script>` tags (`site-config.js`, then `plan-request.js`, both deferred) inside the markers.
+  `plan-request.js` opens the dialog on click with the plan preselected, validates with the API's own rules, and
+  POSTs JSON to `<apiBaseUrl>/api/plan-requests` with an `Idempotency-Key` (a new UUID when the dialog opens and
+  after any change or any 4xx; the same one on a retry after a network error, a timeout or a 5xx, also when the dialog is
+  closed and reopened from the same plan with nothing changed, since the first request may have been stored). If the config has no
+  API address, the script fails to load, or JavaScript is off, nothing changes: every button is still its WhatsApp link.
+  The script never logs or stores anything.
 
 ## Site config: `_dev/site-config.json` (PF2)
 
@@ -85,16 +97,19 @@ into the HTML.
 
 | Key | What it is |
 |---|---|
-| `planRequestMode` | `"whatsapp"` (today): every request button is a WhatsApp link. `"form"`: the request form (PF2 Pass B, not built yet). |
+| `planRequestMode` | `"form"` (today, PF2 Pass B): every request button opens the request form; its WhatsApp link stays as the fallback. `"whatsapp"`: every request button is a plain WhatsApp link and nothing of the form is published. |
 | `whatsappNumber` | Digits only, with the country code, for example `573001234567`. While it is `"PENDIENTE"`, the links are `https://wa.me/?text=…` (WhatsApp asks for the contact) and the release check fails. |
 | `contactEmail` | The email for clients and privacy requests, shown on the privacy page. `"PENDIENTE"` until JD gives it. |
-| `replyTime` | The reply-time promise shown after a form request (used from Pass B). |
-| `privacyPolicyVersion`, `privacyPolicyDate` | Shown at the end of the privacy page. The date is `YYYY-MM-DD` and is written out, e.g. "16 de octubre de 2026". |
+| `replyTime` | The reply-time promise shown in the form's success view. |
+| `privacyPolicyVersion`, `privacyPolicyDate` | Shown at the end of the privacy page, and the version is sent with every form request as `policyVersion`. **It must equal Railway's `POLICY_VERSION`**, or every submission is a 422 and the form tells the visitor to reload. The date is `YYYY-MM-DD` and is written out, e.g. "24 de octubre de 2026". |
 | `controller` | The data controller: `name`, `nit`, `city` and `address` (the city and the street address are `"PENDIENTE"` until JD gives them). |
-| `apiBaseUrl` | `null` in WhatsApp mode. In form mode, the `https://` address of the plan-request API. |
+| `apiBaseUrl` | `null` in WhatsApp mode. In form mode, the `https://` address of the plan-request API (`https://api.gtl-ai.com`); the release check fails on anything else. |
 
-After changing it, run `npm --prefix _dev run pricing:build` and commit `site-config.json`, `index.html` and
-`privacidad.html` together.
+After changing it, run `npm --prefix _dev run pricing:build` and commit `site-config.json`, `index.html`,
+`privacidad.html` and `site-config.js` together.
+
+The build writes `site-config.js` (`window.GTL_CONFIG`) with exactly five keys for the browser: `planRequestMode`,
+`apiBaseUrl`, `privacyPolicyVersion`, `replyTime`, `whatsappNumber`. Nothing else from the config reaches the browser.
 
 The WhatsApp messages are built from the names in `pricing.json`, one builder per kind (`requestMessage` in
 `build-pricing.mjs`): "Hola, quiero información del plan Agenda · Crece (gtl-ai.com)", "… del paquete Clínica Completa …",
@@ -107,16 +122,36 @@ text inside it, "(abre WhatsApp en una pestaña nueva)" (`NEW_TAB_TEXT` in `buil
 - Generated from `_dev/templates/privacidad.html`. Never edit `privacidad.html` by hand; the check fails.
 - `{{key}}` in the template takes a value from the config. Text between `<!-- form -->` and `<!-- /form -->` appears only in form mode.
 - The header and footer are copied from `index.html` at build time, with their links pointing to `index.html#…`.
-- The text is a draft for JD's approval in PQ1, not legal advice. The template's first comment line is a `PENDIENTE-COPY`
-  marker, so the release check fails until JD approves the text and that line is deleted.
-- The home page links to it from the footer ("Privacidad").
+- The text was approved by JD in PQ1 (version 1.0); form mode changed it to version 1.1 (Pass B, amendment A1 §4). It is
+  not legal advice.
+- In form mode three parts appear that WhatsApp mode hides: what the form collects (§2), the consent box (§4) and the
+  providers Railway (server and database) and Resend (notification emails) in §5.
+- The home page links to it from the footer ("Privacidad"), and the form's consent box links to it too.
 
-## Switching to form mode (after PB1 and PB2 are live)
+## Form mode (PF2 Pass B): on since 2026-10-24
 
-Form mode is PF2 Pass B and is **not built yet**: today the build stops with
-`planRequestMode "form" needs PF2 Pass B`. Once Pass B is merged:
+`site-config.json` has `"planRequestMode": "form"`, `"apiBaseUrl": "https://api.gtl-ai.com"`, `"privacyPolicyVersion": "1.1"`.
+The form's field limits (name 2–100, business 2–150, phone 20, email 254, city 80, message 500) live in `FIELD_LIMITS` in
+`build-pricing.mjs`; the build writes them as `minlength`/`maxlength`, and `plan-request.js` reads them from there.
+They are the live API's own limits (`PlanRequestValidator`; amendment A2 §1), so nothing the form accepts is too long for the API.
 
-1. In `site-config.json`, set `"planRequestMode": "form"` and `"apiBaseUrl": "https://…"` (the PB1 API address).
-2. Run `npm --prefix _dev run pricing:build`. The privacy page then also shows its form paragraphs.
-3. Run the tests and `npm --prefix _dev run pricing:release-check`; in form mode it fails without an `https://` `apiBaseUrl`.
-4. Commit and merge as usual. To go back, set `"planRequestMode": "whatsapp"` and rebuild.
+**Back to WhatsApp mode in one line:** set `"planRequestMode": "whatsapp"` in `site-config.json` (the `apiBaseUrl` may
+stay), run `npm --prefix _dev run pricing:build`, then the tests. The dialog, the `data-request` attributes and the two
+script tags disappear from `index.html`, the privacy page drops its form paragraphs, and `site-config.js` says `whatsapp`.
+The Pass B end-to-end tests skip themselves in WhatsApp mode. Bump `privacyPolicyVersion`/`privacyPolicyDate` if the
+privacy text changes as a result, and keep Railway's `POLICY_VERSION` equal to it.
+
+**Publishing day, in this order (amendment A1 §4–§6):**
+
+1. On Railway, set `POLICY_VERSION` to `1.1` (the site's `privacyPolicyVersion`) and let the API redeploy. Until the site
+   is published nothing sends requests, so no visitor is affected.
+2. If the day is not 2026-10-24, set `privacyPolicyDate` to the publishing day, rebuild, run the unit and end-to-end
+   tests and `pricing:release-check` again (it must pass with zero items).
+3. Merge `pricing/PF2B` into `main`. The merge publishes the site.
+4. Gary sends one real request from a laptop and one from a phone, checks the success view, the email in the founders'
+   inbox and Railway's `Lead email sent. requestId=… providerId=…` log line, then deletes both rows
+   (`DELETE FROM plan_request WHERE id = '<requestId>';`, see the API's `docs/operations.md`).
+
+If the policy version on the site and on Railway ever differ, every submission is answered with 422
+`policy_version_mismatch` and the form shows "La política de privacidad se actualizó. Recargue la página para continuar.";
+fix the variable (or the config) and the mismatch ends.

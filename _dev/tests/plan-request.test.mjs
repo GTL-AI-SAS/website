@@ -7,8 +7,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   loadData, loadConfig, renderSection, applyToIndex, renderPrivacy, sharedChrome, validateConfig,
-  configReleaseItems, privacyReleaseItems, wiringProblems, requestMessage, whatsappLink, formatDateEs,
-  formatWhatsApp, FOOTER_LINK, NEW_TAB_TEXT, INDEX_PATH, PRIVACY_PATH, PRIVACY_TEMPLATE_PATH,
+  configReleaseItems, privacyReleaseItems, wiringProblems, outsideMarkers, requestMessage, whatsappLink, formatDateEs,
+  formatWhatsApp, FOOTER_LINK, NEW_TAB_TEXT, NEW_TAB_TEXT_GENERIC, INDEX_PATH, PRIVACY_PATH, PRIVACY_TEMPLATE_PATH,
 } from '../build-pricing.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -21,9 +21,10 @@ const index = LF(readFileSync(INDEX_PATH, 'utf8'));
 const privacy = LF(readFileSync(PRIVACY_PATH, 'utf8'));
 const template = readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8');
 
-// Test values only; never published.
+// Test values only; never published. WhatsApp mode, whatever mode the committed config is in (Pass B: form).
 const TEST_CONFIG = {
   ...config,
+  planRequestMode: 'whatsapp',
   whatsappNumber: '573001234567',
   contactEmail: 'privacidad@example.com',
   controller: { ...config.controller, city: 'Medellín', address: 'Calle 10 # 43-12' },
@@ -38,6 +39,9 @@ const PENDING_CONFIG = {
   contactEmail: 'PENDIENTE',
   controller: { ...config.controller, city: 'PENDIENTE', address: 'PENDIENTE' },
 };
+// Form mode with test values (PF2 Pass B).
+const FORM_CONFIG = { ...TEST_CONFIG, planRequestMode: 'form', apiBaseUrl: 'https://api.example.com' };
+const formMode = config.planRequestMode === 'form';
 
 // The contract's four messages, written out independently of the generator.
 const SITE = '(gtl-ai.com)';
@@ -127,18 +131,27 @@ test('messages follow the data: renamed package, tier and bundle in a fixture', 
 });
 
 // Every link that opens a new tab says so inside it, visually hidden; the visible labels stay as they were.
+// Form mode (Pass B) adds the dialog's three: WhatsApp in the banner and the success view, and the privacy link.
 const NEW_TAB_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT}</span>`;
+const GENERIC_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT_GENERIC}</span>`;
 test('every target="_blank" link carries the hidden new-tab notice', () => {
   assert.equal(NEW_TAB_TEXT, '(abre WhatsApp en una pestaña nueva)');
-  for (const [name, html, count] of [['rendered section', renderSection(data, TEST_CONFIG), 21], ['index.html', index, 21],
+  assert.equal(NEW_TAB_TEXT_GENERIC, '(abre en una pestaña nueva)');
+  for (const [name, html, count] of [['rendered section', renderSection(data, TEST_CONFIG), 21],
+    ['rendered section, form mode', renderSection(data, FORM_CONFIG), 24], ['index.html', index, formMode ? 24 : 21],
     ['privacidad.html', privacy, 0]]) {
     const blank = [...html.matchAll(/<a\b[^>]*\btarget="_blank"[^>]*>([\s\S]*?)<\/a>/g)];
     assert.equal(blank.length, count, name);
-    for (const [a, inner] of blank) assert.ok(inner.includes(NEW_TAB_SPAN), `${name}: no new-tab notice in ${a.slice(0, 120)}`);
+    for (const [a, inner] of blank) {
+      const expected = /href="privacidad\.html"/.test(a) ? GENERIC_SPAN : NEW_TAB_SPAN;
+      assert.ok(inner.includes(expected), `${name}: no new-tab notice in ${a.slice(0, 120)}`);
+    }
   }
   const labels = [...index.matchAll(/target="_blank"[^>]*>([^<]*)</g)].map((m) => m[1].trim());
-  assert.deepEqual([...new Set(labels)].sort(),
-    ['Cotizar mi proyecto', 'Hablar con nosotros', 'Solicitar este paquete', 'Solicitar este plan']);
+  assert.deepEqual([...new Set(labels)].sort(), formMode
+    ? ['Cotizar mi proyecto', 'Escribir por WhatsApp', 'Hablar con nosotros', 'Solicitar este paquete', 'Solicitar este plan',
+      'política de tratamiento de datos personales']
+    : ['Cotizar mi proyecto', 'Hablar con nosotros', 'Solicitar este paquete', 'Solicitar este plan']);
 });
 
 test('links are fully percent-encoded and carry no personal data', () => {
@@ -151,21 +164,23 @@ test('links are fully percent-encoded and carry no personal data', () => {
 
 // ---------- the config ----------
 
-// PQ1: JD's inputs (2026-10-14), written out independently of site-config.json.
-test('the committed config is valid and holds JD\'s PQ1 inputs', () => {
+// PQ1: JD's inputs (2026-10-14), written out independently of site-config.json. Pass B (A1 §5, 2026-10-23): form mode,
+// the live API, policy version 1.1 dated the publishing day.
+test('the committed config is valid and holds JD\'s PQ1 inputs and the Pass B go-live values', () => {
   assert.deepEqual(validateConfig(config), []);
-  assert.equal(config.planRequestMode, 'whatsapp');
-  assert.equal(config.apiBaseUrl, null);
+  assert.equal(config.planRequestMode, 'form');
+  assert.equal(config.apiBaseUrl, 'https://api.gtl-ai.com');
   assert.equal(config.whatsappNumber, '573192788238');
   assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
   assert.equal(config.controller.city, 'Bogotá');
   assert.equal(config.controller.address, 'Cra 47 #104B-15');
-  assert.equal(config.privacyPolicyVersion, '1.0');
-  assert.equal(config.privacyPolicyDate, '2026-10-15');
-  assert.equal(formatDateEs(config.privacyPolicyDate), '15 de octubre de 2026');
+  assert.equal(config.privacyPolicyVersion, '1.1');
+  assert.equal(config.privacyPolicyDate, '2026-10-24');
+  assert.equal(formatDateEs(config.privacyPolicyDate), '24 de octubre de 2026');
   assert.equal(formatWhatsApp(config.whatsappNumber), '+57 319 278 8238');
   assert.deepEqual(validateConfig(TEST_CONFIG), []);
   assert.deepEqual(validateConfig(PENDING_CONFIG), []);
+  assert.deepEqual(validateConfig(FORM_CONFIG), []);
 });
 
 test('the config validator rejects malformed values', () => {
@@ -177,7 +192,10 @@ test('the config validator rejects malformed values', () => {
   assert.ok(bad({ controller: { ...TEST_CONFIG.controller, address: '' } }).some((e) => /controller.address/.test(e)));
   assert.ok(bad({ privacyPolicyDate: '16/10/2026' }).some((e) => /privacyPolicyDate/.test(e)));
   assert.ok(bad({ planRequestMode: 'email' }).some((e) => /planRequestMode/.test(e)));
-  assert.ok(bad({ planRequestMode: 'form' }).some((e) => /Pass B/.test(e)));
+  // Pass B: form mode builds; a missing API address is the release check's business, not the build's.
+  assert.deepEqual(bad({ planRequestMode: 'form', apiBaseUrl: 'https://api.example.com' }), []);
+  assert.deepEqual(bad({ planRequestMode: 'form', apiBaseUrl: null }), []);
+  assert.ok(bad({ apiBaseUrl: 42 }).some((e) => /apiBaseUrl/.test(e)));
 });
 
 test('release items: PENDIENTE and missing values fail; test values with apiBaseUrl null pass', () => {
@@ -235,15 +253,19 @@ test('the privacy page states every element the contract lists, from config', ()
 });
 
 test('form-mode paragraphs are absent in WhatsApp mode and present in form mode', () => {
+  // A1 §4: Section 5 names Railway (server and database) and Resend (notification emails).
   const formOnly = ['Cuando usa el formulario de solicitud', 'al marcar la casilla de autorización del formulario',
-    'Para el formulario usamos además un proveedor de servidor.'];
+    'Para el formulario de solicitud usamos además Railway, que aloja el servidor y la base de datos donde se guardan sus solicitudes, '
+    + 'y Resend, que nos envía los correos de aviso de cada solicitud.'];
   const wa = textOf(renderWith(TEST_CONFIG));
-  const form = textOf(renderWith({ ...TEST_CONFIG, planRequestMode: 'form', apiBaseUrl: 'https://api.example.com' }));
+  const form = textOf(renderWith(FORM_CONFIG));
   for (const s of formOnly) {
     assert.ok(!wa.includes(s), `shown in WhatsApp mode: ${s}`);
     assert.ok(form.includes(s), `missing in form mode: ${s}`);
   }
-  assert.ok(!privacy.includes('data-form-only') && !privacy.includes('<!-- form'));
+  assert.ok(!privacy.includes('<!-- form'), 'a form marker reached the page');
+  assert.equal((privacy.match(/data-form-only/g) || []).length, formMode ? 3 : 0);
+  assert.equal(textOf(privacy).includes('Railway'), formMode);
 });
 
 test('the committed privacidad.html is the template with the committed config; version and date equal config', () => {
@@ -297,7 +319,9 @@ test('dates and numbers are formatted for the page', () => {
 // ---------- the footer link and the CLI ----------
 
 test('index.html has one "Privacidad" link, in the footer, and the check requires it', () => {
-  assert.equal(index.split('href="privacidad.html"').length - 1, 1);
+  // Outside the markers exactly one (the footer). Form mode adds the consent link inside the markers (Pass B).
+  assert.equal(outsideMarkers(index).split('href="privacidad.html"').length - 1, 1);
+  assert.equal(index.split('href="privacidad.html"').length - 1, formMode ? 2 : 1);
   assert.ok(index.split('<footer')[1].includes(FOOTER_LINK));
   assert.deepEqual(wiringProblems(index), []);
   assert.ok(wiringProblems(index.replace(FOOTER_LINK, '')).some((p) => /Privacidad/.test(p)));

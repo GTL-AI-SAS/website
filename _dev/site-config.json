@@ -1,17 +1,17 @@
 {
-  "planRequestMode": "whatsapp",
+  "planRequestMode": "form",
   "whatsappNumber": "573192788238",
   "contactEmail": "garydmendez@gtl-ai.com",
   "replyTime": "Le respondemos el mismo día hábil.",
-  "privacyPolicyVersion": "1.0",
-  "privacyPolicyDate": "2026-10-15",
+  "privacyPolicyVersion": "1.1",
+  "privacyPolicyDate": "2026-10-24",
   "controller": {
     "name": "GTL AI (sociedad en constitución)",
     "nit": "en trámite",
     "city": "Bogotá",
     "address": "Cra 47 #104B-15"
   },
-  "apiBaseUrl": null,
+  "apiBaseUrl": "https://api.gtl-ai.com",
   "founders": {
     "Gary D. Mendez": [],
     "Jesus David Garcia": [],
