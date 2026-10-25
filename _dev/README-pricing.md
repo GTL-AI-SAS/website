@@ -59,7 +59,7 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
 
 | Command | What it does |
 |---|---|
-| `npm --prefix _dev run pricing:check` | Fails if `index.html`, `privacidad.html` or `site-config.js` differs from what `pricing.json`, `site-config.json` and the privacy template generate (line endings normalised), if the head script, `pricing.js` tag, "Planes" link or footer "Privacidad" link is missing, or if a price appears outside the generated block. A hand edit to any of the three files is caught. |
+| `npm --prefix _dev run pricing:check` | Fails if `index.html`, `privacidad.html` or `site-config.js` differs from what `pricing.json`, `site-config.json` and the privacy template generate (line endings normalised), if the head script, `pricing.js` tag, "Planes" link or footer "Privacidad" link is missing, or if a price appears outside the generated block, or if a `?v=` stamp on a stylesheet or script is malformed or differs from the file's current hash (PF3: the file was edited without a rebuild). A hand edit to any of the three files, or to a file they load, is caught. |
 | `npm --prefix _dev run pricing:release-check` | Runs the check above, then lists every price still `propuesta`, every draft field still `PENDIENTE-COPY` by its path (for example `packages[agenda].tiers[crece].suits`), every config value still `PENDIENTE` or missing (`whatsappNumber`, `contactEmail`, `controller.city`, `controller.address`), every line of `privacidad.html` that still contains `PENDIENTE`, and, in form mode only, an `apiBaseUrl` that is not `https://`. It fails while any remain. |
 | `npm --prefix _dev run links` | Checks every `href`/`src` in the built pages: anchors have their id, local files exist (`site-config.js`, `plan-request.js`, `privacidad.html`, …). |
 
@@ -81,7 +81,7 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
 - The request buttons carry `data-package`/`data-tier`, `data-bundle` or `data-general`. In every mode each one
   is a plain `https://wa.me/<number>?text=<message>` link written at build time (`target="_blank" rel="noopener"`),
   so it works without JavaScript.
-- **Form mode (PF2 Pass B, on today).** The build also writes `data-request` on each button, a `<dialog>` with the
+- **Form mode (PF2 Pass B, live since 2026-10-24).** The build also writes `data-request` on each button, a `<dialog>` with the
   request form and two `<script>` tags (`site-config.js`, then `plan-request.js`, both deferred) inside the markers.
   `plan-request.js` opens the dialog on click with the plan preselected, validates with the API's own rules, and
   POSTs JSON to `<apiBaseUrl>/api/plan-requests` with an `Idempotency-Key` (a new UUID when the dialog opens and
@@ -90,6 +90,23 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
   API address, the script fails to load, or JavaScript is off, nothing changes: every button is still its WhatsApp link.
   The script never logs or stores anything.
 
+## Versioned asset URLs (PF3)
+
+Every local stylesheet and script a page loads is referenced as `<file>?v=<first 10 hex digits of its SHA-256>`:
+`style.css` and `pricing.js` in the `<head>` of `index.html`, `style.css` in the `<head>` of `privacidad.html`, and, in form
+mode, `site-config.js` and `plan-request.js` inside the pricing markers. A changed file has a new URL, so no browser or
+cache keeps serving the old copy. The build stamps them (`versionAssets` in `build-pricing.mjs`); the hash is of the file's
+bytes with CRLF read as LF, so it never depends on an editor's or a checkout's line endings, and on the repository's
+LF-only files `sha256sum style.css | cut -c1-10` gives it.
+
+- After editing `style.css`, `pricing.js` or `plan-request.js`, run `npm --prefix _dev run pricing:build` and commit the file
+  together with `index.html` (and `privacidad.html` for `style.css`). Until then `pricing:check` fails:
+  `index.html: style.css?v=c8210106a9 is stale: the file is now … (edited without a rebuild).`
+- A stamp that is not `?v=` plus 10 hex digits (`?v=latest`, `?V=…`, any other `?query` on a local file) fails with
+  `has a malformed ?v= stamp`; the build rewrites it.
+- `site-config.js` is generated, so its stamp follows the config: a config change re-stamps it in the same build.
+- The stamp is a plain query string: GitHub Pages and the local server ignore it, and so does the link check.
+
 ## Site config: `_dev/site-config.json` (PF2)
 
 One file holds the values the home page and the privacy page share. The build stamps them in; never type them
@@ -97,7 +114,7 @@ into the HTML.
 
 | Key | What it is |
 |---|---|
-| `planRequestMode` | `"form"` (today, PF2 Pass B): every request button opens the request form; its WhatsApp link stays as the fallback. `"whatsapp"`: every request button is a plain WhatsApp link and nothing of the form is published. |
+| `planRequestMode` | `"form"` (live since 2026-10-24, PF2 Pass B): every request button opens the request form; its WhatsApp link stays as the fallback. `"whatsapp"`: every request button is a plain WhatsApp link and nothing of the form is published. |
 | `whatsappNumber` | Digits only, with the country code, for example `573001234567`. While it is `"PENDIENTE"`, the links are `https://wa.me/?text=…` (WhatsApp asks for the contact) and the release check fails. |
 | `contactEmail` | The email for clients and privacy requests, shown on the privacy page. `"PENDIENTE"` until JD gives it. |
 | `replyTime` | The reply-time promise shown in the form's success view. |
@@ -135,22 +152,20 @@ The form's field limits (name 2–100, business 2–150, phone 20, email 254, ci
 `build-pricing.mjs`; the build writes them as `minlength`/`maxlength`, and `plan-request.js` reads them from there.
 They are the live API's own limits (`PlanRequestValidator`; amendment A2 §1), so nothing the form accepts is too long for the API.
 
+The honeypot field (`nickname`, always sent as `""`) is hidden by an inline off-screen style on its wrapper (`HONEYPOT_STYLE` in
+`build-pricing.mjs`; PF3), so it never shows even if `style.css` fails to load; `style.css` carries the same rule for the class. It is
+not `display:none`, which bots skip; the input has `tabindex="-1"`, `aria-hidden="true"` and `autocomplete="off"`.
+
 **Back to WhatsApp mode in one line:** set `"planRequestMode": "whatsapp"` in `site-config.json` (the `apiBaseUrl` may
 stay), run `npm --prefix _dev run pricing:build`, then the tests. The dialog, the `data-request` attributes and the two
 script tags disappear from `index.html`, the privacy page drops its form paragraphs, and `site-config.js` says `whatsapp`.
 The Pass B end-to-end tests skip themselves in WhatsApp mode. Bump `privacyPolicyVersion`/`privacyPolicyDate` if the
 privacy text changes as a result, and keep Railway's `POLICY_VERSION` equal to it.
 
-**Publishing day, in this order (amendment A1 §4–§6):**
-
-1. On Railway, set `POLICY_VERSION` to `1.1` (the site's `privacyPolicyVersion`) and let the API redeploy. Until the site
-   is published nothing sends requests, so no visitor is affected.
-2. If the day is not 2026-10-24, set `privacyPolicyDate` to the publishing day, rebuild, run the unit and end-to-end
-   tests and `pricing:release-check` again (it must pass with zero items).
-3. Merge `pricing/PF2B` into `main`. The merge publishes the site.
-4. Gary sends one real request from a laptop and one from a phone, checks the success view, the email in the founders'
-   inbox and Railway's `Lead email sent. requestId=… providerId=…` log line, then deletes both rows
-   (`DELETE FROM plan_request WHERE id = '<requestId>';`, see the API's `docs/operations.md`).
+**Policy version and date (amendment A1 §4–§6).** Form mode and privacy policy 1.1 have been live since 2026-10-24, and
+Railway runs `POLICY_VERSION` `1.1`. `privacyPolicyDate` is the policy's effective date: it changes, together with
+`privacyPolicyVersion` and Railway's `POLICY_VERSION`, only when the policy text changes. Then, in this order: Railway first
+(set `POLICY_VERSION` and let the API redeploy), the config second, rebuild, unit + e2e + `pricing:release-check`, merge.
 
 If the policy version on the site and on Railway ever differ, every submission is answered with 422
 `policy_version_mismatch` and the form shows "La política de privacidad se actualizó. Recargue la página para continuar.";

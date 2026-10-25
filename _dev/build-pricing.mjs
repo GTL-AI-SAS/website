@@ -4,12 +4,18 @@
 // W0: the build also writes the footer email and the founders' Background lists from site-config.json.
 // PF2 Pass B: the build also writes site-config.js (window.GTL_CONFIG for plan-request.js) and, in form
 // mode, the request <dialog> and its script tags inside the pricing markers.
+// PF3: every local stylesheet and script a page loads is referenced as <file>?v=<first 10 hex of its SHA-256>; the
+// build stamps them and --check fails while a stamp differs from the file's current hash. The honeypot's wrapper
+// carries an inline off-screen style, so it never shows even without style.css.
 //
-//   node build-pricing.mjs            write the section between the pricing markers, privacidad.html and site-config.js
-//   node build-pricing.mjs --check    fail if index.html, privacidad.html or site-config.js differs from the data (EOL-normalised)
+//   node build-pricing.mjs            write the section between the pricing markers, privacidad.html and site-config.js,
+//                                     and stamp every local .css/.js reference on both pages with ?v=<hash>
+//   node build-pricing.mjs --check    fail if index.html, privacidad.html or site-config.js differs from the data (EOL-normalised),
+//                                     or if a ?v= stamp is malformed or differs from the file's current hash (CRLF read as LF)
 //   node build-pricing.mjs --release  --check, plus fail while any price is "propuesta", any text is
 //                                     "PENDIENTE-COPY", a config value or privacidad.html is PENDIENTE, or
 //                                     apiBaseUrl is not https:// in form mode
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -21,6 +27,8 @@ export const CONFIG_PATH = join(here, 'site-config.json');
 export const PRIVACY_TEMPLATE_PATH = join(here, 'templates', 'privacidad.html');
 export const PRIVACY_PATH = join(here, '..', 'privacidad.html');
 export const SITE_CONFIG_JS_PATH = join(here, '..', 'site-config.js');
+// The published site: both pages and every file they load sit at this root (PF3 hashes the files from here).
+export const SITE_ROOT = join(here, '..');
 
 export const START = '<!-- pricing:start -->';
 export const END = '<!-- pricing:end -->';
@@ -314,9 +322,14 @@ function textInput(name, type, { min, max, autocomplete, required = false, descr
   return `<input ${attrs.join(' ')}>`;
 }
 
+// The honeypot's wrapper is moved off screen by this inline style (PF3), so the field never shows even if style.css
+// fails to load. Not display:none, which bots skip; style.css carries the same rule for the class.
+export const HONEYPOT_STYLE = 'position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden';
+
 // The modal request form (form mode only). method="post" and novalidate: if the script fails, no field
 // ever goes into a URL; plan-request.js does the validation and the request. The nickname field is the
-// honeypot: hidden from sight (CSS), keyboard (tabindex -1) and screen readers (aria-hidden), autocomplete off.
+// honeypot: hidden from sight (the inline style above, and CSS), keyboard (tabindex -1) and screen readers
+// (aria-hidden), autocomplete off.
 export function renderRequestDialog(data, config) {
   const L = FIELD_LIMITS;
   return [
@@ -337,7 +350,7 @@ export function renderRequestDialog(data, config) {
     field('email', 'Correo electrónico', textInput('email', 'email', { max: L.email.max, autocomplete: 'email', describedBy: ['request-contact-hint'] })),
     field('city', 'Ciudad', textInput('city', 'text', { max: L.city.max, autocomplete: 'address-level2' })),
     field('message', 'Mensaje', `<textarea id="request-message" name="message" rows="3" maxlength="${L.message.max}" aria-describedby="request-message-error"></textarea>`),
-    '<div class="request-nickname" aria-hidden="true">',
+    `<div class="request-nickname" aria-hidden="true" style="${HONEYPOT_STYLE}">`,
     '<label for="request-nickname">Apodo</label>',
     '<input id="request-nickname" name="nickname" type="text" tabindex="-1" aria-hidden="true" autocomplete="off">',
     '</div>',
@@ -552,9 +565,71 @@ export function renderSection(data, config = loadConfig()) {
   return body.split('\n').map((l) => '  ' + l).join('\n');
 }
 
-// ---------- applying to index.html ----------
+// ---------- versioned asset URLs (PF3) ----------
 
 const toLF = (s) => s.replace(/\r\n/g, '\n');
+
+// Every local stylesheet and script a page loads is referenced as <file>?v=<first 10 hex of its SHA-256>, so a changed
+// file is never served from a stale cache. The build stamps them; --check fails while a stamp differs from the file's
+// current hash (the file was edited without a rebuild).
+export const VERSION_LENGTH = 10;
+
+// The hash is of the bytes with every CRLF read as LF, so a stamp never depends on an editor's or a checkout's line
+// endings; on the repository's LF-only files it is sha256sum's. A Buffer is normalised byte for byte (latin1 maps each
+// byte to one code unit and back); a string (the site-config.js text the build writes) is hashed as UTF-8.
+const lfBytes = (bytes) => (typeof bytes === 'string' ? toLF(bytes) : Buffer.from(toLF(bytes.toString('latin1')), 'latin1'));
+export const assetVersion = (bytes) => createHash('sha256').update(lfBytes(bytes)).digest('hex').slice(0, VERSION_LENGTH);
+
+// A <link href="…"> or <script src="…"> to a local .css or .js file, bare or with any ?query (its ?v= stamp, well formed
+// or not). A URL with a scheme (https:, data:) or starting with "//" is external and never matches; an <a href> is not
+// a load.
+const ASSET_REF = /(<(?:link|script)\b[^>]*?\s(?:href|src)=")(?!\/\/)([^"#?:]+\.(?:css|js))(?:\?([^"]*))?(")/g;
+// A well-formed stamp: "v=" and exactly VERSION_LENGTH lowercase hex digits, nothing else.
+const STAMP = new RegExp(`^v=([0-9a-f]{${VERSION_LENGTH}})$`);
+
+// Every such reference on a page, in order: { file, version, query }. query is the text after "?" (null when there is
+// none); version is the stamp's hex digits when the query is a well-formed stamp, else null (bare, or malformed).
+export function assetRefs(htmlLF) {
+  return [...htmlLF.matchAll(ASSET_REF)].map((m) => {
+    const query = m[3] === undefined ? null : m[3];
+    const stamp = query === null ? null : query.match(STAMP);
+    return { file: m[2], version: stamp ? stamp[1] : null, query };
+  });
+}
+
+// Stamps (or re-stamps) every reference with versionOf(file). Idempotent.
+export function versionAssets(htmlLF, versionOf) {
+  return htmlLF.replace(ASSET_REF, (_, pre, file, _v, post) => `${pre}${file}?v=${versionOf(file)}${post}`);
+}
+
+// The same page without the stamps, for checks that look for the bare tags.
+export function stripVersions(htmlLF) {
+  return htmlLF.replace(ASSET_REF, (_, pre, file, _v, post) => `${pre}${file}${post}`);
+}
+
+// Every reference whose stamp is missing, malformed (?v=latest, ?V=…, any other ?query) or differs from the file's
+// current version (versionOf returns null for a file that does not exist).
+export function assetVersionProblems(htmlLF, versionOf) {
+  const problems = [];
+  const fix = 'Run: npm --prefix _dev run pricing:build';
+  for (const { file, version, query } of assetRefs(htmlLF)) {
+    const now = versionOf(file);
+    if (now === null) problems.push(`${file} is referenced but does not exist`);
+    else if (query !== null && version === null) problems.push(`${file}?${query} has a malformed ?v= stamp (expected ?v=${now}). ${fix}`);
+    else if (version === null) problems.push(`${file} has no ?v= version (the file is ${now}). ${fix}`);
+    else if (version !== now) problems.push(`${file}?v=${version} is stale: the file is now ${now} (edited without a rebuild). ${fix}`);
+  }
+  return problems;
+}
+
+// The version of a published file, by its path relative to the site root, from its bytes on disk (CRLF read as LF).
+export function fileVersion(file, root = SITE_ROOT) {
+  const path = join(root, file);
+  if (!existsSync(path)) throw new Error(`${file} is referenced by a page but does not exist`);
+  return assetVersion(readFileSync(path));
+}
+
+// ---------- applying to index.html ----------
 
 // Returns the full index.html (LF) with the section rendered. On the first run it also
 // inserts the markers after About, the "Planes" link, the head script and the pricing.js tag.
@@ -616,11 +691,12 @@ export function applySiteConfig(htmlLF, config) {
 // Static wiring outside the markers that the section depends on.
 export function wiringProblems(htmlLF) {
   const problems = [];
-  if (!htmlLF.includes(HEAD_SCRIPT)) problems.push('head script that adds the "js" class is missing');
-  else if (htmlLF.indexOf(HEAD_SCRIPT) > htmlLF.indexOf('href="style.css"')) problems.push('head script must come before the stylesheet');
-  if (!htmlLF.includes(JS_TAG)) problems.push('pricing.js script tag is missing');
-  if (!htmlLF.includes(NAV_LINK)) problems.push('"Planes" header link is missing');
-  if (!footerOf(htmlLF).includes(FOOTER_LINK)) problems.push('"Privacidad" footer link is missing');
+  const bare = stripVersions(htmlLF); // PF3: the tags are compared without their ?v= stamps
+  if (!bare.includes(HEAD_SCRIPT)) problems.push('head script that adds the "js" class is missing');
+  else if (bare.indexOf(HEAD_SCRIPT) > bare.indexOf('href="style.css"')) problems.push('head script must come before the stylesheet');
+  if (!bare.includes(JS_TAG)) problems.push('pricing.js script tag is missing');
+  if (!bare.includes(NAV_LINK)) problems.push('"Planes" header link is missing');
+  if (!footerOf(bare).includes(FOOTER_LINK)) problems.push('"Privacidad" footer link is missing');
   return problems;
 }
 
@@ -740,6 +816,17 @@ function main(argv) {
   }
   const raw = readFileSync(INDEX_PATH, 'utf8');
   const current = toLF(raw);
+  const eol = raw.includes('\r\n') ? '\r\n' : '\n';
+  // PF2 Pass B: the published config for plan-request.js, in every mode.
+  const siteConfigRaw = existsSync(SITE_CONFIG_JS_PATH) ? readFileSync(SITE_CONFIG_JS_PATH, 'utf8') : null;
+  const siteConfigCurrent = siteConfigRaw === null ? null : toLF(siteConfigRaw);
+  const siteConfigNext = renderSiteConfigJs(config);
+  const siteConfigEol = siteConfigRaw ? (siteConfigRaw.includes('\r\n') ? '\r\n' : '\n') : eol;
+  const siteConfigBytes = siteConfigNext.replace(/\n/g, siteConfigEol);
+  // PF3: the version stamped on each reference. site-config.js is generated here, so its version is that of the bytes
+  // this build writes (a config change changes the stamp in the same run); every other file is hashed as it is on disk.
+  // Both with CRLF read as LF (assetVersion), so the stamps are the same whatever the line endings.
+  const versionOf = (file) => (file === 'site-config.js' ? assetVersion(siteConfigBytes) : fileVersion(file));
   let next;
   try {
     next = applySiteConfig(applyToIndex(current, renderSection(data, config)), config);
@@ -749,21 +836,23 @@ function main(argv) {
   }
   const privacyRaw = existsSync(PRIVACY_PATH) ? readFileSync(PRIVACY_PATH, 'utf8') : null;
   const privacyCurrent = privacyRaw === null ? null : toLF(privacyRaw);
-  const privacyNext = renderPrivacy(readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8'), config, sharedChrome(next));
-  // PF2 Pass B: the published config for plan-request.js, in every mode.
-  const siteConfigRaw = existsSync(SITE_CONFIG_JS_PATH) ? readFileSync(SITE_CONFIG_JS_PATH, 'utf8') : null;
-  const siteConfigCurrent = siteConfigRaw === null ? null : toLF(siteConfigRaw);
-  const siteConfigNext = renderSiteConfigJs(config);
+  const privacyRendered = renderPrivacy(readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8'), config, sharedChrome(next));
+  let privacyNext;
+  try {
+    next = versionAssets(next, versionOf);
+    privacyNext = versionAssets(privacyRendered, versionOf);
+  } catch (e) {
+    console.error(`cannot stamp the asset versions: ${e.message}`);
+    return 1;
+  }
 
   if (!check) {
-    const eol = raw.includes('\r\n') ? '\r\n' : '\n';
     if (next !== current) writeFileSync(INDEX_PATH, next.replace(/\n/g, eol));
-    console.log(next === current ? 'index.html already up to date.' : 'index.html updated from pricing.json and site-config.json.');
+    console.log(next === current ? 'index.html already up to date.' : 'index.html updated from pricing.json, site-config.json and the asset versions.');
     const privacyEol = privacyRaw && privacyRaw.includes('\r\n') ? '\r\n' : '\n';
     if (privacyNext !== privacyCurrent) writeFileSync(PRIVACY_PATH, privacyNext.replace(/\n/g, privacyEol));
-    console.log(privacyNext === privacyCurrent ? 'privacidad.html already up to date.' : 'privacidad.html updated from its template and site-config.json.');
-    const siteConfigEol = siteConfigRaw ? (siteConfigRaw.includes('\r\n') ? '\r\n' : '\n') : eol;
-    if (siteConfigNext !== siteConfigCurrent) writeFileSync(SITE_CONFIG_JS_PATH, siteConfigNext.replace(/\n/g, siteConfigEol));
+    console.log(privacyNext === privacyCurrent ? 'privacidad.html already up to date.' : 'privacidad.html updated from its template, site-config.json and the asset versions.');
+    if (siteConfigNext !== siteConfigCurrent) writeFileSync(SITE_CONFIG_JS_PATH, siteConfigBytes);
     console.log(siteConfigNext === siteConfigCurrent ? 'site-config.js already up to date.' : 'site-config.js updated from site-config.json.');
     return 0;
   }
@@ -775,6 +864,9 @@ function main(argv) {
   }
   if (next !== current) { reportDiff('index.html', current, next); failed = true; }
   for (const p of wiringProblems(current)) { console.error(`index.html: ${p}`); failed = true; }
+  // PF3: a stamp that differs from the file's hash on disk means the file was edited without a rebuild.
+  const onDisk = (file) => (existsSync(join(SITE_ROOT, file)) ? fileVersion(file) : null);
+  for (const p of assetVersionProblems(current, onDisk)) { console.error(`index.html: ${p}`); failed = true; }
   const stray = outsideMarkers(current).match(/\$\d[\d.]*/g);
   if (stray) { console.error(`index.html has prices outside the generated block: ${stray.join(', ')}`); failed = true; }
   if (privacyCurrent === null) {
@@ -784,6 +876,9 @@ function main(argv) {
     reportDiff('privacidad.html', privacyCurrent, privacyNext);
     failed = true;
   }
+  if (privacyCurrent !== null) {
+    for (const p of assetVersionProblems(privacyCurrent, onDisk)) { console.error(`privacidad.html: ${p}`); failed = true; }
+  }
   if (siteConfigCurrent === null) {
     console.error('site-config.js is missing. Run: npm --prefix _dev run pricing:build');
     failed = true;
@@ -791,7 +886,7 @@ function main(argv) {
     reportDiff('site-config.js', siteConfigCurrent, siteConfigNext);
     failed = true;
   }
-  if (!failed) console.log('pricing:check passed — index.html, privacidad.html and site-config.js match pricing.json and site-config.json.');
+  if (!failed) console.log('pricing:check passed — index.html, privacidad.html and site-config.js match pricing.json and site-config.json, and every ?v= stamp equals the hash of its file.');
 
   if (release) {
     const items = [...releaseItems(data), ...configReleaseItems(config), ...privacyReleaseItems(privacyCurrent || '')];

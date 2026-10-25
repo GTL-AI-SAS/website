@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 import {
   loadData, loadConfig, renderSection, renderRequestDialog, renderSiteConfigJs, planOptions, renderPrivacy, sharedChrome,
   validateConfig, configReleaseItems, formatDateEs, esc, whatsappLink, requestMessage, FIELD_LIMITS, PHONE_PATTERN, SITE_CONFIG_KEYS, NEW_TAB_TEXT,
-  NEW_TAB_TEXT_GENERIC, FORM_NOTICE_TEXT, START, END, INDEX_PATH, PRIVACY_PATH, PRIVACY_TEMPLATE_PATH, SITE_CONFIG_JS_PATH,
+  NEW_TAB_TEXT_GENERIC, FORM_NOTICE_TEXT, HONEYPOT_STYLE, START, END, INDEX_PATH, PRIVACY_PATH, PRIVACY_TEMPLATE_PATH, SITE_CONFIG_JS_PATH,
+  versionAssets, fileVersion,
 } from '../build-pricing.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -110,7 +111,8 @@ test('form mode writes the dialog, data-request on every button and the two scri
   // The committed page is the form-mode render, and the dialog sits inside the markers.
   const inside = between(index);
   assert.ok(inside.includes('<dialog class="request-dialog" id="request-dialog"'));
-  assert.ok(inside.includes('<script src="plan-request.js" defer></script>'));
+  // PF3: on the page both tags carry their ?v= stamp (the render writes the bare names; the build stamps them).
+  assert.match(inside, /<script src="site-config\.js\?v=[0-9a-f]{10}" defer><\/script>\n  <script src="plan-request\.js\?v=[0-9a-f]{10}" defer><\/script>/);
   assert.ok(!index.slice(index.indexOf(END)).includes('request-dialog'), 'nothing of the dialog outside the markers');
   assert.ok(!index.slice(0, index.indexOf(START)).includes('plan-request.js'), 'no script tag outside the markers');
 });
@@ -166,7 +168,7 @@ test('the form follows the live API (A2 §1): limits, kinds of input, method="po
   assert.ok(html.includes(`<p>${FORM.replyTime} Si prefiere, también puede escribirnos por WhatsApp.</p>`));
 });
 
-test('the honeypot "nickname" is hidden from sight, keyboard and screen readers', () => {
+test('the honeypot "nickname" is hidden from sight (inline style and CSS), keyboard and screen readers', () => {
   const html = renderRequestDialog(data, FORM);
   const tag = inputTag(html, 'nickname');
   assert.equal(attr(tag, 'tabindex'), '-1');
@@ -174,7 +176,15 @@ test('the honeypot "nickname" is hidden from sight, keyboard and screen readers'
   assert.equal(attr(tag, 'autocomplete'), 'off');
   assert.equal(attr(tag, 'type'), 'text');
   assert.ok(!/\brequired\b/.test(tag));
-  assert.ok(html.includes('<div class="request-nickname" aria-hidden="true">'));
+  // PF3: the wrapper moves itself off screen, so the field never shows even if style.css fails to load; not display:none.
+  const wrapper = html.match(/<div class="request-nickname"[^>]*>/)[0];
+  assert.equal(wrapper, `<div class="request-nickname" aria-hidden="true" style="${HONEYPOT_STYLE}">`);
+  assert.match(HONEYPOT_STYLE, /(^|;)position:absolute(;|$)/);
+  assert.match(HONEYPOT_STYLE, /(^|;)left:-10000px(;|$)/);
+  assert.match(HONEYPOT_STYLE, /(^|;)width:1px(;|$)/);
+  assert.match(HONEYPOT_STYLE, /(^|;)overflow:hidden(;|$)/);
+  assert.doesNotMatch(HONEYPOT_STYLE, /display\s*:\s*none|visibility\s*:\s*hidden/);
+  assert.ok(index.includes(wrapper), 'the committed page carries the inline style');
   const rule = css.slice(css.indexOf('.request-nickname {'), css.indexOf('}', css.indexOf('.request-nickname {')));
   assert.match(rule, /position: absolute;/);
   assert.match(rule, /left: -10000px;/);
@@ -267,7 +277,8 @@ test('Section 5 names Railway and Resend only in form mode; the committed page c
   assert.ok(committed.includes(RAILWAY_RESEND));
   assert.ok(committed.includes(`Versión ${config.privacyPolicyVersion}, vigente desde el ${formatDateEs(config.privacyPolicyDate)}`));
   assert.ok(committed.includes('Versión 1.1, vigente desde el 24 de octubre de 2026'));
-  assert.equal(privacy, renderPrivacy(template, config, chrome));
+  // PF3: the build stamps the page's style.css link with ?v=<hash> after rendering it.
+  assert.equal(privacy, versionAssets(renderPrivacy(template, config, chrome), fileVersion));
 });
 
 // ---------- plan-request.js (static; behaviour is proven end to end) ----------

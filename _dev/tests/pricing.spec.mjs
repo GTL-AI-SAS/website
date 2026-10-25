@@ -11,6 +11,8 @@ const before = JSON.parse(readFileSync(join(here, 'fixtures', 'sections-before.j
 const shotDir = join(here, '..', 'screenshots', 'after');
 const WIDTHS = [360, 390, 768, 1440];
 const PACKAGES = ['agenda', 'presencia', 'pedidos', 'reservas', 'comunidad', 'a-medida'];
+// PF3: the page requests pricing.js?v=<hash>, so the routes match the path with any query.
+const PRICING_JS_URL = /\/pricing\.js(\?.*)?$/;
 const SECTIONS = {
   header: '.site-header', hero: '.hero', about: '#about', team: '#team', future: '#future', footer: 'footer.site-footer',
 };
@@ -167,7 +169,7 @@ test.describe('without JavaScript', () => {
 test.describe('without JavaScript (axe)', () => {
   // axe needs page scripts, so the no-JS render is reproduced: pricing.js blocked, no "js" class.
   test('axe finds no serious or critical violations with every package shown', async ({ page, context }) => {
-    await context.route('**/pricing.js', (r) => r.abort());
+    await context.route(PRICING_JS_URL, (r) => r.abort());
     await open(page);
     await page.evaluate(() => document.documentElement.classList.remove('js'));
     await expect(page.locator('#panel-comunidad')).toBeVisible();
@@ -189,7 +191,7 @@ test.describe('if pricing.js fails (step 8, N8)', () => {
   };
 
   test('blocked: every package shows and no tab row shows', async ({ page, context }) => {
-    await context.route('**/pricing.js', (r) => r.abort());
+    await context.route(PRICING_JS_URL, (r) => r.abort());
     await open(page);
     await allPanelsAndNoTabs(page);
   });
@@ -225,7 +227,7 @@ test.describe('layout and quality gates', () => {
     expect(cls).toBeLessThanOrEqual(0.01);
     // The page as it paints before pricing.js acts: the script loads but does nothing. (Aborting it
     // would now trigger the N8 fallback, which deliberately shows every package.)
-    await context.route('**/pricing.js', (r) => r.fulfill({ contentType: 'application/javascript', body: '' }));
+    await context.route(PRICING_JS_URL, (r) => r.fulfill({ contentType: 'application/javascript', body: '' }));
     const withoutScript = await positions();
     expect(await page.locator('[role="tablist"]').count()).toBe(0);
     expect(withoutScript).toEqual(withScript);

@@ -18,6 +18,9 @@ test.skip(config.planRequestMode !== 'form', 'the committed site is in WhatsApp 
 const API = 'http://localhost:4174'; // the served site's own origin
 const ENDPOINT = `${API}/api/plan-requests`;
 const REAL_API = 'https://api.gtl-ai.com';
+// PF3: the page requests site-config.js?v=<hash> and style.css?v=<hash>, so routes match the path with any query.
+const SITE_CONFIG_URL = /\/site-config\.js(\?.*)?$/;
+const STYLE_URL = /\/style\.css(\?.*)?$/;
 const KEYS = ['packageCode', 'tierCode', 'bundleCode', 'name', 'business', 'phone', 'email', 'city', 'message', 'consent', 'policyVersion', 'nickname'];
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const POLICY_MISMATCH = 'La política de privacidad se actualizó. Recargue la página para continuar.';
@@ -50,7 +53,7 @@ async function setup(page, respond, { timeoutMs } = {}) {
   await page.route(`${REAL_API}/**`, (r) => r.abort());
   const testConfig = { ...JSON.parse(published.match(/window\.GTL_CONFIG = (\{.*\});/)[1]), planRequestMode: 'form', apiBaseUrl: API };
   if (timeoutMs) testConfig.requestTimeoutMs = timeoutMs;
-  await page.route('**/site-config.js', (r) => r.fulfill({ contentType: 'application/javascript', body: `window.GTL_CONFIG = ${JSON.stringify(testConfig)};` }));
+  await page.route(SITE_CONFIG_URL, (r) => r.fulfill({ contentType: 'application/javascript', body: `window.GTL_CONFIG = ${JSON.stringify(testConfig)};` }));
   const requests = [];
   await page.route(ENDPOINT, async (route) => {
     const req = route.request();
@@ -549,6 +552,43 @@ test.describe('the request form', () => {
     expect(Object.keys(requests[0].body)).toContain('nickname');
   });
 
+  // PF3: the honeypot's wrapper carries an inline off-screen style, so it never shows even when style.css fails to load.
+  for (const [label, blockCss] of [['with style.css', false], ['with style.css blocked', true]]) {
+    test(`the honeypot's box is entirely outside the viewport and Tab never reaches it (${label})`, async ({ page }) => {
+      const { requests } = await setup(page, created);
+      if (blockCss) await page.route(STYLE_URL, (r) => r.abort());
+      await open(page);
+      // The stylesheet really is, or is not, in effect: the header is sticky only with style.css. (Chromium lists an
+      // aborted stylesheet in document.styleSheets as an empty sheet, so the computed style is the evidence.)
+      expect(await page.evaluate(() => getComputedStyle(document.querySelector('.site-header')).position)).toBe(blockCss ? 'static' : 'sticky');
+      await openDialog(page);
+      const boxes = await page.evaluate(() => {
+        const rect = (el) => { const r = el.getBoundingClientRect(); return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }; };
+        return { wrapper: rect(document.querySelector('.request-nickname')), input: rect(document.getElementById('request-nickname')), vw: window.innerWidth, vh: window.innerHeight };
+      });
+      for (const [name, b] of [['wrapper', boxes.wrapper], ['input', boxes.input]]) {
+        const outside = b.right <= 0 || b.bottom <= 0 || b.left >= boxes.vw || b.top >= boxes.vh;
+        expect(outside, `${name} ${JSON.stringify(b)} in ${boxes.vw}x${boxes.vh}`).toBe(true);
+      }
+      // Tab from the plan <select> to the Cancelar button: every field in order and never the honeypot, which sits
+      // between message and consent in the markup. Ids only: whether a link is in the tab order is up to the engine.
+      expect(await focusedId(page)).toBe('request-plan');
+      const visited = [];
+      for (let i = 0; i < 20; i++) {
+        await page.keyboard.press('Tab');
+        visited.push(await page.evaluate(() => {
+          const el = document.activeElement;
+          return el.id || (el.matches('[data-request-submit]') ? 'submit' : el.matches('[data-request-close]') ? 'close' : el.tagName);
+        }));
+        if (visited[visited.length - 1] === 'close') break;
+      }
+      expect(visited).not.toContain('request-nickname');
+      expect(visited.filter((id) => id.startsWith('request-') || id === 'submit' || id === 'close')).toEqual(
+        ['request-name', 'request-business', 'request-phone', 'request-email', 'request-city', 'request-message', 'request-consent', 'submit', 'close']);
+      expect(requests).toEqual([]);
+    });
+  }
+
   test('the body sends the config\'s privacyPolicyVersion, the one the privacy page shows', async ({ page }) => {
     const { requests } = await setup(page, created);
     await open(page);
@@ -576,7 +616,7 @@ test.describe('the request form', () => {
 
   test('without an API address in the config the buttons stay plain WhatsApp links', async ({ page, context }) => {
     await context.route('https://wa.me/**', (r) => r.fulfill({ contentType: 'text/html', body: '<title>wa.me</title>' }));
-    await page.route('**/site-config.js', (r) => r.fulfill({ contentType: 'application/javascript', body: 'window.GTL_CONFIG = {"planRequestMode":"form","apiBaseUrl":null};' }));
+    await page.route(SITE_CONFIG_URL, (r) => r.fulfill({ contentType: 'application/javascript', body: 'window.GTL_CONFIG = {"planRequestMode":"form","apiBaseUrl":null};' }));
     await open(page);
     const link = page.locator(BUTTON.plan);
     expect(await link.getAttribute('aria-haspopup')).toBeNull();

@@ -9,6 +9,7 @@ import {
   loadData, loadConfig, renderSection, applyToIndex, renderPrivacy, sharedChrome, validateConfig,
   configReleaseItems, privacyReleaseItems, wiringProblems, outsideMarkers, requestMessage, whatsappLink, formatDateEs,
   formatWhatsApp, FOOTER_LINK, NEW_TAB_TEXT, NEW_TAB_TEXT_GENERIC, INDEX_PATH, PRIVACY_PATH, PRIVACY_TEMPLATE_PATH,
+  versionAssets, fileVersion,
 } from '../build-pricing.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -269,7 +270,8 @@ test('form-mode paragraphs are absent in WhatsApp mode and present in form mode'
 });
 
 test('the committed privacidad.html is the template with the committed config; version and date equal config', () => {
-  assert.equal(privacy, renderWith(config));
+  // PF3: the build stamps the page's style.css link with ?v=<hash> after rendering it.
+  assert.equal(privacy, versionAssets(renderWith(config), fileVersion));
   const span = (k) => (privacy.match(new RegExp(`data-config="${k}">([^<]*)<`)) || [])[1];
   assert.equal(span('privacyPolicyVersion'), config.privacyPolicyVersion);
   assert.equal(span('privacyPolicyDate'), formatDateEs(config.privacyPolicyDate));
