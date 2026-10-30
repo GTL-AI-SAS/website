@@ -39,7 +39,12 @@ test.describe('placement and existing content', () => {
     await open(page);
     const now = await page.evaluate((sel) => {
       const norm = (s) => s.replace(/\s+/g, ' ').trim();
-      return Object.fromEntries(Object.entries(sel).map(([k, s]) => [k, norm(document.querySelector(s).textContent)]));
+      return Object.fromEntries(Object.entries(sel).map(([k, s]) => {
+        const section = document.querySelector(s).cloneNode(true);
+        // Branding adds media captions and downloads; preserve the original section copy.
+        section.querySelectorAll('.brand-film, .brand-collection').forEach((el) => el.remove());
+        return [k, norm(section.textContent)];
+      }));
     }, SECTIONS);
     // The one accepted header change: the "Planes" link between About and Team.
     expect(now.header).toBe(before.header.replace('About Team', 'About Planes Team'));
