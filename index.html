@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=06080120c6">
+<link rel="stylesheet" href="style.css?v=30f3fd93eb">
 <script src="pricing.js?v=94f3423503" defer onerror="document.documentElement.classList.remove('js')"></script>
 </head>
 <body>
@@ -66,43 +66,6 @@
         </video>
       </button>
       </div>
-      <details class="brand-collection">
-        <summary>More from our brand <span>Stickers &amp; holiday editions</span></summary>
-        <div class="brand-collection-grid">
-          <figure class="brand-card">
-            <div class="brand-sticker-stage">
-              <picture>
-                <source media="(prefers-reduced-motion: reduce)" srcset="assets/branding/gtl-ai-sticker-1-yume.png">
-                <img class="brand-sticker brand-sticker-symbol" src="assets/branding/gtl-ai-sticker-1-yume.gif" alt="Animated Yume symbol in a mint circle" width="512" height="512" loading="lazy" decoding="async">
-              </picture>
-            </div>
-            <figcaption><span>Yume</span><a href="assets/branding/gtl-ai-sticker-1-yume.gif" download>Download sticker</a></figcaption>
-          </figure>
-          <figure class="brand-card">
-            <div class="brand-sticker-stage">
-              <picture>
-                <source media="(prefers-reduced-motion: reduce)" srcset="assets/branding/gtl-ai-sticker-2-gtlai.png">
-                <img class="brand-sticker brand-sticker-wordmark" src="assets/branding/gtl-ai-sticker-2-gtlai.gif" alt="Animated GTL AI wordmark" width="512" height="512" loading="lazy" decoding="async">
-              </picture>
-            </div>
-            <figcaption><span>GTL AI</span><a href="assets/branding/gtl-ai-sticker-2-gtlai.gif" download>Download sticker</a></figcaption>
-          </figure>
-          <figure class="brand-film brand-card">
-            <video controls muted playsinline preload="none" width="1920" height="1080" poster="assets/branding/holiday-hat.png" aria-label="GTL AI holiday logo with a Santa hat">
-              <source src="assets/branding/gtl-ai-navidad-gorro-1080p.mp4" type="video/mp4">
-              <a href="assets/branding/gtl-ai-navidad-gorro-1080p.mp4">Watch the holiday hat animation</a>
-            </video>
-            <figcaption><span>A little holiday spirit.</span><a href="assets/branding/gtl-ai-navidad-gorro-1080p.mp4" download>Download MP4</a></figcaption>
-          </figure>
-          <figure class="brand-film brand-card">
-            <video controls muted playsinline preload="none" width="1920" height="1080" poster="assets/branding/holiday-lights.png" aria-label="GTL AI holiday logo with festive lights">
-              <source src="assets/branding/gtl-ai-navidad-luces-1080p.mp4" type="video/mp4">
-              <a href="assets/branding/gtl-ai-navidad-luces-1080p.mp4">Watch the holiday lights animation</a>
-            </video>
-            <figcaption><span>Lighting up the season.</span><a href="assets/branding/gtl-ai-navidad-luces-1080p.mp4" download>Download MP4</a></figcaption>
-          </figure>
-        </div>
-      </details>
     </div>
   </section>
 
@@ -796,25 +759,49 @@
 
   // The hero plays only on initial page load, then holds the completed logo.
   const brandIntro = document.querySelector('[data-brand-intro]');
+  const brandIntroStill = brandIntro.querySelector('.brand-film-still');
   const brandIntroVideo = brandIntro.querySelector('video');
+  const brandIntroSource = brandIntroVideo.querySelector('source');
+  const brandIntroStandard = {
+    video: 'assets/branding/gtl-ai-logo-v2-rapido-1080p.mp4',
+    still: 'assets/branding/gtl-ai-logo-v2-rapido-last.png'
+  };
+  const brandIntroHoliday = [
+    {
+      video: 'assets/branding/gtl-ai-navidad-gorro-1080p.mp4',
+      still: 'assets/branding/holiday-hat.png'
+    },
+    {
+      video: 'assets/branding/gtl-ai-navidad-luces-1080p.mp4',
+      still: 'assets/branding/holiday-lights.png'
+    }
+  ];
+  const brandIntroSelection = new Date().getMonth() === 11
+    ? brandIntroHoliday[Math.floor(Math.random() * brandIntroHoliday.length)]
+    : brandIntroStandard;
+  brandIntroSource.src = brandIntroSelection.video;
+  brandIntroStill.src = brandIntroSelection.still;
+  brandIntroVideo.poster = brandIntroSelection.still;
+  brandIntroVideo.load();
   let brandIntroFinished = brandMotionPreference.matches;
-  function finishBrandIntro() {
+  function finishBrandIntro(showFinalFrame) {
     brandIntroFinished = true;
     brandIntroVideo.pause();
     brandIntro.classList.remove('is-playing');
+    brandIntro.classList.toggle('is-finished', showFinalFrame === true);
   }
   brandIntroVideo.addEventListener('playing', () => {
     if (brandIntroFinished) finishBrandIntro();
     else brandIntro.classList.add('is-playing');
   });
-  brandIntroVideo.addEventListener('ended', finishBrandIntro, { once: true });
-  brandIntroVideo.addEventListener('error', finishBrandIntro, { once: true });
+  brandIntroVideo.addEventListener('ended', () => finishBrandIntro(true), { once: true });
+  brandIntroVideo.addEventListener('error', () => finishBrandIntro(false), { once: true });
   brandMotionPreference.addEventListener('change', () => {
-    if (brandMotionPreference.matches) finishBrandIntro();
+    if (brandMotionPreference.matches) finishBrandIntro(false);
   });
   if (!brandIntroFinished) {
     brandIntroVideo.muted = true;
-    brandIntroVideo.play().catch(finishBrandIntro);
+    brandIntroVideo.play().catch(() => finishBrandIntro(false));
   }
 
   // Both directions use native forward playback. Only seek when switching clips.

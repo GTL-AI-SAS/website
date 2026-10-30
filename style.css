@@ -213,7 +213,7 @@ a {
   min-width: 0;
 }
 
-.brand-film, .brand-card {
+.brand-film {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -268,6 +268,14 @@ button.brand-film--ambient {
   visibility: hidden;
 }
 
+.brand-film--ambient.is-finished video {
+  visibility: visible;
+}
+
+.brand-film--ambient.is-finished .brand-film-still {
+  visibility: hidden;
+}
+
 .brand-film--symbol {
   aspect-ratio: 16 / 9;
 }
@@ -292,79 +300,6 @@ button.brand-film--ambient {
   background: var(--accent-dim);
 }
 
-.brand-film figcaption, .brand-card figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px 16px;
-  padding: 16px 20px;
-  border-top: 1px solid var(--border);
-  font-size: 0.8rem;
-  color: var(--text-dim);
-}
-
-.brand-film figcaption a, .brand-card figcaption a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.brand-collection {
-  margin-top: 40px;
-  border-top: 1px solid var(--border);
-}
-
-.brand-collection summary {
-  padding: 22px 0;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.brand-collection summary span {
-  display: inline-block;
-  margin-left: 12px;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  font-weight: 400;
-}
-
-.brand-collection-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-}
-
-.brand-sticker-stage {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-.brand-sticker-stage picture {
-  display: contents;
-}
-
-.brand-sticker {
-  display: block;
-  width: 100%;
-  height: auto;
-  grid-area: 1 / 1;
-}
-
-/* Clip the supplied stickers' green matte without changing the source GIFs. */
-.brand-sticker-symbol {
-  width: 42%;
-  clip-path: circle(47%);
-}
-
-.brand-sticker-wordmark {
-  width: 86%;
-  clip-path: inset(33% 2% round 9%);
-  margin-block: -20%;
-}
-
 @media (max-width: 900px) {
   .hero-inner, .about-brand-grid {
     grid-template-columns: 1fr;
@@ -376,13 +311,6 @@ button.brand-film--ambient {
 }
 
 @media (max-width: 640px) {
-  .brand-collection-grid {
-    grid-template-columns: 1fr;
-  }
-  .brand-collection summary span {
-    display: block;
-    margin: 6px 0 0;
-  }
   .logo-symbol {
     width: 28px;
     height: 28px;
@@ -1399,10 +1327,16 @@ html.js .pricing-panel.is-active {
     column-gap: 10px;
   }
   .nav {
-    gap: 8px;
+    gap: 6px;
+    font-size: 0.8rem;
   }
   .nav-cta {
-    padding: 6px 10px;
+    padding: 5px 8px;
+  }
+  .logo-symbol {
+    width: 22px;
+    height: 22px;
+    margin-right: 4px;
   }
 }
 

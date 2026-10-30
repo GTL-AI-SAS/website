@@ -42,7 +42,7 @@ test.describe('placement and existing content', () => {
       return Object.fromEntries(Object.entries(sel).map(([k, s]) => {
         const section = document.querySelector(s).cloneNode(true);
         // Branding adds media captions and downloads; preserve the original section copy.
-        section.querySelectorAll('.brand-film, .brand-collection').forEach((el) => el.remove());
+        section.querySelectorAll('.brand-film').forEach((el) => el.remove());
         return [k, norm(section.textContent)];
       }));
     }, SECTIONS);
