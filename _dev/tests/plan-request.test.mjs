@@ -166,18 +166,20 @@ test('links are fully percent-encoded and carry no personal data', () => {
 // ---------- the config ----------
 
 // PQ1: JD's inputs (2026-10-14), written out independently of site-config.json. Pass B (A1 §5, 2026-10-23): form mode,
-// the live API, policy version 1.1 dated the publishing day.
-test('the committed config is valid and holds JD\'s PQ1 inputs and the Pass B go-live values', () => {
+// the live API, policy version 1.1 dated the publishing day. W15 (2026-10-30): the registered name, NIT and address; policy 1.2.
+test('the committed config is valid and holds JD\'s PQ1 inputs, the Pass B go-live values and the W15 registered values', () => {
   assert.deepEqual(validateConfig(config), []);
   assert.equal(config.planRequestMode, 'form');
   assert.equal(config.apiBaseUrl, 'https://api.gtl-ai.com');
   assert.equal(config.whatsappNumber, '573192788238');
   assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
-  assert.equal(config.controller.city, 'Bogotá');
-  assert.equal(config.controller.address, 'Cra 47 #104B-15');
-  assert.equal(config.privacyPolicyVersion, '1.1');
-  assert.equal(config.privacyPolicyDate, '2026-10-24');
-  assert.equal(formatDateEs(config.privacyPolicyDate), '24 de octubre de 2026');
+  assert.equal(config.controller.name, 'GTL AI S.A.S');
+  assert.equal(config.controller.nit, '902.117.320-8');
+  assert.equal(config.controller.city, 'Bogotá D.C.');
+  assert.equal(config.controller.address, 'Carrera 47 # 104B-15');
+  assert.equal(config.privacyPolicyVersion, '1.2');
+  assert.equal(config.privacyPolicyDate, '2026-10-30');
+  assert.equal(formatDateEs(config.privacyPolicyDate), '30 de octubre de 2026');
   assert.equal(formatWhatsApp(config.whatsappNumber), '+57 319 278 8238');
   assert.deepEqual(validateConfig(TEST_CONFIG), []);
   assert.deepEqual(validateConfig(PENDING_CONFIG), []);
@@ -237,7 +239,7 @@ test('the privacy page states every element the contract lists, from config', ()
   assert.match(html, /<title>Política de tratamiento de datos personales/);
   assert.deepEqual([...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/g)].map((m) => m[1]), HEADINGS);
   for (const s of [
-    'GTL AI (sociedad en constitución), NIT en trámite, con domicilio en Medellín, Colombia, y dirección Calle 10 # 43-12.',
+    'GTL AI S.A.S, NIT 902.117.320-8, con domicilio en Medellín, Colombia, y dirección Calle 10 # 43-12.',
     'Correo: privacidad@example.com', 'Teléfono y WhatsApp: +57 300 123 4567',
     'recibimos su número, su nombre de perfil y lo que nos cuente en la conversación',
     'Para responder su solicitud', 'seguimiento comercial',

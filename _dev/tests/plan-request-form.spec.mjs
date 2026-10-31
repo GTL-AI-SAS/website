@@ -597,7 +597,7 @@ test.describe('the request form', () => {
     await submit(page);
     await expect(page.locator(SEL.success)).toBeVisible();
     expect(requests[0].body.policyVersion).toBe(config.privacyPolicyVersion);
-    expect(requests[0].body.policyVersion).toBe('1.1');
+    expect(requests[0].body.policyVersion).toBe('1.2');
     await page.goto('/privacidad.html');
     await expect(page.locator('[data-config="privacyPolicyVersion"]')).toHaveText(requests[0].body.policyVersion);
   });

@@ -47,13 +47,13 @@ const inputTag = (html, name) => (html.match(new RegExp(`<(?:input|textarea|sele
 
 // ---------- the config (A1 §5) ----------
 
-test('the committed config is the go-live config: form mode, the live API, policy 1.1 dated the publishing day', () => {
+test('the committed config is the go-live config: form mode, the live API, policy 1.2 dated the publishing day', () => {
   assert.deepEqual(validateConfig(config), []);
   assert.deepEqual(configReleaseItems(config), []);
   assert.equal(config.planRequestMode, 'form');
   assert.equal(config.apiBaseUrl, 'https://api.gtl-ai.com');
-  assert.equal(config.privacyPolicyVersion, '1.1');
-  assert.equal(config.privacyPolicyDate, '2026-10-24');
+  assert.equal(config.privacyPolicyVersion, '1.2');
+  assert.equal(config.privacyPolicyDate, '2026-10-30');
 });
 
 test('form mode builds with any apiBaseUrl; only the release check demands https://', () => {
@@ -81,10 +81,10 @@ test('site-config.js holds exactly the five keys plan-request.js reads, from the
   assert.equal(siteConfigJs, renderSiteConfigJs(config));
   const published = evalConfig(siteConfigJs);
   assert.deepEqual(published, {
-    planRequestMode: 'form', apiBaseUrl: 'https://api.gtl-ai.com', privacyPolicyVersion: '1.1',
+    planRequestMode: 'form', apiBaseUrl: 'https://api.gtl-ai.com', privacyPolicyVersion: '1.2',
     replyTime: config.replyTime, whatsappNumber: config.whatsappNumber,
   });
-  for (const secret of ['contactEmail', 'controller', 'founders', 'privacyPolicyDate', 'Bogotá', 'garydmendez']) {
+  for (const secret of ['contactEmail', 'controller', 'founders', 'privacyPolicyDate', 'Bogotá', '902.117.320-8', 'garydmendez']) {
     assert.ok(!siteConfigJs.includes(secret), `${secret} must not reach the browser config`);
   }
   const test = evalConfig(renderSiteConfigJs(WA));
@@ -265,7 +265,7 @@ test('the dialog copy carries none of the words the page checks forbid', () => {
 
 const RAILWAY_RESEND = 'Para el formulario de solicitud usamos además Railway, que aloja el servidor y la base de datos donde se guardan sus solicitudes, y Resend, que nos envía los correos de aviso de cada solicitud.';
 
-test('Section 5 names Railway and Resend only in form mode; the committed page carries it at version 1.1', () => {
+test('Section 5 names Railway and Resend only in form mode; the committed page carries it at version 1.2', () => {
   const chrome = sharedChrome(index);
   const form = textOf(renderPrivacy(template, FORM, chrome));
   const wa = textOf(renderPrivacy(template, WA, chrome));
@@ -276,7 +276,7 @@ test('Section 5 names Railway and Resend only in form mode; the committed page c
   const committed = textOf(privacy);
   assert.ok(committed.includes(RAILWAY_RESEND));
   assert.ok(committed.includes(`Versión ${config.privacyPolicyVersion}, vigente desde el ${formatDateEs(config.privacyPolicyDate)}`));
-  assert.ok(committed.includes('Versión 1.1, vigente desde el 24 de octubre de 2026'));
+  assert.ok(committed.includes('Versión 1.2, vigente desde el 30 de octubre de 2026'));
   // PF3: the build stamps the page's style.css link with ?v=<hash> after rendering it.
   assert.equal(privacy, versionAssets(renderPrivacy(template, config, chrome), fileVersion));
 });
