@@ -69,7 +69,7 @@ for (const leaveBeforeReady of [false, true]) {
     mediaSite.release(sources[1]);
     await expect(trigger).toHaveClass(/is-ready/);
     for (const video of [advance, returning]) {
-      expect(await video.evaluate((el) => el.currentSrc)).toMatch(/\/assets\/branding\/.*\.mp4$/);
+      expect(await video.evaluate((el) => el.currentSrc)).toMatch(/\/assets\/branding\/.*\.mp4(?:\?rev=[a-f0-9]+)?$/);
     }
 
     if (leaveBeforeReady) {

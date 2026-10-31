@@ -59,10 +59,10 @@
       <button type="button" class="brand-film brand-film--ambient brand-film--symbol" aria-label="Animate Yume: hover to advance, move away to rewind; tap or press Enter to change direction" data-brand-scrub>
         <img class="brand-film-still" src="assets/branding/ezgif-yume-reverse-first.png" alt="" width="512" height="512" loading="lazy">
         <video data-direction="advance" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512" poster="assets/branding/ezgif-yume-reverse-first.png">
-          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume-reverse.mp4" type="video/mp4">
+          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume-reverse.mp4?rev=b8dcb0e60c" type="video/mp4">
         </video>
         <video data-direction="return" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512">
-          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume.mp4" type="video/mp4">
+          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume.mp4?rev=2e77d29ed9" type="video/mp4">
         </video>
       </button>
       </div>
@@ -813,6 +813,7 @@
     let initialized = false;
     let direction = -1;
     let hovering = false;
+    let touchInteraction = false;
     let revision = 0;
     let pendingSwitch;
     let loading;
@@ -865,11 +866,12 @@
       const run = ++revision;
       if (pendingSwitch) pendingSwitch.abort();
       videos.forEach((video) => video.pause());
+      if (direction === 0) return;
       if (!initialized) {
+        if (direction === -1 && !loading) return;
         initialize();
         return;
       }
-      if (direction === 0) return;
 
       // Preserve accumulated progress, allowing for the clips' slightly different durations.
       const position = progress();
@@ -964,8 +966,11 @@
       if (!brandMotionPreference.matches) setDirection(-1);
     });
     // Touch and keyboard users can toggle direction without a hover-capable pointer.
+    trigger.addEventListener('touchstart', () => { touchInteraction = true; }, { passive: true });
     trigger.addEventListener('click', (event) => {
-      if (event.detail === 0 || event.pointerType === 'touch' || brandMotionPreference.matches) {
+      // Safari's synthetic touch click can be a MouseEvent without pointerType.
+      if (touchInteraction || event.detail === 0 || event.pointerType === 'touch' || brandMotionPreference.matches) {
+        touchInteraction = false;
         setDirection(direction === 1 ? -1 : 1);
       }
     });

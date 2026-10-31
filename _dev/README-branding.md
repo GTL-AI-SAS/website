@@ -19,6 +19,8 @@ The 512 px, 25 fps About clips use H.264 baseline with `-g 1 -bf 0 -pix_fmt yuv4
 and `-movflags +faststart`. Independent frames cost more bytes than long GOP clips,
 but make the direction switches precise across engines. They are not part of the
 initial page transfer. Playback holds the final frame before end-of-stream.
+Their `?rev=` URLs use the first ten hex digits of each file's SHA-256; update
+them when re-encoding so visitors do not reuse an older cached clip.
 
 Run branding tests in Chromium, Firefox and WebKit. The delayed-load tests use a
 real HTTP server with range responses because native WebKit media requests can
