@@ -1,0 +1,5 @@
+# Development notes must never be rendered or copied into GitHub Pages.
+exclude:
+  - _dev
+  - TODO.md
+  - TODO.html
