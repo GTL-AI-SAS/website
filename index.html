@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=75cb2edf1a">
+<link rel="stylesheet" href="style.css?v=5e2b09168a">
 <script src="pricing.js?v=94f3423503" defer onerror="document.documentElement.classList.remove('js')"></script>
 </head>
 <body>
@@ -819,6 +819,25 @@
     let loading;
     let endFrame = 0;
     let heldPosition = 0;
+    let cancelFrameReveal = () => {};
+
+    function revealPresentedFrame(video) {
+      if (trigger.classList.contains('has-video-frame')) return;
+      cancelFrameReveal();
+      const run = revision;
+      function reveal() {
+        if (run !== revision || video !== active || video.seeking || video.readyState < 2) return;
+        trigger.classList.add('has-video-frame');
+      }
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        const id = video.requestVideoFrameCallback(reveal);
+        cancelFrameReveal = () => video.cancelVideoFrameCallback(id);
+      } else {
+        // Older WebKit ports need a paint opportunity after the playing event.
+        let id = requestAnimationFrame(() => { id = requestAnimationFrame(reveal); });
+        cancelFrameReveal = () => cancelAnimationFrame(id);
+      }
+    }
 
     function progress() {
       if (heldPosition !== null) return heldPosition;
@@ -863,6 +882,7 @@
     async function setDirection(next) {
       direction = next;
       cancelAnimationFrame(endFrame);
+      cancelFrameReveal();
       const run = ++revision;
       if (pendingSwitch) pendingSwitch.abort();
       videos.forEach((video) => video.pause());
@@ -937,6 +957,8 @@
     videos.forEach((video) => video.addEventListener('playing', () => {
       const expected = video === advance ? 1 : -1;
       if (video !== active || direction !== expected) { video.pause(); return; }
+      // Metadata readiness must not uncover an undecoded video surface.
+      revealPresentedFrame(video);
       let previousTime = video.currentTime;
       function holdLastFrame() {
         if (video !== active || video.paused || direction !== expected) return;

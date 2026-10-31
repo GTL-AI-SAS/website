@@ -11,6 +11,36 @@ const position = (trigger) => trigger.evaluate((el) => {
   return video.dataset.direction === 'advance' ? fraction : 1 - fraction;
 });
 
+test('the first hover keeps its still cover until a video frame is presented', async ({ page }) => {
+  await page.addInitScript(() => {
+    const frames = new Map();
+    let nextId = 0;
+    HTMLVideoElement.prototype.requestVideoFrameCallback = function (callback) {
+      const id = ++nextId;
+      frames.set(id, { video: this, callback });
+      return id;
+    };
+    HTMLVideoElement.prototype.cancelVideoFrameCallback = (id) => frames.delete(id);
+    window.presentPendingVideoFrames = () => {
+      const pending = [...frames.values()];
+      frames.clear();
+      pending.forEach(({ video, callback }) => callback(performance.now(), { mediaTime: video.currentTime }));
+    };
+    window.pendingVideoFrameCount = () => frames.size;
+  });
+  await page.goto('/');
+  const trigger = page.locator('[data-brand-scrub]');
+  const still = trigger.locator('img');
+  await trigger.hover();
+  await expect(trigger).toHaveClass(/is-ready/);
+  await expect.poll(() => page.evaluate(() => window.pendingVideoFrameCount())).toBeGreaterThan(0);
+  await expect(still).toBeVisible();
+  await expect(trigger).not.toHaveClass(/has-video-frame/);
+  await page.evaluate(() => window.presentPendingVideoFrames());
+  await expect(still).toBeHidden();
+  await expect(trigger).toHaveClass(/has-video-frame/);
+});
+
 test('touch controls work with an iPhone viewport in WebKit', async ({ browser, browserName, baseURL }) => {
   test.skip(browserName !== 'webkit', 'iPhone emulation uses WebKit');
   const context = await browser.newContext({ ...devices['iPhone 13'], baseURL });
@@ -22,6 +52,7 @@ test('touch controls work with an iPhone viewport in WebKit', async ({ browser, 
     await trigger.tap();
     await expect(trigger).toHaveClass(/is-ready/);
     await expect.poll(() => position(trigger)).toBeGreaterThan(0.15);
+    await expect(trigger.locator('img')).toBeHidden();
     await trigger.tap();
     await expect.poll(() => position(trigger)).toBe(0);
     for (const video of await trigger.locator('video').all()) await expect(video).toHaveJSProperty('paused', true);
@@ -74,14 +105,24 @@ for (const leaveBeforeReady of [false, true]) {
 
     if (leaveBeforeReady) {
       await expect(advance).toHaveJSProperty('paused', true);
-      expect(await position(trigger)).toBe(0);
+      // Safari can preroll its paused clock within the first frame; the cover
+      // must still show the exact initial image until playback presents a frame.
+      await expect(trigger.locator('img')).toBeVisible();
+      await expect(trigger).not.toHaveClass(/has-video-frame/);
       await trigger.hover();
     }
     await expect(advance).toHaveJSProperty('paused', false);
     await expect.poll(() => position(trigger)).toBeGreaterThan(0.15);
+    await expect(trigger).toHaveClass(/has-video-frame/);
+    await expect(trigger.locator('img')).toBeHidden();
+    await returning.evaluate(video => {
+      video.returnPlaybackObserved = false;
+      video.addEventListener('playing', () => { video.returnPlaybackObserved = true; }, { once: true });
+    });
     await page.mouse.move(0, 0);
     await expect(returning).toHaveClass(/is-active/);
-    await expect(returning).toHaveJSProperty('paused', false);
+    // The short return may finish before the next assertion is scheduled.
+    await expect(returning).toHaveJSProperty('returnPlaybackObserved', true);
     await expect.poll(() => position(trigger), { timeout: 6000 }).toBe(0);
 
     // Further interactions reuse the same two native video sources.

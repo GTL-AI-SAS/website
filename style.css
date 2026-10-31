@@ -291,7 +291,12 @@ button.brand-film--ambient {
   pointer-events: none;
 }
 
-.brand-film--symbol.is-ready .brand-film-still {
+.brand-film--symbol .brand-film-still {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.brand-film--symbol.has-video-frame .brand-film-still {
   visibility: hidden;
 }
 
