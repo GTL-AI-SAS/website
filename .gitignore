@@ -5,3 +5,7 @@ _dev/playwright-report/
 _dev/blob-report/
 _dev/playwright/.cache/
 _dev/screenshots/
+
+# Keep private planning notes out of Git and the published site.
+/TODO.md
+/TODO.html

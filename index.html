@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=30f3fd93eb">
+<link rel="stylesheet" href="style.css?v=75cb2edf1a">
 <script src="pricing.js?v=94f3423503" defer onerror="document.documentElement.classList.remove('js')"></script>
 </head>
 <body>
@@ -43,7 +43,7 @@
       <figure class="brand-film brand-film--ambient" data-brand-intro>
         <img class="brand-film-still" src="assets/branding/gtl-ai-logo-v2-rapido-last.png" alt="GTL AI" width="960" height="540">
         <video muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="1920" height="1080" poster="assets/branding/gtl-ai-logo-v2-rapido-last.png">
-          <source src="assets/branding/gtl-ai-logo-v2-rapido-1080p.mp4" type="video/mp4">
+          <source data-src="assets/branding/gtl-ai-logo-intro.mp4" type="video/mp4">
         </video>
       </figure>
     </div>
@@ -59,10 +59,10 @@
       <button type="button" class="brand-film brand-film--ambient brand-film--symbol" aria-label="Animate Yume: hover to advance, move away to rewind; tap or press Enter to change direction" data-brand-scrub>
         <img class="brand-film-still" src="assets/branding/ezgif-yume-reverse-first.png" alt="" width="512" height="512" loading="lazy">
         <video data-direction="advance" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512" poster="assets/branding/ezgif-yume-reverse-first.png">
-          <source src="assets/branding/ezgif-gtl-ai-sticker-1-yume-reverse.mp4" type="video/mp4">
+          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume-reverse.mp4" type="video/mp4">
         </video>
         <video data-direction="return" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512">
-          <source src="assets/branding/ezgif-gtl-ai-sticker-1-yume.mp4" type="video/mp4">
+          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume.mp4" type="video/mp4">
         </video>
       </button>
       </div>
@@ -763,26 +763,24 @@
   const brandIntroVideo = brandIntro.querySelector('video');
   const brandIntroSource = brandIntroVideo.querySelector('source');
   const brandIntroStandard = {
-    video: 'assets/branding/gtl-ai-logo-v2-rapido-1080p.mp4',
+    video: 'assets/branding/gtl-ai-logo-intro.mp4',
     still: 'assets/branding/gtl-ai-logo-v2-rapido-last.png'
   };
   const brandIntroHoliday = [
     {
-      video: 'assets/branding/gtl-ai-navidad-gorro-1080p.mp4',
+      video: 'assets/branding/gtl-ai-holiday-hat.mp4',
       still: 'assets/branding/holiday-hat.png'
     },
     {
-      video: 'assets/branding/gtl-ai-navidad-luces-1080p.mp4',
+      video: 'assets/branding/gtl-ai-holiday-lights.mp4',
       still: 'assets/branding/holiday-lights.png'
     }
   ];
   const brandIntroSelection = new Date().getMonth() === 11
     ? brandIntroHoliday[Math.floor(Math.random() * brandIntroHoliday.length)]
     : brandIntroStandard;
-  brandIntroSource.src = brandIntroSelection.video;
   brandIntroStill.src = brandIntroSelection.still;
   brandIntroVideo.poster = brandIntroSelection.still;
-  brandIntroVideo.load();
   let brandIntroFinished = brandMotionPreference.matches;
   function finishBrandIntro(showFinalFrame) {
     brandIntroFinished = true;
@@ -800,6 +798,8 @@
     if (brandMotionPreference.matches) finishBrandIntro(false);
   });
   if (!brandIntroFinished) {
+    brandIntroSource.src = brandIntroSelection.video;
+    brandIntroVideo.load();
     brandIntroVideo.muted = true;
     brandIntroVideo.play().catch(() => finishBrandIntro(false));
   }
@@ -816,10 +816,15 @@
     let revision = 0;
     let pendingSwitch;
     let loading;
-    const localSources = new Map();
+    let endFrame = 0;
+    let heldPosition = 0;
 
     function progress() {
-      const fraction = active.currentTime / active.duration;
+      if (heldPosition !== null) return heldPosition;
+      // Firefox rounds media clocks, and WebKit can report a frame beyond duration.
+      const time = active.currentTime;
+      const fraction = active.ended || time >= active.duration - 0.002 ? 1
+        : time <= 0.002 ? 0 : time / active.duration;
       return Math.max(0, Math.min(1, active === advance ? fraction : 1 - fraction));
     }
 
@@ -856,6 +861,7 @@
 
     async function setDirection(next) {
       direction = next;
+      cancelAnimationFrame(endFrame);
       const run = ++revision;
       if (pendingSwitch) pendingSwitch.abort();
       videos.forEach((video) => video.pause());
@@ -881,50 +887,42 @@
       }
       // A timestamp rounded to the endpoint must hold there, never implicitly loop.
       if (run !== revision || target.ended || target.currentTime >= target.duration) return;
+      heldPosition = null;
       target.muted = true;
       target.play().catch(() => {});
     }
 
-    async function primeVideo(video) {
-      try {
-        // preload="auto" is only a hint. A complete Blob removes network seeks on first use.
-        if (!localSources.has(video)) {
-          const response = await fetch(video.querySelector('source').src);
-          if (!response.ok) throw new Error('Video unavailable');
-          localSources.set(video, URL.createObjectURL(await response.blob()));
-        }
-        const loaded = await new Promise((resolve) => {
+    function primeVideo(video) {
+      if (video.readyState >= 1 && Number.isFinite(video.duration)) return Promise.resolve(true);
+      return new Promise((resolve) => {
+          const source = video.querySelector('source');
+          const timer = setTimeout(() => finish(false), 15000);
           function finish(ready) {
-            video.removeEventListener('loadeddata', check);
+            clearTimeout(timer);
+            video.removeEventListener('loadedmetadata', check);
             video.removeEventListener('canplay', check);
             video.removeEventListener('error', failed);
+            source.removeEventListener('error', failed);
             resolve(ready);
           }
-          function check() { if (video.readyState >= 2) finish(true); }
+          // Safari may only preload metadata until play() is requested.
+          function check() { if (video.readyState >= 1 && Number.isFinite(video.duration)) finish(true); }
           function failed() { finish(false); }
-          video.addEventListener('loadeddata', check);
+          video.addEventListener('loadedmetadata', check);
           video.addEventListener('canplay', check);
           video.addEventListener('error', failed);
-          video.src = localSources.get(video);
+          source.addEventListener('error', failed, { once: true });
+          video.muted = true;
+          video.preload = 'auto';
+          source.src = source.dataset.src;
           video.load();
           check();
         });
-        if (!loaded || !Number.isFinite(video.duration)) throw new Error('Video could not decode');
-
-        // Decode both ends behind the poster, including the return clip's first handoff.
-        const signal = new AbortController().signal;
-        const endReady = await prepareFrame(video, Math.max(0, video.duration - 0.001), signal);
-        if (!endReady) return false;
-        return video === advance ? await prepareFrame(video, 0, signal) : true;
-      } catch {
-        if (localSources.has(video)) URL.revokeObjectURL(localSources.get(video));
-        localSources.delete(video);
-        return false;
-      }
     }
 
     function initialize() {
       if (loading || initialized) return;
+      trigger.setAttribute('aria-busy', 'true');
       loading = Promise.all(videos.map(primeVideo)).then((ready) => {
         if (!ready.every(Boolean)) return;
         initialized = true;
@@ -932,9 +930,29 @@
         trigger.classList.add('is-ready');
         // Use the latest hover state, not the one present when downloading began.
         setDirection(direction);
-      }).finally(() => { loading = null; });
+      }).finally(() => { loading = null; trigger.removeAttribute('aria-busy'); });
     }
-    initialize();
+    videos.forEach((video) => video.addEventListener('playing', () => {
+      const expected = video === advance ? 1 : -1;
+      if (video !== active || direction !== expected) { video.pause(); return; }
+      let previousTime = video.currentTime;
+      function holdLastFrame() {
+        if (video !== active || video.paused || direction !== expected) return;
+        const time = video.currentTime;
+        // These 25 fps clips end on duration - 0.04. Hold that final decoded frame
+        // before WebKit's end-of-stream clock can briefly wrap back to zero.
+        if (time >= video.duration - 0.04 || (time < previousTime && previousTime >= video.duration - 0.1)) {
+          heldPosition = video === advance ? 1 : 0;
+          video.pause();
+          video.currentTime = video.duration;
+          return;
+        }
+        previousTime = time;
+        endFrame = requestAnimationFrame(holdLastFrame);
+      }
+      cancelAnimationFrame(endFrame);
+      endFrame = requestAnimationFrame(holdLastFrame);
+    }));
     trigger.addEventListener('pointerenter', (event) => {
       if (event.pointerType === 'touch') return;
       hovering = true;
