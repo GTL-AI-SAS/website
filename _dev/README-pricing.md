@@ -118,7 +118,7 @@ into the HTML.
 | `whatsappNumber` | Digits only, with the country code, for example `573001234567`. While it is `"PENDIENTE"`, the links are `https://wa.me/?text=…` (WhatsApp asks for the contact) and the release check fails. |
 | `contactEmail` | The email for clients and privacy requests, shown on the privacy page. `"PENDIENTE"` until JD gives it. |
 | `replyTime` | The reply-time promise shown in the form's success view. |
-| `privacyPolicyVersion`, `privacyPolicyDate` | Shown at the end of the privacy page, and the version is sent with every form request as `policyVersion`. **It must equal Railway's `POLICY_VERSION`**, or every submission is a 422 and the form tells the visitor to reload. The date is `YYYY-MM-DD` and is written out, e.g. "24 de octubre de 2026". |
+| `privacyPolicyVersion`, `privacyPolicyDate` | Shown at the end of the privacy page, and the version is sent with every form request as `policyVersion`. **It must equal Railway's `POLICY_VERSION`**, or every submission is a 422 and the form tells the visitor to reload. The date is `YYYY-MM-DD` and is written out, e.g. "30 de octubre de 2026". |
 | `controller` | The data controller: `name`, `nit`, `city` and `address` (the city and the street address are `"PENDIENTE"` until JD gives them). |
 | `apiBaseUrl` | `null` in WhatsApp mode. In form mode, the `https://` address of the plan-request API (`https://api.gtl-ai.com`); the release check fails on anything else. |
 
@@ -139,15 +139,15 @@ text inside it, "(abre WhatsApp en una pestaña nueva)" (`NEW_TAB_TEXT` in `buil
 - Generated from `_dev/templates/privacidad.html`. Never edit `privacidad.html` by hand; the check fails.
 - `{{key}}` in the template takes a value from the config. Text between `<!-- form -->` and `<!-- /form -->` appears only in form mode.
 - The header and footer are copied from `index.html` at build time, with their links pointing to `index.html#…`.
-- The text was approved by JD in PQ1 (version 1.0); form mode changed it to version 1.1 (Pass B, amendment A1 §4). It is
-  not legal advice.
+- The text was approved by JD in PQ1 (version 1.0); form mode changed it to version 1.1 (Pass B, amendment A1 §4); W15
+  (2026-10-30) put the registered name, NIT and address in §1 (version 1.2). It is not legal advice.
 - In form mode three parts appear that WhatsApp mode hides: what the form collects (§2), the consent box (§4) and the
   providers Railway (server and database) and Resend (notification emails) in §5.
 - The home page links to it from the footer ("Privacidad"), and the form's consent box links to it too.
 
 ## Form mode (PF2 Pass B): on since 2026-10-24
 
-`site-config.json` has `"planRequestMode": "form"`, `"apiBaseUrl": "https://api.gtl-ai.com"`, `"privacyPolicyVersion": "1.1"`.
+`site-config.json` has `"planRequestMode": "form"`, `"apiBaseUrl": "https://api.gtl-ai.com"`, `"privacyPolicyVersion": "1.2"`.
 The form's field limits (name 2–100, business 2–150, phone 20, email 254, city 80, message 500) live in `FIELD_LIMITS` in
 `build-pricing.mjs`; the build writes them as `minlength`/`maxlength`, and `plan-request.js` reads them from there.
 They are the live API's own limits (`PlanRequestValidator`; amendment A2 §1), so nothing the form accepts is too long for the API.
@@ -162,8 +162,8 @@ script tags disappear from `index.html`, the privacy page drops its form paragra
 The Pass B end-to-end tests skip themselves in WhatsApp mode. Bump `privacyPolicyVersion`/`privacyPolicyDate` if the
 privacy text changes as a result, and keep Railway's `POLICY_VERSION` equal to it.
 
-**Policy version and date (amendment A1 §4–§6).** Form mode and privacy policy 1.1 have been live since 2026-10-24, and
-Railway runs `POLICY_VERSION` `1.1`. `privacyPolicyDate` is the policy's effective date: it changes, together with
+**Policy version and date (amendment A1 §4–§6).** Form mode has been live since 2026-10-24; privacy policy 1.2 (W15) has been
+live since 2026-10-30, and Railway runs `POLICY_VERSION` `1.2`. `privacyPolicyDate` is the policy's effective date: it changes, together with
 `privacyPolicyVersion` and Railway's `POLICY_VERSION`, only when the policy text changes. Then, in this order: Railway first
 (set `POLICY_VERSION` and let the API redeploy), the config second, rebuild, unit + e2e + `pricing:release-check`, merge.
 
