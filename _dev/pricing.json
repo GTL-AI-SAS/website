@@ -46,7 +46,7 @@
           "suits": { "text": "Para consultorios con equipo." },
           "setup": { "amount": 4000000 }, "monthly": { "amount": 350000 },
           "includesLead": { "text": "Todo lo de Esencial, y además:" },
-          "includes": ["Hasta 5 profesionales", "Recordatorios por WhatsApp", "Anticipos en línea", "Gestión de su Perfil de Empresa en Google", "2 cambios al mes", "Informe mensual de resultados"],
+          "includes": ["Hasta 5 profesionales", "Recordatorios por WhatsApp — Próximamente", "Anticipos en línea — Próximamente", "Gestión de su Perfil de Empresa en Google", "2 cambios al mes", "Informe mensual de resultados"],
           "highlight": true, "status": "confirmado"
         },
         {

@@ -232,7 +232,7 @@ const APPENDIX_B = [
   // PQ1, the "DIAN" block: the add-on is marked Próximamente wherever it appears.
   'Facturación electrónica DIAN incluida (próximamente)', 'Próximamente', 'Disponible próximamente; aún no se puede contratar.',
   'La facturación electrónica DIAN se activará cuando esté disponible.',
-  'Agenda en línea', '1 sede', '1 profesional', 'Hasta 5 profesionales', 'Recordatorios por WhatsApp', 'Anticipos en línea',
+  'Agenda en línea', '1 sede', '1 profesional', 'Hasta 5 profesionales', 'Recordatorios por WhatsApp — Próximamente', 'Anticipos en línea — Próximamente', 'Anticipos en línea',
   'Informe mensual de resultados',
   'Menú o catálogo en línea', 'Pedidos por WhatsApp', 'Pedidos en línea con pago', 'Avisos de pedido por WhatsApp', 'Informe mensual de ventas',
   'Calendario de disponibilidad', 'Solicitudes de reserva', '1 propiedad o tipo de unidad', 'Hasta 5 unidades',
