@@ -19,8 +19,8 @@ const index = LF(readFileSync(INDEX_PATH, 'utf8'));
 const privacy = LF(readFileSync(PRIVACY_PATH, 'utf8'));
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 // What each committed page loads, in document order.
-const INDEX_ASSETS = ['style.css', 'pricing.js', 'site-config.js', 'plan-request.js'];
-const PRIVACY_ASSETS = ['style.css'];
+const INDEX_ASSETS = ['style.css', 'showcase.js', 'site-config.js', 'plan-request.js', 'i18n.js'];
+const PRIVACY_ASSETS = ['style.css', 'i18n.js'];
 
 // ---------- the version ----------
 
@@ -53,23 +53,24 @@ test('every local stylesheet and script on both committed pages carries ?v= equa
     assert.deepEqual(bare, [], `${name}: ${bare.join(', ')}`);
     assert.equal((html.match(/\?v=/g) || []).length, count, name);
   }
-  // Where they sit: style.css and pricing.js in <head> (the one change outside the markers); in form mode the two
-  // form scripts inside the markers; style.css in the privacy page's <head>.
+  // Where they sit: style.css and showcase.js in <head>; in form mode the two form scripts inside the markers;
+  // style.css in the privacy page's <head>. (pricing.js left with the plans section.)
   const head = index.slice(0, index.indexOf('</head>'));
   assert.ok(head.includes(`<link rel="stylesheet" href="style.css?v=${fileVersion('style.css')}">`));
-  assert.ok(head.includes(`<script src="pricing.js?v=${fileVersion('pricing.js')}" defer onerror="document.documentElement.classList.remove('js')"></script>`));
+  assert.ok(head.includes(`<script src="showcase.js?v=${fileVersion('showcase.js')}" defer`));
+  assert.ok(!index.includes('pricing.js'));
   const inside = index.slice(index.indexOf(START), index.indexOf(END));
   assert.ok(inside.includes(`<script src="site-config.js?v=${fileVersion('site-config.js')}" defer></script>\n  <script src="plan-request.js?v=${fileVersion('plan-request.js')}" defer></script>`));
   assert.ok(privacy.slice(0, privacy.indexOf('</head>')).includes(`<link rel="stylesheet" href="style.css?v=${fileVersion('style.css')}">`));
 });
 
-test('the wiring check reads through the stamps: the stamped page passes and a missing pricing.js tag is still caught', () => {
+test('the wiring check reads through the stamps: the stamped page passes and a missing "js" class script is still caught', () => {
   assert.deepEqual(wiringProblems(index), []);
   assert.notEqual(stripVersions(index), index);
   assert.deepEqual(wiringProblems(stripVersions(index)), []);
-  const noTag = index.replace(/<script src="pricing\.js\?v=[0-9a-f]+" defer onerror="[^"]*"><\/script>\n/, '');
-  assert.notEqual(noTag, index);
-  assert.ok(wiringProblems(noTag).some((p) => /pricing\.js script tag is missing/.test(p)));
+  const noScript = index.replace("<script>document.documentElement.classList.add('js')</script>\n", '');
+  assert.notEqual(noScript, index);
+  assert.ok(wiringProblems(noScript).some((p) => /head script that adds the "js" class is missing/.test(p)));
 });
 
 // ---------- the stamping ----------
@@ -209,7 +210,7 @@ test('the committed site passes --check on a scratch copy, and a rebuild there c
   } finally { s.drop(); }
 });
 
-for (const file of ['style.css', 'pricing.js', 'plan-request.js']) {
+for (const file of ['style.css', 'showcase.js', 'plan-request.js']) {
   test(`one byte added to ${file} without a rebuild fails --check; the rebuild stamps the new hash and the check passes again`, () => {
     const s = scratchSite();
     try {
@@ -299,10 +300,10 @@ test('a malformed stamp written by hand fails --check with its own message, and 
   const s = scratchSite();
   try {
     const style = fileVersion('style.css');
-    const pricing = fileVersion('pricing.js');
+    const pricing = fileVersion('showcase.js');
     const edits = [
       ['privacidad.html', `href="style.css?v=${style}"`, 'href="style.css?v=latest"'],
-      ['index.html', `src="pricing.js?v=${pricing}"`, `src="pricing.js?V=${pricing}"`],
+      ['index.html', `src="showcase.js?v=${pricing}"`, `src="showcase.js?V=${pricing}"`],
     ];
     for (const [f, from, to] of edits) {
       const html = readFileSync(join(s.dir, f), 'utf8');
@@ -312,14 +313,14 @@ test('a malformed stamp written by hand fails --check with its own message, and 
     const check = s.run('--check');
     assert.equal(check.status, 1, check.stdout);
     assert.ok(check.stderr.includes(`privacidad.html: style.css?v=latest has a malformed ?v= stamp (expected ?v=${style}). Run: npm --prefix _dev run pricing:build`), check.stderr);
-    assert.ok(check.stderr.includes(`index.html: pricing.js?V=${pricing} has a malformed ?v= stamp (expected ?v=${pricing}). Run: npm --prefix _dev run pricing:build`), check.stderr);
+    assert.ok(check.stderr.includes(`index.html: showcase.js?V=${pricing} has a malformed ?v= stamp (expected ?v=${pricing}). Run: npm --prefix _dev run pricing:build`), check.stderr);
     assert.ok(!/has no \?v= version|is stale/.test(check.stderr), check.stderr);
     const build = s.run();
     assert.equal(build.status, 0, build.stderr);
     assert.match(build.stdout, /index\.html updated/);
     assert.match(build.stdout, /privacidad\.html updated/);
     assert.equal(assetRefs(s.read('privacidad.html'))[0].version, style);
-    assert.equal(assetRefs(s.read('index.html')).find((r) => r.file === 'pricing.js').version, pricing);
+    assert.equal(assetRefs(s.read('index.html')).find((r) => r.file === 'showcase.js').version, pricing);
     assert.equal(s.run('--check').status, 0);
   } finally { s.drop(); }
 });

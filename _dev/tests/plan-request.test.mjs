@@ -108,11 +108,13 @@ for (const [label, cfg, base] of [
   });
 }
 
-test('the committed index.html carries exactly these links', () => {
-  const links = requestLinks(index);
-  const expected = expectedMessages(data);
-  assert.deepEqual(links.map((l) => [l.key, l.href]),
-    expected.map((e) => [e.key, whatsappLink(config, e.text)]));
+test('the committed index.html carries no plan buttons: the plans section was retired, the form stays', () => {
+  const block = index.split('<!-- pricing:start -->')[1].split('<!-- pricing:end -->')[0];
+  assert.deepEqual(requestLinks(block), []);
+  assert.doesNotMatch(block, /<section/);
+  if (formMode) assert.match(block, /<dialog class="request-dialog" id="request-dialog"/);
+  // The one request button is "Hablar con nosotros" in Quiero saber más.
+  assert.equal((index.match(/data-request="general"/g) || []).length, formMode ? 1 : 0);
   assert.ok(!index.includes('href="#contact" data-'), 'a request button still points to #contact');
 });
 
@@ -133,26 +135,31 @@ test('messages follow the data: renamed package, tier and bundle in a fixture', 
 
 // Every link that opens a new tab says so inside it, visually hidden; the visible labels stay as they were.
 // Form mode (Pass B) adds the dialog's three: WhatsApp in the banner and the success view, and the privacy link.
+// Quiero saber más adds four on the page: the form button, WhatsApp, Gmail and Outlook.
 const NEW_TAB_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT}</span>`;
 const GENERIC_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT_GENERIC}</span>`;
+// Links to other sites that open a new tab: the privacy link in the form, Gmail, Outlook and the founders' LinkedIn.
+const GENERIC_LINK = /href="privacidad\.html"|data-contact="(gmail|outlook)"|class="member-link"/;
 test('every target="_blank" link carries the hidden new-tab notice', () => {
   assert.equal(NEW_TAB_TEXT, '(abre WhatsApp en una pestaña nueva)');
   assert.equal(NEW_TAB_TEXT_GENERIC, '(abre en una pestaña nueva)');
   for (const [name, html, count] of [['rendered section', renderSection(data, TEST_CONFIG), 21],
-    ['rendered section, form mode', renderSection(data, FORM_CONFIG), 24], ['index.html', index, formMode ? 24 : 21],
+    ['rendered section, form mode', renderSection(data, FORM_CONFIG), 24], ['index.html', index, formMode ? 9 : 6],
     ['privacidad.html', privacy, 0]]) {
     const blank = [...html.matchAll(/<a\b[^>]*\btarget="_blank"[^>]*>([\s\S]*?)<\/a>/g)];
     assert.equal(blank.length, count, name);
     for (const [a, inner] of blank) {
-      const expected = /href="privacidad\.html"/.test(a) ? GENERIC_SPAN : NEW_TAB_SPAN;
+      const expected = GENERIC_LINK.test(a) ? GENERIC_SPAN : NEW_TAB_SPAN;
       assert.ok(inner.includes(expected), `${name}: no new-tab notice in ${a.slice(0, 120)}`);
     }
   }
-  const labels = [...index.matchAll(/target="_blank"[^>]*>([^<]*)</g)].map((m) => m[1].trim());
-  assert.deepEqual([...new Set(labels)].sort(), formMode
-    ? ['Cotizar mi proyecto', 'Escribir por WhatsApp', 'Hablar con nosotros', 'Solicitar este paquete', 'Solicitar este plan',
-      'política de tratamiento de datos personales']
-    : ['Cotizar mi proyecto', 'Hablar con nosotros', 'Solicitar este paquete', 'Solicitar este plan']);
+  // The visible label: the link's text without its icons and its hidden notice.
+  const labels = [...index.matchAll(/target="_blank"[^>]*>([\s\S]*?)<\/a>/g)]
+    .map((m) => m[1].replace(/<span class="visually-hidden">[^<]*<\/span>/g, '').replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '').trim());
+  const others = ['Hablar con nosotros', 'Abrir WhatsApp', 'Gmail', 'Outlook', 'LinkedIn'];
+  assert.deepEqual([...new Set(labels)].sort(), (formMode
+    ? ['Escribir por WhatsApp', 'política de tratamiento de datos personales', ...others]
+    : others).sort());
 });
 
 test('links are fully percent-encoded and carry no personal data', () => {
@@ -281,8 +288,9 @@ test('the committed privacidad.html is the template with the committed config; v
 });
 
 test('the privacy page reuses the site header and footer with links to index.html', () => {
-  assert.match(privacy, /<header class="site-header" lang="en">/);
-  for (const id of ['about', 'planes', 'team', 'future', 'contact']) assert.ok(privacy.includes(`href="index.html#${id}"`), id);
+  assert.match(privacy, /<header class="site-header">/);
+  assert.ok(!/<(header|footer)[^>]* lang="en"/.test(privacy), 'the header and footer are Spanish now, like the page');
+  for (const id of ['features', 'team', 'contact']) assert.ok(privacy.includes(`href="index.html#${id}"`), id);
   assert.ok(privacy.includes('<a href="index.html" class="logo">'));
   assert.ok(!/href="#/.test(privacy), 'an in-page link was not rewritten');
   assert.ok(privacy.includes('<a aria-current="page" href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>'));
@@ -308,7 +316,7 @@ const TU_FORMS = ['tu', 'tus', 'tuyo', 'tuyos', 'te', 'contigo', 'puedes', 'quie
 test('register: the privacy page addresses the visitor as usted', () => {
   const word = new RegExp(`(?<![\\p{L}\\p{N}])(${TU_FORMS.join('|')})(?![\\p{L}\\p{N}])`, 'iu');
   assert.ok(word.test('Si USAS el formulario') && !word.test('Cuando usa el formulario'), 'the matcher itself works');
-  const main = textOf(renderWith({ ...TEST_CONFIG, planRequestMode: 'form' }).split('<main>')[1].split('</main>')[0]);
+  const main = textOf(renderWith({ ...TEST_CONFIG, planRequestMode: 'form' }).split(/<main[^>]*>/)[1].split('</main>')[0]);
   assert.equal(main.match(word), null);
 });
 

@@ -75,11 +75,11 @@
     if (!cfg || cfg.planRequestMode !== 'form' || typeof cfg.apiBaseUrl !== 'string' || !cfg.apiBaseUrl) return;
     if (!dialog || typeof dialog.showModal !== 'function' || !window.fetch || !window.AbortController
       || !window.crypto || typeof window.crypto.getRandomValues !== 'function' || typeof Object.hasOwn !== 'function') return;
-    var section = document.getElementById('planes');
-    var buttons = [].slice.call(document.querySelectorAll('#planes a[data-request]'));
+    // "Hablar con nosotros" in Quiero saber más (the plans section that also had request buttons was retired).
+    var buttons = [].slice.call(document.querySelectorAll('a[data-request]'));
     var form = dialog.querySelector('[data-request-form]');
     var success = dialog.querySelector('[data-request-success]');
-    if (!section || !buttons.length || !form || !success) return;
+    if (!buttons.length || !form || !success) return;
 
     var el = function (name) { return form.elements.namedItem(name); };
     var select = el('plan');
@@ -103,7 +103,7 @@
       var note = a.querySelector('.visually-hidden');
       if (note) note.textContent = FORM_NOTICE;
     });
-    section.addEventListener('click', function (e) {
+    document.addEventListener('click', function (e) {
       var a = e.target && e.target.closest ? e.target.closest('a[data-request]') : null;
       if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
@@ -145,7 +145,8 @@
         renewKey();
       }
       dialog.showModal();
-      select.focus();
+      // The first field the visitor can see: the plan, or the name when the plan is fixed (no plans on the page).
+      (select.closest('[hidden]') ? el('name') : select).focus();
     }
 
     dialog.addEventListener('close', function () {
@@ -240,7 +241,8 @@
         var p = document.getElementById('request-' + e.field + '-error');
         var control = el(e.field);
         if (p) { p.textContent = message; p.hidden = false; }
-        if (control) { control.setAttribute('aria-invalid', 'true'); if (!first) first = control; }
+        // A hidden field (the plan, fixed on a general request) is named in the summary but cannot take focus.
+        if (control) { control.setAttribute('aria-invalid', 'true'); if (!first && !control.closest('[hidden]')) first = control; }
         var li = document.createElement('li');
         li.textContent = (Object.hasOwn(LABELS, e.field) ? LABELS[e.field] : e.field) + ': ' + message;
         list.appendChild(li);
@@ -250,7 +252,7 @@
       errorsBox.appendChild(intro);
       errorsBox.appendChild(list);
       errorsBox.hidden = false;
-      if (first) first.focus();
+      (first || errorsBox).focus();
     }
 
     function showBanner(text, retry, focus) {

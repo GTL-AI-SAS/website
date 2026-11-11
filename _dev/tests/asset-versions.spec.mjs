@@ -17,8 +17,8 @@ const version = (file) => createHash('sha256').update(readFileSync(join(root, fi
 const FORM = config.planRequestMode === 'form';
 // What each page loads (document order does not matter here).
 const EXPECTED = {
-  '/': ['style.css', 'pricing.js', ...(FORM ? ['site-config.js', 'plan-request.js'] : [])],
-  '/privacidad.html': ['style.css'],
+  '/': ['style.css', 'showcase.js', ...(FORM ? ['site-config.js', 'plan-request.js'] : []), 'i18n.js'],
+  '/privacidad.html': ['style.css', 'i18n.js'],
 };
 
 test.describe('versioned asset URLs', () => {
@@ -45,10 +45,10 @@ test.describe('versioned asset URLs', () => {
       expect(await page.evaluate(() => [...document.styleSheets].some((s) => s.href && /\/style\.css\?v=[0-9a-f]{10}$/.test(s.href)))).toBe(true);
       expect(await page.evaluate(() => getComputedStyle(document.querySelector('.site-header')).position)).not.toBe('static');
       if (path === '/') {
-        await expect(page.locator('[role="tablist"]')).toHaveCount(1); // pricing.js ran
+        await expect(page.locator('#features [role="tablist"]')).toHaveCount(1); // showcase.js ran
         if (FORM) {
           expect(await page.evaluate(() => window.GTL_CONFIG && window.GTL_CONFIG.planRequestMode)).toBe('form'); // site-config.js ran
-          await expect(page.locator('#planes a[data-request]').first()).toHaveAttribute('aria-haspopup', 'dialog'); // plan-request.js ran
+          await expect(page.locator('#contact a[data-request]')).toHaveAttribute('aria-haspopup', 'dialog'); // plan-request.js ran
         }
       }
       // The page's own markup carries the same stamps the browser requested.

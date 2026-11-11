@@ -19,6 +19,16 @@ test('every published branding asset has a page reference, including seasonal me
   }
 });
 
+test('every feature tour photo is used by the page and stays below 40 KB', () => {
+  const page = readFileSync(join(SITE_ROOT, 'index.html'), 'utf8');
+  const names = readdirSync(join(SITE_ROOT, 'assets', 'showcase'));
+  assert.ok(names.length > 0);
+  for (const name of names) {
+    assert.ok(page.includes(`assets/showcase/${name}`), `${name} is published but unused`);
+    assert.ok(statSync(join(SITE_ROOT, 'assets', 'showcase', name)).size < 40_000, `${name} is over 40 KB`);
+  }
+});
+
 test('the initial hero video stays below 300 KB', () => {
   assert.ok(statSync(join(SITE_ROOT, 'assets', 'branding', 'gtl-ai-logo-intro.mp4')).size < 300_000);
 });

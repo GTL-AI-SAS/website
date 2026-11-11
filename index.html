@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-CO">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GTL AI | Páginas web con agenda, pedidos y reservas en línea en Colombia</title>
+<title>GTL AI | Impulsando sueños</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png">
 <meta name="description" content="Creamos la página web de su negocio con agenda, pedidos o reservas en línea. Planes con precios claros y soporte en Colombia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=5e2b09168a">
-<script src="pricing.js?v=94f3423503" defer onerror="document.documentElement.classList.remove('js')"></script>
+<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
+<link rel="stylesheet" href="style.css?v=1d74d8d567">
+<script src="showcase.js?v=4c3e9e4b74" defer onerror="document.documentElement.classList.add('no-showcase')"></script>
 </head>
 <body>
 
@@ -18,11 +21,18 @@
   <div class="container header-inner">
     <a href="#" class="logo"><img class="logo-symbol" src="assets/branding/gtl-ai-sticker-1-yume.png" alt="" width="40" height="40">GTL<span>AI</span></a>
     <nav class="nav">
-      <a href="#about">About</a>
-      <a href="#planes">Planes</a>
-      <a href="#team">Team</a>
-      <a href="#future">Roadmap</a>
-      <a href="#contact" class="nav-cta">Get in Touch</a>
+      <a href="#features">Funciones</a>
+      <a href="#stories"><span class="nav-long">Historias de clientes</span><span class="nav-short">Historias</span></a>
+      <a href="#falco" class="nav-falco"><span class="nav-long">Falco · Recepcionista IA</span><span class="nav-short">Falco IA</span></a>
+      <a href="#team">Nosotros</a>
+      <div class="lang-switch" data-lang-switch data-i18n="off">
+        <button type="button" class="lang-current" aria-expanded="false" aria-controls="lang-menu" data-lang-current><span class="lang-is lang-is-es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><span>ES</span></span><span class="lang-is lang-is-en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><span>ENG</span></span><svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m3 4.5 3 3 3-3"/></svg></button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+          <li><button type="button" lang="es" data-lang="es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><b>ES</b><span>Español</span></button></li>
+          <li><button type="button" lang="en" data-lang="en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><b>ENG</b><span>English</span></button></li>
+        </ul>
+      </div>
+      <a href="#contact" class="nav-cta">Contáctenos</a>
     </nav>
   </div>
 </header>
@@ -31,514 +41,671 @@
 
   <section class="hero">
     <div class="container hero-inner">
-      <div class="hero-copy">
-      <p class="eyebrow">Founded 2026</p>
-      <h1>Engineering the future of artificial intelligence.</h1>
-      <p class="hero-sub">GTL AI is built by a founding team focused on turning advanced AI research into products that solve real problems — responsibly, and at scale.</p>
-      <div class="hero-actions">
-        <a href="#planes" class="btn btn-primary">See plans &amp; pricing</a>
-        <a href="#team" class="btn btn-ghost">Meet the founders</a>
-      </div>
-      </div>
       <figure class="brand-film brand-film--ambient" data-brand-intro>
         <img class="brand-film-still" src="assets/branding/gtl-ai-logo-v2-rapido-last.png" alt="GTL AI" width="960" height="540">
         <video muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="1920" height="1080" poster="assets/branding/gtl-ai-logo-v2-rapido-last.png">
           <source data-src="assets/branding/gtl-ai-logo-intro.mp4" type="video/mp4">
         </video>
       </figure>
+      <div class="hero-copy">
+      <h1>Software para impulsar su <span>sueño</span></h1>
+      <p class="hero-sub">Agenda, reservas en línea, ventas y pagos en un solo lugar. Una plataforma completa, rápida, confiable, fácil de usar y que funciona en cualquier dispositivo.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Quiero saber más</a>
+        <a href="#team" class="btn btn-ghost">Por qué nosotros</a>
+      </div>
+      </div>
     </div>
   </section>
 
-  <section id="about" class="about">
-    <div class="container">
-      <div class="about-brand-grid">
-      <div>
-      <h2>About GTL AI</h2>
-      <p>GTL AI was founded to close the gap between what AI can do in a lab and what it can do for real businesses and people. Our founding team brings together experience in operations, finance, data, and engineering — united by a shared conviction that the next wave of AI products has to be trustworthy, useful, and built to last.</p>
+  <!-- Feature tour: the screens show Alba, a fictional clinic. Replace them with approved client material. -->
+  <section id="features" class="showcase" aria-labelledby="features-title" data-showcase>
+    <h2 id="features-title" class="visually-hidden">Funciones</h2>
+    <svg class="showcase-sprite" aria-hidden="true" focusable="false">
+      <symbol id="m-alba" viewBox="0 0 32 32"><path d="M5 20a11 11 0 0 1 22 0z" fill="#e8805f"/><path d="M10.5 20a5.5 5.5 0 0 1 11 0z" fill="#f6c27a"/><rect x="3" y="22.5" width="26" height="2.6" rx="1.3" fill="currentColor"/><rect x="8" y="27" width="16" height="2.6" rx="1.3" fill="currentColor"/></symbol>
+      <symbol id="m-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+      <symbol id="m-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></symbol>
+      <symbol id="m-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+      <symbol id="m-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="m-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="m-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="m-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+      <symbol id="m-chat" viewBox="0 0 24 24"><path d="M12 4a8 8 0 0 0-6.9 12L4 20l4.1-1.1A8 8 0 1 0 12 4z"/></symbol>
+      <symbol id="m-phone" viewBox="0 0 24 24"><path d="M6.5 4h3l1.5 4-2 1.5a10 10 0 0 0 5.5 5.5L16 13l4 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 4.5 6a2 2 0 0 1 2-2z"/></symbol>
+      <symbol id="m-card" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h3"/></symbol>
+      <symbol id="m-cash" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.5"/></symbol>
+      <symbol id="m-bank" viewBox="0 0 24 24"><path d="M4 10 12 5l8 5M5 10v8M19 10v8M9.5 10v8M14.5 10v8M3.5 19.5h17"/></symbol>
+      <symbol id="m-wallet" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="15" height="13" rx="3"/><path d="M14 11h6.5v4H14a2 2 0 0 1 0-4z"/></symbol>
+      <symbol id="m-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="m-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-4 16-4-6.5z"/><path d="m12 13.5 8-9.5"/></symbol>
+      <symbol id="m-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+      <symbol id="m-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></symbol>
+      <symbol id="m-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></symbol>
+    </svg>
+
+    <div class="showcase-bar">
+    <div class="showcase-tabs" data-showcase-tabs data-label="Funciones">
+      <button type="button" class="showcase-tab is-active" id="feature-tab-landing" data-feature="landing" data-duration="6000"><span class="showcase-tab-label">Página web y SEO</span></button>
+      <button type="button" class="showcase-tab" id="feature-tab-calendar" data-feature="calendar" data-duration="8000"><span class="showcase-tab-label">Agenda</span></button>
+      <button type="button" class="showcase-tab" id="feature-tab-booking" data-feature="booking" data-duration="6500"><span class="showcase-tab-label">Reservas en línea</span></button>
+      <button type="button" class="showcase-tab" id="feature-tab-sales" data-feature="sales" data-duration="7000"><span class="showcase-tab-label">Ventas y pagos</span></button>
+      <button type="button" class="showcase-tab" id="feature-tab-finance" data-feature="finance" data-duration="7000"><span class="showcase-tab-label">Finanzas y contabilidad</span></button>
+      <button type="button" class="showcase-tab" id="feature-tab-messages" data-feature="messages" data-duration="8000"><span class="showcase-tab-label">Llamadas y mensajes</span></button>
+    </div>
+    <button type="button" class="showcase-toggle" data-showcase-toggle><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path class="showcase-pause" d="M4 3h3v10H4zM9 3h3v10H9z"/><path class="showcase-play" d="M5 2.5 13.5 8 5 13.5z"/></svg><span class="visually-hidden" data-showcase-toggle-label>Pausar recorrido</span></button>
+    </div>
+
+    <div class="showcase-stage" data-showcase-stage>
+
+      <div class="showcase-slide is-active" id="feature-landing" style="--pos: 0">
+        <div class="mock m-lp" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-chrome"><span class="m-dots"><i></i><i></i><i></i></span><span class="m-url"><svg class="mi"><use href="#m-lock"/></svg>albafisio.co</span><span class="m-lp-score"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="m-lp-score-arc" cx="18" cy="18" r="15" pathLength="100"/></svg><b>98</b><small>SEO</small></span></div>
+          <div class="m-lp-view">
+            <div class="m-lp-page">
+              <div class="m-site-nav"><span class="m-brand m-brand--ink"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span><span class="m-site-links"><span>Servicios</span><span>Equipo</span><span>Blog</span><span>Contacto</span></span><span class="m-btn m-btn--ink">Reservar</span></div>
+              <div class="m-lp-hero">
+                <div class="m-lp-copy">
+                  <small class="m-eyebrow">Fisioterapia &amp; bienestar · Bogotá</small>
+                  <strong class="m-lp-title"><span>Muévete</span> <span>sin dolor</span></strong>
+                  <p>Fisioterapia, masaje terapéutico y pilates clínico con un equipo que te acompaña en cada sesión.</p>
+                  <span class="m-site-cta"><span class="m-btn m-btn--clay m-lp-cta">Reserva tu cita</span><span class="m-btn">Ver servicios</span></span>
+                  <span class="m-lp-trust"><span><svg class="mi mi-star"><use href="#m-star"/></svg>4,9 · 320 reseñas</span><span>+2.000 pacientes</span></span>
+                </div>
+                <div class="m-lp-art">
+                  <i class="m-arch m-arch--1"></i><i class="m-lp-sun"></i><i class="m-arch m-arch--2"></i>
+                  <span class="m-lp-photo"><img src="assets/showcase/alba-runner.webp" width="720" height="900" alt="" loading="lazy" decoding="async"></span>
+                  <i class="m-arch m-arch--3"></i>
+                  <span class="m-lp-float m-lp-float--a"><span class="m-lp-ico"><svg class="mi"><use href="#m-cal"/></svg></span><span><small>Próxima cita disponible</small><strong>Hoy, 3:15 p. m.</strong></span></span>
+                  <span class="m-lp-float m-lp-float--b"><span class="m-lp-avs"><i class="m-av m-av--clay">CR</i><i class="m-av m-av--violet">AM</i><i class="m-av m-av--sage">VO</i></span><strong>4 especialistas</strong></span>
+                </div>
+              </div>
+              <div class="m-lp-services">
+                <span><img class="m-lp-thumb" src="assets/showcase/alba-fisioterapia.webp" width="640" height="400" alt="" loading="lazy" decoding="async"><strong>Fisioterapia</strong><small>Lesiones, dolor de espalda y rehabilitación.</small><b>Desde $&nbsp;120.000</b></span>
+                <span><img class="m-lp-thumb" src="assets/showcase/alba-masaje.webp" width="640" height="400" alt="" loading="lazy" decoding="async"><strong>Masaje terapéutico</strong><small>Alivia la tensión y mejora la circulación.</small><b>Desde $&nbsp;110.000</b></span>
+                <span><img class="m-lp-thumb" src="assets/showcase/alba-pilates.webp" width="640" height="400" alt="" loading="lazy" decoding="async"><strong>Pilates clínico</strong><small>Grupos de máximo 6 personas.</small><b>Desde $&nbsp;60.000</b></span>
+              </div>
+              <div class="m-lp-quote"><span class="m-lp-stars"><svg class="mi mi-star"><use href="#m-star"/></svg><svg class="mi mi-star"><use href="#m-star"/></svg><svg class="mi mi-star"><use href="#m-star"/></svg><svg class="mi mi-star"><use href="#m-star"/></svg><svg class="mi mi-star"><use href="#m-star"/></svg></span><strong>“Volví a correr después de mi lesión de rodilla. El equipo es increíble.”</strong><small>María José P. · paciente desde 2025</small></div>
+              <div class="m-lp-band"><strong>¿Quieres moverte mejor?</strong><span class="m-btn m-btn--clay">Reservar cita</span></div>
+            </div>
+            <span class="m-lp-wa"><svg class="mi"><use href="#m-chat"/></svg></span>
+          </div>
+          <div class="m-lp-seo">
+            <span class="m-label">Así te encuentran en Google</span>
+            <span class="m-lp-search"><svg class="mi"><use href="#m-search"/></svg><span class="m-lp-typed">fisioterapia en chicó</span></span>
+            <span class="m-lp-result"><b class="m-lp-rank">1</b><span><strong>Alba · Fisioterapia &amp; Bienestar</strong><small>albafisio.co › reservar</small><small><svg class="mi mi-star"><use href="#m-star"/></svg> 4,9 (320) · abierto ahora</small></span></span>
+            <span class="m-lp-metric"><span><small>Visitas desde Google</small><strong>2.840</strong><em>▲ 38 % este mes</em></span><svg class="m-lp-spark" viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M2 34 L20 29 L38 31 L56 22 L74 24 L92 13 L118 5" pathLength="100"/></svg></span>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Página web y SEO</p>
+          <h3>Una página web que le trae pacientes</h3>
+          <p>Una página rápida que se ve bien en cualquier celular, preparada para que la gente cercana lo encuentre en Google y reserve con un toque.</p>
+        </div>
       </div>
-      <button type="button" class="brand-film brand-film--ambient brand-film--symbol" aria-label="Animate Yume: hover to advance, move away to rewind; tap or press Enter to change direction" data-brand-scrub>
-        <img class="brand-film-still" src="assets/branding/ezgif-yume-reverse-first.png" alt="" width="512" height="512" loading="lazy">
-        <video data-direction="advance" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512" poster="assets/branding/ezgif-yume-reverse-first.png">
-          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume-reverse.mp4?rev=b8dcb0e60c" type="video/mp4">
-        </video>
-        <video data-direction="return" muted playsinline preload="none" tabindex="-1" aria-hidden="true" width="512" height="512">
-          <source data-src="assets/branding/ezgif-gtl-ai-sticker-1-yume.mp4?rev=2e77d29ed9" type="video/mp4">
-        </video>
-      </button>
+
+      <div class="showcase-slide" id="feature-calendar" style="--pos: 1">
+        <div class="mock" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-bar">
+            <span class="m-brand"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span>
+            <span class="m-nav"><span class="is-on"><svg class="mi"><use href="#m-cal"/></svg>Agenda</span><span>Pacientes</span><span>Ventas</span><span>Finanzas</span><span>Mensajes</span><span>Informes</span></span>
+            <span class="m-tools"><svg class="mi"><use href="#m-search"/></svg><svg class="mi"><use href="#m-bell"/></svg><span class="m-user"><span class="m-av m-av--honey">LG</span><span class="m-user-name">Laura G.<small>Sede Chicó</small></span></span></span>
+          </div>
+          <div class="m-body m-cal-body">
+            <div class="m-cal-main">
+              <div class="m-toolbar">
+                <span class="m-btn">Hoy</span>
+                <span class="m-iconbtn"><svg class="mi"><use href="#m-left"/></svg></span>
+                <span class="m-iconbtn m-next"><svg class="mi"><use href="#m-right"/></svg></span>
+                <strong class="m-date"><span class="m-long m-swap"><span>Martes, 17 de noviembre</span><span>Martes, 24 de noviembre</span></span><span class="m-short m-swap"><span>Mar 17 nov</span><span>Mar 24 nov</span></span></strong>
+                <span class="m-spacer"></span>
+                <span class="m-select">Sede Chicó<svg class="mi"><use href="#m-down"/></svg></span>
+                <span class="m-seg"><span class="is-on">Día</span><span>Semana</span></span>
+              </div>
+              <div class="m-cal-head">
+                <span></span>
+                <span class="m-staff"><span class="m-av m-av--clay">CR</span>Camila Ruiz</span>
+                <span class="m-staff"><span class="m-av m-av--violet">AM</span>Andrés Mejía</span>
+                <span class="m-staff"><span class="m-av m-av--sage">VO</span>Valentina Ortiz</span>
+                <span class="m-staff"><span class="m-av m-av--sky">JR</span>Julián Restrepo</span>
+              </div>
+              <div class="m-cal-grid">
+                <div class="m-hours"><span><b>8 a. m.</b></span><span><b>9 a. m.</b></span><span><b>10 a. m.</b></span><span><b>11 a. m.</b></span><span><b>12 p. m.</b></span><span><b>1 p. m.</b></span><span><b>2 p. m.</b></span></div>
+                <div class="m-col">
+                  <span class="m-ev m-ev--fisio" style="--s: 0; --d: .75"><b>Fisioterapia</b><span>Sofía Arango</span><small>8:00 – 8:45</small></span>
+                  <span class="m-ev m-ev--valor" style="--s: 1; --d: 1"><b>Valoración inicial</b><span>Mateo Cárdenas</span><small>9:00 – 10:00</small></span>
+                  <span class="m-ev m-ev--fisio is-sel" style="--s: 2; --d: .75"><b>Fisioterapia</b><span>María José Pérez</span><small>10:00 – 10:45</small></span>
+                  <span class="m-ev m-ev--rehab m-ev-daniel" style="--s: 3; --d: 1"><b class="m-swap"><span>Rehabilitación deportiva</span><span>Cancelada</span></b><span>Daniel Ospina</span><small>11:00 – 12:00</small></span>
+                  <span class="m-ev m-ev--block" style="--s: 4; --d: 1"><b>Bloqueo</b><span>Almuerzo</span><small>12:00 – 1:00</small></span>
+                  <span class="m-ev m-ev--fisio" style="--s: 5; --d: .75"><b>Fisioterapia</b><span>Juliana Cano</span><small>1:00 – 1:45</small></span>
+                </div>
+                <div class="m-col">
+                  <span class="m-ev m-ev--rehab" style="--s: 0; --d: 1"><b>Rehabilitación deportiva</b><span>Tomás Vélez</span><small>8:00 – 9:00</small></span>
+                  <span class="m-ev m-ev--fisio m-ev-laura" style="--s: 1.25; --d: .75"><b>Fisioterapia</b><span>Laura Henao</span><small class="m-swap"><span>9:15 – 10:00</span><span>11:30 – 12:15</span></small></span>
+                  <span class="m-ev m-ev--valor" style="--s: 2.5; --d: 1"><b>Valoración inicial</b><span>Esteban Mora</span><small>10:30 – 11:30</small></span>
+                  <span class="m-ev m-ev--block" style="--s: 4.5; --d: 1"><b>Bloqueo</b><span>Almuerzo</span><small>12:30 – 1:30</small></span>
+                  <span class="m-ev m-ev--rehab" style="--s: 5.5; --d: 1"><b>Rehabilitación deportiva</b><span>Simón Arias</span><small>1:30 – 2:30</small></span>
+                </div>
+                <div class="m-col">
+                  <span class="m-ev m-ev--masaje" style="--s: .5; --d: 1"><b>Masaje terapéutico</b><span>Natalia Gómez</span><small>8:30 – 9:30</small></span>
+                  <span class="m-ev m-ev--masaje" style="--s: 1.5; --d: 1"><b>Masaje terapéutico</b><span>Carolina Zapata</span><small>9:30 – 10:30</small></span>
+                  <span class="m-ev m-ev--masaje" style="--s: 3; --d: 1.5"><b>Drenaje linfático</b><span>Isabel Correa</span><small>11:00 – 12:30</small></span>
+                  <span class="m-ev m-ev--masaje" style="--s: 5; --d: 1"><b>Masaje terapéutico</b><span>Ana Lucía Toro</span><small>1:00 – 2:00</small></span>
+                </div>
+                <div class="m-col">
+                  <span class="m-ev m-ev--pilates" style="--s: 0; --d: 1"><b>Pilates clínico</b><span>Grupo · 5 de 6</span><small>8:00 – 9:00</small></span>
+                  <span class="m-ev m-ev--pilates" style="--s: 1; --d: 1"><b>Pilates clínico</b><span>Grupo · lleno</span><small>9:00 – 10:00</small></span>
+                  <span class="m-ev m-ev--valor" style="--s: 2.5; --d: .75"><b>Valoración inicial</b><span>Andrea Muñoz</span><small>10:30 – 11:15</small></span>
+                  <span class="m-ev m-ev--pilates" style="--s: 4; --d: 1"><b>Pilates clínico</b><span>Grupo · 3 de 6</span><small>12:00 – 1:00</small></span>
+                </div>
+                <span class="m-now" style="--s: 2.4"><b>10:24</b></span>
+                <div class="m-cal-next">
+                  <div class="m-col">
+                    <span class="m-ev m-ev--valor" style="--s: 0; --d: 1"><b>Valoración inicial</b><span>Felipe Rincón</span><small>8:00 – 9:00</small></span>
+                    <span class="m-ev m-ev--fisio" style="--s: 1.5; --d: .75"><b>Fisioterapia</b><span>Sofía Arango</span><small>9:30 – 10:15</small></span>
+                    <span class="m-ev m-ev--fisio" style="--s: 3; --d: .75"><b>Fisioterapia</b><span>Juliana Cano</span><small>11:00 – 11:45</small></span>
+                    <span class="m-ev m-ev--block" style="--s: 4; --d: 1"><b>Bloqueo</b><span>Almuerzo</span><small>12:00 – 1:00</small></span>
+                  </div>
+                  <div class="m-col">
+                    <span class="m-ev m-ev--fisio" style="--s: .5; --d: .75"><b>Fisioterapia</b><span>Laura Henao</span><small>8:30 – 9:15</small></span>
+                    <span class="m-ev m-ev--rehab" style="--s: 2; --d: 1"><b>Rehabilitación deportiva</b><span>Tomás Vélez</span><small>10:00 – 11:00</small></span>
+                    <span class="m-ev m-ev--block" style="--s: 4.5; --d: 1"><b>Bloqueo</b><span>Almuerzo</span><small>12:30 – 1:30</small></span>
+                  </div>
+                  <div class="m-col">
+                    <span class="m-ev m-ev--masaje" style="--s: 1; --d: 1"><b>Masaje terapéutico</b><span>Natalia Gómez</span><small>9:00 – 10:00</small></span>
+                    <span class="m-ev m-ev--masaje" style="--s: 2.5; --d: 1.5"><b>Drenaje linfático</b><span>Isabel Correa</span><small>10:30 – 12:00</small></span>
+                  </div>
+                  <div class="m-col">
+                    <span class="m-ev m-ev--pilates" style="--s: 0; --d: 1"><b>Pilates clínico</b><span>Grupo · 2 de 6</span><small>8:00 – 9:00</small></span>
+                    <span class="m-ev m-ev--pilates" style="--s: 4; --d: 1"><b>Pilates clínico</b><span>Grupo · 4 de 6</span><small>12:00 – 1:00</small></span>
+                  </div>
+                </div>
+                <span class="m-pop"><strong>Daniel Ospina</strong><small>Rehabilitación · 11:00 a. m.</small><span class="m-pop-act">Reprogramar</span><span class="m-pop-act m-pop-cancel">Cancelar cita</span></span>
+                <span class="m-toast"><svg class="mi"><use href="#m-check"/></svg><span>Cita movida a las 11:30 a. m.<small>Laura recibió el aviso por WhatsApp</small></span></span>
+              </div>
+            </div>
+            <div class="m-side">
+              <div class="m-side-head">Cita<span class="m-pill m-pill--sage"><i></i>Confirmada</span></div>
+              <div class="m-kv"><span><small>Fecha</small>Mar 17 nov</span><span><small>Hora</small>10:00 a. m.</span></div>
+              <div class="m-person"><span class="m-av m-av--violet m-av--lg">MP</span><span><strong>María José Pérez</strong><small>Paciente desde marzo de 2025</small></span></div>
+              <div class="m-card"><strong>Rehabilitación de rodilla</strong><small>Sesión 6 de 10</small><span class="m-progress"><i style="width: 60%"></i></span></div>
+              <div class="m-line"><span><strong>Fisioterapia · 45 min</strong><small>Con Camila Ruiz · consultorio 2</small></span><strong>$&nbsp;120.000</strong></div>
+              <div class="m-note"><svg class="mi"><use href="#m-chat"/></svg><span>Recordatorio enviado por WhatsApp<small>Ayer, 6:00 p. m.</small></span></div>
+              <div class="m-actions"><span class="m-btn m-btn--primary">Cobrar $&nbsp;120.000</span><span class="m-btn">Reprogramar</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Agenda</p>
+          <h3>Todo el día de su equipo de un vistazo</h3>
+          <p>Las citas de cada profesional por día o por semana, con colores por servicio y los datos de cada paciente a un clic.</p>
+        </div>
+      </div>
+
+      <div class="showcase-slide" id="feature-booking" style="--pos: 2">
+        <div class="mock" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-chrome"><span class="m-dots"><i></i><i></i><i></i></span><span class="m-url"><svg class="mi"><use href="#m-lock"/></svg>albafisio.co/reservar</span></div>
+          <div class="m-body m-book-body">
+            <div class="m-widget">
+              <div class="m-widget-head"><span class="m-brand m-brand--ink"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span><small>Reserva tu cita</small></div>
+              <div class="m-steps"><span class="is-done">1 · Servicio</span><span class="is-on">2 · Fecha y hora</span><span>3 · Tus datos</span></div>
+              <div class="m-chosen"><span><strong>Fisioterapia</strong><small>45 min · $&nbsp;120.000</small></span><span class="m-link">Cambiar</span></div>
+              <div class="m-label">Profesional</div>
+              <div class="m-chips m-book-staff"><span class="is-on">Cualquiera</span><span>Camila</span><span>Andrés</span></div>
+              <div class="m-monthbar"><strong>Noviembre 2026</strong><span><svg class="mi"><use href="#m-left"/></svg><svg class="mi"><use href="#m-right"/></svg></span></div>
+              <div class="m-days m-book-days"><span><small>lun</small>16</span><span><small>mar</small>17</span><span class="is-on"><small>mié</small>18</span><span><small>jue</small>19</span><span><small>vie</small>20</span><span class="is-off"><small>sáb</small>21</span></div>
+              <div class="m-label">Mañana</div>
+              <div class="m-slots m-book-am"><span>8:15</span><span class="is-off">9:00</span><span>10:45</span><span>11:30</span></div>
+              <div class="m-label">Tarde</div>
+              <div class="m-slots m-book-pm"><span>2:00</span><span class="is-on">3:15</span><span>4:30</span><span>5:15</span></div>
+              <span class="m-btn m-btn--primary m-btn--block m-book-go"><span class="m-swap"><span>Continuar · mié 18, 3:15 p. m.</span><span>Continuar · jue 19, 4:30 p. m.</span></span></span>
+              <small class="m-powered">Con tecnología de GTL AI</small>
+              <div class="m-booked"><span class="m-booked-check"><svg class="mi"><use href="#m-check"/></svg></span><strong>¡Cita reservada!</strong><span>Fisioterapia con Camila Ruiz</span><span>Jueves 19 de noviembre · 4:30 p. m.</span><span class="m-booked-where">Sede Chicó · Calle 93 # 15-20</span><small>Te enviamos la confirmación por WhatsApp.</small></div>
+            </div>
+            <div class="m-site">
+              <div class="m-site-nav"><span class="m-brand m-brand--ink"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span><span class="m-site-links"><span>Servicios</span><span>Equipo</span><span>Sedes</span><span>Contacto</span></span><span class="m-btn m-btn--ink">Reservar</span></div>
+              <div class="m-site-hero">
+                <div class="m-site-copy">
+                  <small class="m-eyebrow">Fisioterapia &amp; bienestar · Bogotá</small>
+                  <strong class="m-site-title">Muévete sin dolor</strong>
+                  <p>Fisioterapia, masaje terapéutico y pilates clínico con un equipo que te acompaña en cada sesión.</p>
+                  <span class="m-site-cta"><span class="m-btn m-btn--clay">Reserva tu cita</span><span class="m-rating"><svg class="mi mi-star"><use href="#m-star"/></svg>4,9 · 320 reseñas</span></span>
+                </div>
+                <div class="m-art"><i class="m-arch m-arch--1"></i><i class="m-sun"></i><i class="m-arch m-arch--2"></i><span class="m-site-photo"><img src="assets/showcase/alba-runner.webp" width="720" height="900" alt="" loading="lazy" decoding="async"></span><i class="m-arch m-arch--3"></i></div>
+              </div>
+              <div class="m-site-services"><span><strong>Fisioterapia</strong><small>Desde $&nbsp;120.000</small></span><span><strong>Masaje terapéutico</strong><small>Desde $&nbsp;110.000</small></span><span><strong>Pilates clínico</strong><small>Desde $&nbsp;60.000</small></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Reservas en línea</p>
+          <h3>Sus pacientes reservan solos, de día y de noche</h3>
+          <p>Su página web recibe reservas a toda hora: el paciente elige el servicio, el profesional y un horario libre, y la cita aparece de inmediato en su agenda.</p>
+        </div>
+      </div>
+
+      <div class="showcase-slide" id="feature-sales" style="--pos: 3">
+        <div class="mock" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-bar">
+            <span class="m-brand"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span>
+            <span class="m-nav"><span>Agenda</span><span>Pacientes</span><span class="is-on"><svg class="mi"><use href="#m-card"/></svg>Ventas</span><span>Finanzas</span><span>Mensajes</span><span>Informes</span></span>
+            <span class="m-tools"><svg class="mi"><use href="#m-search"/></svg><svg class="mi"><use href="#m-bell"/></svg><span class="m-user"><span class="m-av m-av--honey">LG</span><span class="m-user-name">Laura G.<small>Sede Chicó</small></span></span></span>
+          </div>
+          <div class="m-body m-split">
+            <div class="m-main">
+              <div class="m-page-head"><strong class="m-h">Ventas</strong><span class="m-select m-sales-range">Esta semana<svg class="mi"><use href="#m-down"/></svg></span><span class="m-select m-filter"><span class="m-swap"><span>Todos los servicios</span><span>Fisioterapia</span></span><svg class="mi"><use href="#m-down"/></svg><span class="m-menu"><span>Todos los servicios</span><span class="m-menu-pick">Fisioterapia</span><span>Masaje terapéutico</span><span>Pilates clínico</span><span>Valoración inicial</span></span></span><span class="m-spacer"></span><span class="m-btn m-btn--primary"><svg class="mi"><use href="#m-plus"/></svg>Nueva venta</span></div>
+              <div class="m-kpis">
+                <span class="m-kpi"><small>Ventas de hoy</small><strong>$&nbsp;2.340.000</strong><em class="is-up">▲ 8 % vs. el martes pasado</em></span>
+                <span class="m-kpi"><small>Transacciones</small><strong>18</strong><em>4 con link de pago</em></span>
+                <span class="m-kpi"><small>Ticket promedio</small><strong>$&nbsp;130.000</strong><em class="is-up">▲ 3 %</em></span>
+                <span class="m-kpi"><small>Por cobrar</small><strong>$&nbsp;1.135.000</strong><em>2 ventas pendientes</em></span>
+              </div>
+              <div class="m-table m-sales-table">
+                <div class="m-tr m-th"><span>Venta</span><span>Cliente</span><span>Concepto</span><span>Método</span><span>Estado</span><span>Total</span></div>
+                <div class="m-tbody">
+                  <div class="m-tlist">
+                    <div class="m-tr"><span>#2481</span><span>María José Pérez</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2480</span><span>Daniel Ospina</span><span>Rehabilitación deportiva</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;150.000</span></div>
+                    <div class="m-tr"><span>#2479</span><span>Laura Henao</span><span>Paquete 10 sesiones</span><span>Link de pago</span><span><i class="m-pill m-pill--honey">Pendiente</i></span><span>$&nbsp;1.080.000</span></div>
+                    <div class="m-tr"><span>#2478</span><span>Natalia Gómez</span><span>Masaje terapéutico</span><span>PSE</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;110.000</span></div>
+                    <div class="m-tr"><span>#2477</span><span>Tomás Vélez</span><span>Rehabilitación + banda elástica</span><span>Efectivo</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;185.000</span></div>
+                    <div class="m-tr"><span>#2476</span><span>Carolina Zapata</span><span>Masaje terapéutico</span><span>Tarjeta</span><span><i class="m-pill m-pill--violet">Abono 50 %</i></span><span>$&nbsp;55.000</span></div>
+                    <div class="m-tr"><span>#2475</span><span>Esteban Mora</span><span>Valoración inicial</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;90.000</span></div>
+                    <div class="m-tr"><span>#2474</span><span>Grupo de pilates</span><span>Pilates clínico × 5</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;300.000</span></div>
+                    <div class="m-tsep">Ayer · lunes 16 de noviembre</div>
+                    <div class="m-tr"><span>#2473</span><span>Sofía Arango</span><span>Fisioterapia</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2472</span><span>Andrea Muñoz</span><span>Valoración inicial</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;90.000</span></div>
+                    <div class="m-tr"><span>#2471</span><span>Isabel Correa</span><span>Drenaje linfático</span><span>PSE</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;165.000</span></div>
+                    <div class="m-tr"><span>#2470</span><span>Juliana Cano</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2469</span><span>Simón Arias</span><span>Rehabilitación deportiva</span><span>Link de pago</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;150.000</span></div>
+                    <div class="m-tr"><span>#2468</span><span>Ana Lucía Toro</span><span>Masaje terapéutico</span><span>Efectivo</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;110.000</span></div>
+                    <div class="m-tr"><span>#2467</span><span>Felipe Rincón</span><span>Paquete 5 sesiones</span><span>Tarjeta</span><span><i class="m-pill m-pill--violet">Abono 50 %</i></span><span>$&nbsp;280.000</span></div>
+                    <div class="m-tr"><span>#2466</span><span>Mateo Cárdenas</span><span>Fisioterapia</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2465</span><span>Grupo de pilates</span><span>Pilates clínico × 6</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;360.000</span></div>
+                    <div class="m-tr"><span>#2464</span><span>Valeria Rojas</span><span>Cinta kinesiológica</span><span>Efectivo</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;38.000</span></div>
+                  </div>
+                  <div class="m-tlist m-tlist--fisio">
+                    <div class="m-tsep">Fisioterapia esta semana · 9 ventas · $&nbsp;1.020.000</div>
+                    <div class="m-tr"><span>#2481</span><span>María José Pérez</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2473</span><span>Sofía Arango</span><span>Fisioterapia</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2470</span><span>Juliana Cano</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2466</span><span>Mateo Cárdenas</span><span>Fisioterapia</span><span>Nequi</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2459</span><span>Laura Henao</span><span>Fisioterapia</span><span>Link de pago</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2455</span><span>Paula Jaramillo</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2451</span><span>Daniel Ospina</span><span>Fisioterapia</span><span>PSE</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                    <div class="m-tr"><span>#2447</span><span>Camilo Duarte</span><span>Fisioterapia</span><span>Efectivo</span><span><i class="m-pill m-pill--violet">Abono 50 %</i></span><span>$&nbsp;60.000</span></div>
+                    <div class="m-tr"><span>#2442</span><span>Natalia Gómez</span><span>Fisioterapia</span><span>Tarjeta</span><span><i class="m-pill m-pill--sage">Pagada</i></span><span>$&nbsp;120.000</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="m-side m-checkout">
+              <div class="m-side-head">Cobro<span class="m-sub">Venta #2482</span></div>
+              <div class="m-person"><span class="m-av m-av--sage m-av--lg">MC</span><span><strong>Mateo Cárdenas</strong><small>Valoración con Camila · 9:00 a. m.</small></span></div>
+              <div class="m-items">
+                <div class="m-line"><span>Valoración inicial<small>60 min</small></span><span>$&nbsp;90.000</span></div>
+                <div class="m-line"><span>Cinta kinesiológica<small>1 unidad</small></span><span>$&nbsp;38.000</span></div>
+              </div>
+              <div class="m-sum"><span>Subtotal</span><span>$&nbsp;128.000</span><span>IVA 19 % (productos)</span><span>$&nbsp;7.220</span><strong>Total</strong><strong>$&nbsp;135.220</strong></div>
+              <div class="m-label">Método de pago</div>
+              <div class="m-methods"><span class="is-on"><svg class="mi"><use href="#m-card"/></svg>Tarjeta</span><span><svg class="mi"><use href="#m-bank"/></svg>PSE</span><span><svg class="mi"><use href="#m-wallet"/></svg>Nequi</span><span><svg class="mi"><use href="#m-cash"/></svg>Efectivo</span></div>
+              <div class="m-toggle-row"><span class="m-toggle"><i></i></span>Emitir factura electrónica</div>
+              <div class="m-actions"><span class="m-btn m-btn--primary">Cobrar $&nbsp;135.220</span><span class="m-btn"><svg class="mi"><use href="#m-chat"/></svg>Link de pago por WhatsApp</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Ventas y pagos</p>
+          <h3>Cobre en segundos, como sea que le paguen</h3>
+          <p>Reciba tarjeta, transferencia o efectivo en recepción, o envíe un link de pago. Cada venta queda en una sola lista con su estado.</p>
+        </div>
+      </div>
+
+      <div class="showcase-slide" id="feature-finance" style="--pos: -2">
+        <div class="mock" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-bar">
+            <span class="m-brand"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span>
+            <span class="m-nav"><span>Agenda</span><span>Pacientes</span><span>Ventas</span><span class="is-on"><svg class="mi"><use href="#m-file"/></svg>Finanzas</span><span>Mensajes</span><span>Informes</span></span>
+            <span class="m-tools"><svg class="mi"><use href="#m-search"/></svg><svg class="mi"><use href="#m-bell"/></svg><span class="m-user"><span class="m-av m-av--honey">LG</span><span class="m-user-name">Laura G.<small>Sede Chicó</small></span></span></span>
+          </div>
+          <div class="m-body m-fin-body">
+            <div class="m-page-head"><strong class="m-h">Finanzas</strong><span class="m-seg m-fin-seg"><span class="is-on">Mes</span><span>Trimestre</span><span>Año</span></span><span class="m-select m-fin-period"><span class="m-swap"><span>Noviembre 2026</span><span>T3 2026</span><span>2026</span></span><svg class="mi"><use href="#m-down"/></svg></span><span class="m-spacer"></span><span class="m-btn"><svg class="mi"><use href="#m-file"/></svg>Exportar para el contador</span></div>
+            <div class="m-kpis">
+              <span class="m-kpi"><small>Ingresos</small><strong class="m-swap"><span>$&nbsp;48,6 M</span><span>$&nbsp;124,4 M</span><span>$&nbsp;462,0 M</span></strong><em class="m-swap"><span class="is-up">▲ 12 % vs. octubre</span><span class="is-up">▲ 6 % vs. el T2</span><span class="is-up">▲ 15 % vs. 2025</span></em></span>
+              <span class="m-kpi"><small>Gastos</small><strong class="m-swap"><span>$&nbsp;21,3 M</span><span>$&nbsp;65,3 M</span><span>$&nbsp;241,0 M</span></strong><em class="m-swap"><span class="is-up">▼ 4 % vs. octubre</span><span>▲ 6 % vs. el T2</span><span>▲ 9 % vs. 2025</span></em></span>
+              <span class="m-kpi"><small>Utilidad neta</small><strong class="m-swap"><span>$&nbsp;27,3 M</span><span>$&nbsp;59,1 M</span><span>$&nbsp;221,0 M</span></strong><em class="m-swap"><span>Margen del 56 %</span><span>Margen del 48 %</span><span>Margen del 48 %</span></em></span>
+              <span class="m-kpi"><small>Por cobrar</small><strong>$&nbsp;3,2 M</strong><em>9 facturas</em></span>
+            </div>
+            <div class="m-fin-grid">
+              <div class="m-panel m-chart">
+                <div class="m-panel-head"><span class="m-swap"><span>Ingresos y gastos por mes</span><span>Ingresos y gastos por trimestre</span><span>Ingresos y gastos por año</span></span><span class="m-legend"><span><i class="m-sw m-sw--in"></i>Ingresos</span><span><i class="m-sw m-sw--out"></i>Gastos</span></span></div>
+                <div class="m-colchart">
+                  <div class="m-axis"><span class="m-swap"><span>50 M</span><span>150 M</span><span>500 M</span></span><span class="m-swap"><span>25 M</span><span>75 M</span><span>250 M</span></span><span>0</span></div>
+                  <div class="m-plot">
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.764; --b: 0.617; --c: 0.42"></i><i class="m-b-out" style="--a: 0.402; --b: 0.352; --c: 0.262"></i></span>
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.83; --b: 0.656; --c: 0.536"></i><i class="m-b-out" style="--a: 0.42; --b: 0.368; --c: 0.316"></i></span>
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.796; --b: 0.698; --c: 0.662"></i><i class="m-b-out" style="--a: 0.448; --b: 0.386; --c: 0.374"></i></span>
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.862; --b: 0.722; --c: 0.784"></i><i class="m-b-out" style="--a: 0.438; --b: 0.401; --c: 0.428"></i></span>
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.868; --b: 0.779; --c: 0.874"></i><i class="m-b-out" style="--a: 0.444; --b: 0.412; --c: 0.472"></i></span>
+                    <span class="m-pair"><i class="m-b-in" style="--a: 0.972; --b: 0.829; --c: 0.924"><span class="m-cap"><b class="m-swap"><span>48,6</span><span>124,4</span><span>462</span></b></span></i><i class="m-b-out" style="--a: 0.426; --b: 0.435; --c: 0.482"><span class="m-cap"><b class="m-swap"><span>21,3</span><span>65,3</span><span>241</span></b></span></i></span>
+                  </div>
+                  <div class="m-xlabels"><span class="m-swap"><span>Jun</span><span>T2 25</span><span>2021</span></span><span class="m-swap"><span>Jul</span><span>T3 25</span><span>2022</span></span><span class="m-swap"><span>Ago</span><span>T4 25</span><span>2023</span></span><span class="m-swap"><span>Sep</span><span>T1 26</span><span>2024</span></span><span class="m-swap"><span>Oct</span><span>T2 26</span><span>2025</span></span><span class="m-swap"><span>Nov</span><span>T3 26</span><span>2026</span></span></div>
+                </div>
+              </div>
+              <div class="m-panel m-cats">
+                <div class="m-panel-head">Gastos por categoría</div>
+                <div class="m-hbars">
+                  <span class="m-hbar"><span>Nómina</span><span class="m-hbar-track"><i style="--v: 11.2"></i><b class="m-swap"><span>11,2 M</span><span>33,9 M</span><span>125,4 M</span></b></span></span>
+                  <span class="m-hbar"><span>Arriendo</span><span class="m-hbar-track"><i style="--v: 4.8"></i><b class="m-swap"><span>4,8 M</span><span>14,4 M</span><span>52,8 M</span></b></span></span>
+                  <span class="m-hbar"><span>Insumos</span><span class="m-hbar-track"><i style="--v: 2.6"></i><b class="m-swap"><span>2,6 M</span><span>8,1 M</span><span>28,9 M</span></b></span></span>
+                  <span class="m-hbar"><span>Servicios</span><span class="m-hbar-track"><i style="--v: 1.5"></i><b class="m-swap"><span>1,5 M</span><span>4,6 M</span><span>17,6 M</span></b></span></span>
+                  <span class="m-hbar"><span>Publicidad</span><span class="m-hbar-track"><i style="--v: 1.2"></i><b class="m-swap"><span>1,2 M</span><span>4,3 M</span><span>16,3 M</span></b></span></span>
+                </div>
+              </div>
+              <div class="m-panel m-invoices">
+                <div class="m-panel-head">Facturación electrónica DIAN<span class="m-pill m-pill--violet">142 emitidas en noviembre</span></div>
+                <div class="m-table m-inv-table">
+                  <div class="m-tr m-th"><span>Número</span><span>Cliente</span><span>Fecha</span><span>Estado DIAN</span><span>Total</span></div>
+                  <div class="m-tr"><span>FE-1182</span><span>María José Pérez</span><span>17 nov</span><span><i class="m-pill m-pill--sage"><svg class="mi"><use href="#m-check"/></svg>Aceptada</i></span><span>$&nbsp;120.000</span></div>
+                  <div class="m-tr"><span>FE-1181</span><span>Daniel Ospina</span><span>17 nov</span><span><i class="m-pill m-pill--sage"><svg class="mi"><use href="#m-check"/></svg>Aceptada</i></span><span>$&nbsp;150.000</span></div>
+                  <div class="m-tr"><span>FE-1180</span><span>Seguros Andinos S. A.</span><span>16 nov</span><span><i class="m-pill m-pill--honey">Enviada</i></span><span>$&nbsp;2.450.000</span></div>
+                  <div class="m-tr"><span>NC-031</span><span>Laura Henao · nota crédito</span><span>16 nov</span><span><i class="m-pill m-pill--sage"><svg class="mi"><use href="#m-check"/></svg>Aceptada</i></span><span>−$&nbsp;60.000</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Finanzas y contabilidad</p>
+          <h3>Sepa a dónde va cada peso</h3>
+          <p>Ingresos, gastos y utilidad mes a mes, con una exportación lista para su contador. La facturación electrónica DIAN llegará pronto.</p>
+        </div>
+      </div>
+
+      <div class="showcase-slide" id="feature-messages" style="--pos: -1">
+        <div class="mock" aria-hidden="true" lang="es-CO" data-i18n="off">
+          <div class="m-bar">
+            <span class="m-brand"><svg class="m-logo"><use href="#m-alba"/></svg>Alba</span>
+            <span class="m-nav"><span>Agenda</span><span>Pacientes</span><span>Ventas</span><span>Finanzas</span><span class="is-on"><svg class="mi"><use href="#m-chat"/></svg>Mensajes</span><span>Informes</span></span>
+            <span class="m-tools"><svg class="mi"><use href="#m-search"/></svg><svg class="mi"><use href="#m-bell"/></svg><span class="m-user"><span class="m-av m-av--honey">LG</span><span class="m-user-name">Laura G.<small>Sede Chicó</small></span></span></span>
+          </div>
+          <div class="m-body m-msg-body">
+            <div class="m-inbox">
+              <div class="m-inbox-head"><strong class="m-h">Mensajes</strong><span class="m-chips"><span class="is-on">Todos</span><span>WhatsApp</span><span>SMS</span><span>Llamadas</span></span></div>
+              <div class="m-convs">
+              <div class="m-conv m-conv--new"><span class="m-av m-av--sky">VR<i class="m-ch m-ch--wa"></i></span><span class="m-conv-text"><strong>Valentina Ríos</strong><small>Hola, ¿tienen cita hoy en la tarde?</small></span><time>10:24</time><b class="m-badge">1</b></div>
+              <div class="m-conv is-on m-conv-sofia"><span class="m-av m-av--clay">SA<i class="m-ch m-ch--wa"></i></span><span class="m-conv-text"><strong>Sofía Arango</strong><small class="m-swap"><span>4:00 perfecto, ¡gracias!</span><span>¿Me mandas la dirección?</span><span>Tú: Calle 93 # 15-20, Chicó</span></small></span><time class="m-swap"><span>10:21</span><span>10:24</span><span>10:25</span></time></div>
+              <div class="m-conv"><span class="m-av m-av--missed"><svg class="mi"><use href="#m-phone"/></svg></span><span class="m-conv-text"><strong>Llamada perdida</strong><small>+57 310 555 0142 · devolver</small></span><time>10:05</time></div>
+              <div class="m-conv"><span class="m-av m-av--violet">DO<i class="m-ch m-ch--wa"></i></span><span class="m-conv-text"><strong>Daniel Ospina</strong><small>¿Hay parqueadero en la sede?</small></span><time>9:48</time><b class="m-badge">2</b></div>
+              <div class="m-conv"><span class="m-av m-av--sage"><svg class="mi"><use href="#m-cal"/></svg></span><span class="m-conv-text"><strong>Recordatorios automáticos</strong><small>Enviados a 23 pacientes</small></span><time>9:00</time></div>
+              <div class="m-conv"><span class="m-av m-av--honey">LH<i class="m-ch m-ch--sms"></i></span><span class="m-conv-text"><strong>Laura Henao</strong><small>Listo, ya pagué con el link</small></span><time>Ayer</time></div>
+              <div class="m-conv"><span class="m-av m-av--sky"><svg class="mi"><use href="#m-phone"/></svg></span><span class="m-conv-text"><strong>Esteban Mora</strong><small>Llamada entrante · 3:12 min</small></span><time>Ayer</time></div>
+              </div>
+            </div>
+            <div class="m-thread">
+              <div class="m-thread-head"><span class="m-av m-av--clay">SA</span><span><strong>Sofía Arango</strong><small>WhatsApp · +57 300 555 0187</small></span><span class="m-spacer"></span><span class="m-iconbtn"><svg class="mi"><use href="#m-phone"/></svg></span></div>
+              <div class="m-msgs">
+                <div class="m-msgs-track">
+                <span class="m-day">Hoy</span>
+                <div class="m-msg m-in">¡Hola! Me fue súper bien en la sesión de hoy. ¿Puedo agendar la próxima para el jueves en la tarde?<time>10:12</time></div>
+                <div class="m-msg m-out">¡Hola, Sofía! Qué bueno. El jueves 19 tenemos 4:00 p. m. o 5:30 p. m. con Camila. ¿Cuál te sirve?<time>10:15 · Leído</time></div>
+                <div class="m-msg m-in">4:00 perfecto, ¡gracias!<time>10:21</time></div>
+                <span class="m-event"><svg class="mi"><use href="#m-cal"/></svg>Cita agendada: jue 19 nov, 4:00 p. m. · recordatorio programado</span>
+                <div class="m-msg m-in m-msg--new m-msg--ask"><span class="m-typing"><i></i><i></i><i></i></span>¿Me mandas la dirección? Mi mamá también quiere agendar con Camila.<time>10:24</time></div>
+                <div class="m-msg m-out m-msg--new m-msg--reply">Claro, Sofía: Calle 93 # 15-20, Chicó. Hay parqueadero gratis para pacientes.<time>10:25 · Enviado</time></div>
+                </div>
+              </div>
+              <div class="m-quick"><span>Horarios disponibles</span><span class="m-quick-addr">Dirección y parqueadero</span><span>Enviar link de pago</span></div>
+              <div class="m-compose"><span class="m-swap m-compose-text"><span>Escribe un mensaje…</span><span>Claro, Sofía: Calle 93 # 15-20, Chicó. Hay parqueadero gratis para pacientes.</span></span><span class="m-send"><svg class="mi"><use href="#m-send"/></svg></span></div>
+            </div>
+            <div class="m-side m-contact">
+              <div class="m-contact-top"><span class="m-av m-av--clay m-av--xl">SA</span><strong>Sofía Arango</strong><small>Paciente desde enero de 2026</small><span class="m-contact-actions"><span class="m-btn"><svg class="mi"><use href="#m-phone"/></svg>Llamar</span><span class="m-btn">Ver ficha</span></span></div>
+              <div class="m-card"><small>Próxima cita</small><strong>Jue 19 nov · 4:00 p. m.</strong><small>Fisioterapia con Camila Ruiz</small></div>
+              <div class="m-card"><small>Plan</small><strong>Rehabilitación de tobillo</strong><small>Sesión 4 de 8</small><span class="m-progress"><i style="width: 50%"></i></span></div>
+              <div class="m-history"><span class="m-label">Historial</span><span><svg class="mi"><use href="#m-check"/></svg>Hoy · fisioterapia</span><span><svg class="mi"><use href="#m-check"/></svg>12 nov · fisioterapia</span><span><svg class="mi"><use href="#m-phone"/></svg>3 nov · llamada de 2:41 min</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="showcase-caption">
+          <p class="showcase-kicker">Llamadas y mensajes</p>
+          <h3>Todas las conversaciones en una sola bandeja</h3>
+          <p>Mensajes de WhatsApp, SMS y llamadas perdidas junto al historial de cada paciente. Los recordatorios automáticos por WhatsApp llegarán pronto.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Clients: for now the logos are made-up businesses. Replace them with approved client logos before this
+       goes live, since the heading says they are real clients. -->
+  <section id="clients" class="clients" aria-labelledby="clients-title">
+    <div class="clients-inner">
+      <div class="clients-copy">
+        <h2 id="clients-title">Clientes reales creando su sueño con nosotros</h2>
+        <p class="clients-note"><svg class="clients-note-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17l6-6 4 4 8-8M15 7h6v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Una pequeña inversión con retorno inmediato en más clientes y mejor gestión.</span></p>
+        <ul class="visually-hidden" data-i18n="off"><li>Alba Fisioterapia</li><li>La Fonda de Rosita</li><li>Barbería El Bigote</li><li>Finca Los Guaduales</li><li>Torres de Usaquén</li><li>Tinta Norte Tattoo Studio</li><li>Sonríe Dental</li><li>Prana Estudio de Yoga</li><li>Horno Andino</li><li>Veterinaria Patitas</li><li>Lumen Spa</li><li>Núcleo Pilates</li></ul>
+        <button type="button" class="showcase-toggle clients-toggle" data-clients-toggle hidden><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path class="showcase-pause" d="M4 3h3v10H4zM9 3h3v10H9z"/><path class="showcase-play" d="M5 2.5 13.5 8 5 13.5z"/></svg><span class="visually-hidden" data-clients-toggle-label>Pausar logos</span></button>
+      </div>
+      <div class="clients-rows" aria-hidden="true" data-i18n="off">
+        <div class="client-row">
+          <div class="client-track">
+            <ul class="client-set"><li class="client cl-alba"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 16a9 9 0 0 1 18 0z" fill="#e8805f"/><path d="M7.5 16a4.5 4.5 0 0 1 9 0z" fill="#f6c27a"/><rect x="2" y="17.5" width="20" height="2" rx="1" fill="#2a2850"/></svg><span><b>Alba</b><small>fisioterapia</small></span></li><li class="client cl-fonda"><span><small>la fonda de</small><b>Rosita</b></span></li><li class="client cl-bigote"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 11c-1.6-2.6-5.4-3-7.4-.6C3.5 11.7 2.6 13 1 13c1.2 2.2 4.3 3 6.6 1.8C9.6 13.8 11 12.6 12 11zm0 0c1.6-2.6 5.4-3 7.4-.6 1.1 1.3 2 2.6 3.6 2.6-1.2 2.2-4.3 3-6.6 1.8C14.4 13.8 13 12.6 12 11z" fill="currentColor"/></svg><span><b>El Bigote</b><small>barbería</small></span></li><li class="client cl-guadua"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21V8M12 12c-3 0-5-2-6-5 3 0 5 1.5 6 5zm0-2c3 0 5-2 6-5-3 0-5 1.5-6 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><small>finca</small><b>Los Guaduales</b></span></li><li class="client cl-torres"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 21V9l5-3v15M9 21V4l6 3v14M15 21v-9l5 2v7M2 21h20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span><b>TORRES</b><small>de Usaquén</small></span></li><li class="client cl-tinta"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5c3 4.2 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.8 6-11z" fill="currentColor"/><path d="M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8" fill="none" stroke="#f7f5f2" stroke-width="1.6" stroke-linecap="round"/></svg><span><b>TINTA NORTE</b><small>tattoo studio</small></span></li></ul>
+            <ul class="client-set" data-copy><li class="client cl-alba"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 16a9 9 0 0 1 18 0z" fill="#e8805f"/><path d="M7.5 16a4.5 4.5 0 0 1 9 0z" fill="#f6c27a"/><rect x="2" y="17.5" width="20" height="2" rx="1" fill="#2a2850"/></svg><span><b>Alba</b><small>fisioterapia</small></span></li><li class="client cl-fonda"><span><small>la fonda de</small><b>Rosita</b></span></li><li class="client cl-bigote"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 11c-1.6-2.6-5.4-3-7.4-.6C3.5 11.7 2.6 13 1 13c1.2 2.2 4.3 3 6.6 1.8C9.6 13.8 11 12.6 12 11zm0 0c1.6-2.6 5.4-3 7.4-.6 1.1 1.3 2 2.6 3.6 2.6-1.2 2.2-4.3 3-6.6 1.8C14.4 13.8 13 12.6 12 11z" fill="currentColor"/></svg><span><b>El Bigote</b><small>barbería</small></span></li><li class="client cl-guadua"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21V8M12 12c-3 0-5-2-6-5 3 0 5 1.5 6 5zm0-2c3 0 5-2 6-5-3 0-5 1.5-6 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><small>finca</small><b>Los Guaduales</b></span></li><li class="client cl-torres"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 21V9l5-3v15M9 21V4l6 3v14M15 21v-9l5 2v7M2 21h20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span><b>TORRES</b><small>de Usaquén</small></span></li><li class="client cl-tinta"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5c3 4.2 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.8 6-11z" fill="currentColor"/><path d="M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8" fill="none" stroke="#f7f5f2" stroke-width="1.6" stroke-linecap="round"/></svg><span><b>TINTA NORTE</b><small>tattoo studio</small></span></li></ul>
+          </div>
+        </div>
+        <div class="client-row client-row--reverse">
+          <div class="client-track">
+            <ul class="client-set"><li class="client cl-sonrie"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3c-2.8 0-4.5 2.3-4 5.2.4 2.1 1.4 3.4 1.8 6 .5 3.5 1.2 6.8 2.7 6.8 1.7 0 1.6-4.5 4.5-4.5s2.8 4.5 4.5 4.5c1.5 0 2.2-3.3 2.7-6.8.4-2.6 1.4-3.9 1.8-6C21.5 5.3 19.8 3 17 3c-2 0-3 1-5 1S9 3 7 3z" fill="currentColor"/></svg><span><b>sonríe</b><small>dental</small></span></li><li class="client cl-prana"><span><b>PRANA</b><small>estudio de yoga</small></span></li><li class="client cl-horno"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="13" r="4.5" fill="currentColor"/><path d="M12 3v3M4.5 6l2 2M19.5 6l-2 2M2 13h3M19 13h3M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span><b>HORNO ANDINO</b></span></li><li class="client cl-patitas"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><ellipse cx="12" cy="16" rx="4.6" ry="3.8" fill="currentColor"/><circle cx="5.5" cy="10.5" r="2.1" fill="currentColor"/><circle cx="18.5" cy="10.5" r="2.1" fill="currentColor"/><circle cx="9" cy="6" r="2.1" fill="currentColor"/><circle cx="15" cy="6" r="2.1" fill="currentColor"/></svg><span><b>patitas</b><small>veterinaria</small></span></li><li class="client cl-lumen"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg><span><b>Lumen</b><small>spa &amp; bienestar</small></span></li><li class="client cl-nucleo"><span><b>núcleo</b><small>pilates</small></span></li></ul>
+            <ul class="client-set" data-copy><li class="client cl-sonrie"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3c-2.8 0-4.5 2.3-4 5.2.4 2.1 1.4 3.4 1.8 6 .5 3.5 1.2 6.8 2.7 6.8 1.7 0 1.6-4.5 4.5-4.5s2.8 4.5 4.5 4.5c1.5 0 2.2-3.3 2.7-6.8.4-2.6 1.4-3.9 1.8-6C21.5 5.3 19.8 3 17 3c-2 0-3 1-5 1S9 3 7 3z" fill="currentColor"/></svg><span><b>sonríe</b><small>dental</small></span></li><li class="client cl-prana"><span><b>PRANA</b><small>estudio de yoga</small></span></li><li class="client cl-horno"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="13" r="4.5" fill="currentColor"/><path d="M12 3v3M4.5 6l2 2M19.5 6l-2 2M2 13h3M19 13h3M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span><b>HORNO ANDINO</b></span></li><li class="client cl-patitas"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><ellipse cx="12" cy="16" rx="4.6" ry="3.8" fill="currentColor"/><circle cx="5.5" cy="10.5" r="2.1" fill="currentColor"/><circle cx="18.5" cy="10.5" r="2.1" fill="currentColor"/><circle cx="9" cy="6" r="2.1" fill="currentColor"/><circle cx="15" cy="6" r="2.1" fill="currentColor"/></svg><span><b>patitas</b><small>veterinaria</small></span></li><li class="client cl-lumen"><svg class="cl-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg><span><b>Lumen</b><small>spa &amp; bienestar</small></span></li><li class="client cl-nucleo"><span><b>núcleo</b><small>pilates</small></span></li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customer stories: for now fictional businesses (the same as the logos above) and made-up quotes. Replace them
+       with approved client stories before this goes live. -->
+  <section id="stories" class="stories" aria-labelledby="stories-title">
+    <div class="container">
+      <p class="eyebrow">Historias de clientes</p>
+      <h2 id="stories-title">Menos tiempo administrativo, más tiempo en su negocio y lo que haces mejor</h2>
+      <div class="stories-layout">
+        <div class="story-tabs" data-story-tabs data-label="Historias de clientes">
+          <button type="button" class="story-tab is-active" id="story-tab-fisioterapia" data-story="fisioterapia"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-7-4.4-9.2-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.2 12C19 16.6 12 21 12 21z"/><path d="M7 12h2.5l1.5-2.5 2 5 1.5-2.5H17"/></svg><span><b>Fisioterapia</b><small>Alba Fisioterapia</small></span></button>
+          <button type="button" class="story-tab" id="story-tab-clinica" data-story="clinica"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3c-2.8 0-4.5 2.3-4 5.2.4 2.1 1.4 3.4 1.8 6 .5 3.5 1.2 6.8 2.7 6.8 1.7 0 1.6-4.5 4.5-4.5s2.8 4.5 4.5 4.5c1.5 0 2.2-3.3 2.7-6.8.4-2.6 1.4-3.9 1.8-6C21.5 5.3 19.8 3 17 3c-2 0-3 1-5 1S9 3 7 3z"/></svg><span><b>Clínica dental</b><small>Sonríe Dental</small></span></button>
+          <button type="button" class="story-tab" id="story-tab-barberia" data-story="barberia"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg><span><b>Peluquería y barbería</b><small>Barbería El Bigote</small></span></button>
+          <button type="button" class="story-tab" id="story-tab-tatuajes" data-story="tatuajes"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5c3 4.2 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.8 6-11z"/></svg><span><b>Estudio de tatuajes</b><small>Tinta Norte</small></span></button>
+          <button type="button" class="story-tab" id="story-tab-restaurante" data-story="restaurante"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3v8a2 2 0 0 0 2 2v8M9 3v8a2 2 0 0 1-2 2M7 3v6M17 21V3c-2.2 1.2-3.5 3.7-3.5 7v3H17"/></svg><span><b>Restaurante</b><small>La Fonda de Rosita</small></span></button>
+          <button type="button" class="story-tab story-tab--pick" id="story-tab-negocio" data-story="negocio"><svg class="story-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span><b>Escoge <em>TU</em> negocio</b><small>15 tipos de negocio</small></span></button>
+        </div>
+        <div class="story-panels">
+          <div class="story-panel is-active" id="story-fisioterapia">
+            <h3 class="story-title">Fisioterapia · Alba Fisioterapia</h3>
+            <div class="story-site story-site--fisioterapia" aria-hidden="true" lang="es-CO" data-i18n="off">
+              <div class="story-chrome"><span class="story-dots"><i></i><i></i><i></i></span><span class="story-url"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>albafisio.co</span></div>
+              <div class="story-hero">
+                <img src="assets/showcase/story-fisioterapia.webp" width="960" height="600" alt="" loading="lazy" decoding="async">
+                <div class="story-nav"><b class="story-brand">Alba Fisioterapia</b><span class="story-links"><span>Servicios</span><span>Equipo</span><span>Contacto</span></span></div>
+                <div class="story-copy"><small>Fisioterapia &amp; bienestar · Bogotá</small><strong>Muévete sin dolor</strong><span class="story-cta">Reserva tu cita</span></div>
+              </div>
+            </div>
+            <div class="story-text">
+              <figure class="story-quote">
+                <blockquote><p>“El tiempo que se me iba organizando citas, respondiendo a pacientes y haciendo reservas ahora lo dedico a mi consulta y a lo que sé hacer.”</p></blockquote>
+                <figcaption><span class="story-avatar" aria-hidden="true">NH</span><span><b>Natalia Herrera</b><small>Directora · Alba Fisioterapia</small></span></figcaption>
+              </figure>
+              <ul class="story-points">
+                <li class="story-point story-point--before"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7l10 10M17 7 7 17"/></svg><span>Alba no tenía sistema de agendamiento: las citas se llevaban por WhatsApp y en un cuaderno.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Ahora tiene reservas automáticas desde su página web, de día y de noche.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Analiza su desempeño financiero y por paciente, mes a mes, en un solo panel.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="story-panel" id="story-clinica">
+            <h3 class="story-title">Clínica dental · Sonríe Dental</h3>
+            <div class="story-site story-site--clinica" aria-hidden="true" lang="es-CO" data-i18n="off">
+              <div class="story-chrome"><span class="story-dots"><i></i><i></i><i></i></span><span class="story-url"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>sonriedental.co</span></div>
+              <div class="story-hero">
+                <img src="assets/showcase/story-clinica.webp" width="960" height="600" alt="" loading="lazy" decoding="async">
+                <div class="story-nav"><b class="story-brand">Sonríe Dental</b><span class="story-links"><span>Tratamientos</span><span>Sedes</span><span>Contacto</span></span></div>
+                <div class="story-copy"><small>Odontología general y estética</small><strong>Tu sonrisa, en manos expertas</strong><span class="story-cta">Agenda tu valoración</span></div>
+              </div>
+            </div>
+            <div class="story-text">
+              <figure class="story-quote">
+                <blockquote><p>“Los pacientes reservan en la noche desde el celular y en la mañana ya tengo el día organizado. Mi equipo dejó de vivir pegado al teléfono.”</p></blockquote>
+                <figcaption><span class="story-avatar" aria-hidden="true">AR</span><span><b>Andrés Rojas</b><small>Odontólogo y director · Sonríe Dental</small></span></figcaption>
+              </figure>
+              <ul class="story-points">
+                <li class="story-point story-point--before"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7l10 10M17 7 7 17"/></svg><span>Sonríe Dental tenía dos sedes y una agenda en Excel para cada una.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Las dos sedes comparten una sola agenda en línea, con la historia de cada paciente a un clic.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Ve en un mismo panel cuánto factura cada sede y cada tratamiento.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="story-panel" id="story-barberia">
+            <h3 class="story-title">Peluquería y barbería · Barbería El Bigote</h3>
+            <div class="story-site story-site--barberia" aria-hidden="true" lang="es-CO" data-i18n="off">
+              <div class="story-chrome"><span class="story-dots"><i></i><i></i><i></i></span><span class="story-url"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>elbigote.co</span></div>
+              <div class="story-hero">
+                <img src="assets/showcase/story-barberia.webp" width="960" height="600" alt="" loading="lazy" decoding="async">
+                <div class="story-nav"><b class="story-brand">Barbería El Bigote</b><span class="story-links"><span>Servicios</span><span>Barberos</span><span>Ubicación</span></span></div>
+                <div class="story-copy"><small>Barbería clásica · Chapinero</small><strong>Cortes y barba con estilo</strong><span class="story-cta">Reserva tu turno</span></div>
+              </div>
+            </div>
+            <div class="story-text">
+              <figure class="story-quote">
+                <blockquote><p>“Los clientes ya no tienen que llamar ni esperar respuesta: escogen barbero y hora, y llegan. Los sábados ya no se me cruzan los turnos.”</p></blockquote>
+                <figcaption><span class="story-avatar" aria-hidden="true">JC</span><span><b>Julián Castaño</b><small>Dueño · Barbería El Bigote</small></span></figcaption>
+              </figure>
+              <ul class="story-points">
+                <li class="story-point story-point--before"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7l10 10M17 7 7 17"/></svg><span>El Bigote tomaba los turnos por Instagram y cada fin de semana se cruzaban horarios.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Cada barbero tiene su agenda y los clientes reservan solos desde la página.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Cobra con tarjeta, Nequi o efectivo, y cada venta queda registrada con su barbero.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="story-panel" id="story-tatuajes">
+            <h3 class="story-title">Estudio de tatuajes · Tinta Norte</h3>
+            <div class="story-site story-site--tatuajes" aria-hidden="true" lang="es-CO" data-i18n="off">
+              <div class="story-chrome"><span class="story-dots"><i></i><i></i><i></i></span><span class="story-url"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>tintanorte.co</span></div>
+              <div class="story-hero">
+                <img src="assets/showcase/story-tatuajes.webp" width="960" height="600" alt="" loading="lazy" decoding="async">
+                <div class="story-nav"><b class="story-brand">Tinta Norte</b><span class="story-links"><span>Portafolio</span><span>Artistas</span><span>Contacto</span></span></div>
+                <div class="story-copy"><small>Tattoo studio · Usaquén</small><strong>Arte que se queda contigo</strong><span class="story-cta">Agenda tu sesión</span></div>
+              </div>
+            </div>
+            <div class="story-text">
+              <figure class="story-quote">
+                <blockquote><p>“En una sesión no puedo soltar la máquina para contestar mensajes. Ahora las citas me llegan con la idea del diseño y la zona, sin que yo tenga que responder.”</p></blockquote>
+                <figcaption><span class="story-avatar" aria-hidden="true">MG</span><span><b>Mariana Gil</b><small>Tatuadora y fundadora · Tinta Norte</small></span></figcaption>
+              </figure>
+              <ul class="story-points">
+                <li class="story-point story-point--before"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7l10 10M17 7 7 17"/></svg><span>Tinta Norte coordinaba diseños, fechas y precios por chat, cliente por cliente.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Sus clientes reservan la sesión y envían la referencia del diseño desde la página.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Su portafolio en la página le trae clientes nuevos que la encuentran en Google.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="story-panel" id="story-restaurante">
+            <h3 class="story-title">Restaurante · La Fonda de Rosita</h3>
+            <div class="story-site story-site--restaurante" aria-hidden="true" lang="es-CO" data-i18n="off">
+              <div class="story-chrome"><span class="story-dots"><i></i><i></i><i></i></span><span class="story-url"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>lafondaderosita.co</span></div>
+              <div class="story-hero">
+                <img src="assets/showcase/story-restaurante.webp" width="960" height="600" alt="" loading="lazy" decoding="async">
+                <div class="story-nav"><b class="story-brand">La Fonda de Rosita</b><span class="story-links"><span>Menú</span><span>Domicilios</span><span>Contacto</span></span></div>
+                <div class="story-copy"><small>Comida casera · Teusaquillo</small><strong>Sabor de casa, a domicilio</strong><span class="story-cta">Pide en línea</span></div>
+              </div>
+            </div>
+            <div class="story-text">
+              <figure class="story-quote">
+                <blockquote><p>“Antes el teléfono no paraba a la hora del almuerzo. Ahora los pedidos llegan organizados, con la dirección y el pago hechos.”</p></blockquote>
+                <figcaption><span class="story-avatar" aria-hidden="true">RP</span><span><b>Rosa Elvira Pardo</b><small>Dueña · La Fonda de Rosita</small></span></figcaption>
+              </figure>
+              <ul class="story-points">
+                <li class="story-point story-point--before"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7l10 10M17 7 7 17"/></svg><span>La Fonda tomaba los domicilios por teléfono y los anotaba a mano.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Sus clientes piden desde el menú en línea y pagan al hacer el pedido.</span></li><li class="story-point story-point--now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Sabe qué platos se venden más y a qué horas, mes a mes.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="story-panel story-panel--pick" id="story-negocio">
+            <h3 class="story-title">Escoge TU negocio</h3>
+            <div class="biz-head">
+              <p class="biz-lead">Elija su tipo de negocio y vea lo que GTL AI hace por usted.</p>
+              <div class="biz-chips" data-biz-chips role="group" aria-label="Tipo de negocio">
+                <button type="button" class="biz-chip is-on" data-biz="fisioterapia" aria-pressed="true">Fisioterapia</button>
+                <button type="button" class="biz-chip" data-biz="clinica" aria-pressed="false">Clínica dental</button>
+                <button type="button" class="biz-chip" data-biz="barberia" aria-pressed="false">Peluquería y barbería</button>
+                <button type="button" class="biz-chip" data-biz="tatuajes" aria-pressed="false">Estudio de tatuajes</button>
+                <button type="button" class="biz-chip" data-biz="restaurante" aria-pressed="false">Restaurante</button>
+                <button type="button" class="biz-chip" data-biz="veterinaria" aria-pressed="false">Veterinaria</button>
+                <button type="button" class="biz-chip" data-biz="entrenador" aria-pressed="false">Entrenador personal</button>
+                <button type="button" class="biz-chip" data-biz="lavanderia" aria-pressed="false">Lavandería</button>
+                <button type="button" class="biz-chip" data-biz="sastreria" aria-pressed="false">Sastrería</button>
+                <button type="button" class="biz-chip" data-biz="tienda" aria-pressed="false">Tienda comercial</button>
+                <button type="button" class="biz-chip" data-biz="spa" aria-pressed="false">Spa y estética</button>
+                <button type="button" class="biz-chip" data-biz="yoga" aria-pressed="false">Yoga y pilates</button>
+                <button type="button" class="biz-chip" data-biz="finca" aria-pressed="false">Finca y alojamiento</button>
+                <button type="button" class="biz-chip" data-biz="conjunto" aria-pressed="false">Conjunto residencial</button>
+                <button type="button" class="biz-chip biz-chip--dream" data-biz="otro" aria-pressed="false">Otro tipo de sueño</button>
+              </div>
+            </div>
+            <div class="biz-features" data-biz-features>
+              <div class="feat-group" data-group="agenda">
+                <h4 class="feat-group-title">Agenda y pagos</h4>
+                <ul class="feat-list">
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes restaurante veterinaria entrenador lavanderia sastreria tienda spa yoga finca conjunto otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg><span>Página web y SEO</span></li>
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes veterinaria entrenador sastreria spa yoga finca otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 9l11 4-4.5 1.5L14 19z"/><path d="M5 3v3M3 5h3M8.5 4.5l-1 1M4.5 8.5l1-1"/></svg><span>Reservas en línea</span></li>
+                  <li class="feat" data-for="fisioterapia clinica barberia veterinaria spa"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>Agenda del equipo</span></li>
+                  <li class="feat" data-for="entrenador yoga"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M8 22l4-8 4 8M5 10h14"/></svg><span>Clases y cupos</span></li>
+                  <li class="feat" data-for="restaurante"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9h18M5 9v10M19 9v10M8 9l-1-4h10l-1 4"/></svg><span>Reserva de mesas</span></li>
+                  <li class="feat" data-for="restaurante lavanderia tienda"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Pedidos en línea</span></li>
+                  <li class="feat" data-for="finca"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11 12 4l9 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg><span>Calendario de disponibilidad</span></li>
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes restaurante veterinaria entrenador lavanderia sastreria tienda spa yoga otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h3"/></svg><span>Pagos y caja</span></li>
+                  <li class="feat" data-for="clinica tatuajes sastreria finca"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M14.5 9.5c-.5-1-1.4-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.1 0-2-.5-2.5-1.5M12 6.5V8M12 16v1.5"/></svg><span>Anticipos en línea</span><i class="feat-soon">Próximamente</i></li>
+                </ul>
+              </div>
+              <div class="feat-group" data-group="clientes">
+                <h4 class="feat-group-title">Clientes</h4>
+                <ul class="feat-list">
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes entrenador lavanderia sastreria tienda spa yoga otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg><span>Fichas de clientes</span></li>
+                  <li class="feat" data-for="fisioterapia clinica"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span>Historia clínica</span></li>
+                  <li class="feat" data-for="veterinaria"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><ellipse cx="12" cy="16" rx="4" ry="3.4"/><circle cx="6" cy="11" r="1.8"/><circle cx="18" cy="11" r="1.8"/><circle cx="9.3" cy="6.5" r="1.8"/><circle cx="14.7" cy="6.5" r="1.8"/></svg><span>Fichas de mascotas</span></li>
+                  <li class="feat" data-for="conjunto"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l2 2M15 8l2 2"/></svg><span>Portal de residentes</span></li>
+                  <li class="feat" data-for="barberia tatuajes restaurante veterinaria entrenador lavanderia tienda yoga finca conjunto otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4a8 8 0 0 0-6.9 12L4 20l4.1-1.1A8 8 0 1 0 12 4z"/></svg><span>Mensajes y WhatsApp</span></li>
+                  <li class="feat" data-for="fisioterapia clinica veterinaria spa"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg><span>Recordatorios por WhatsApp</span><i class="feat-soon">Próximamente</i></li>
+                  <li class="feat" data-for="lavanderia sastreria"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4 4 7l2 4 2-1v10h8V10l2 1 2-4-4-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/></svg><span>Aviso de prenda lista</span><i class="feat-soon">Próximamente</i></li>
+                  <li class="feat" data-for="fisioterapia barberia entrenador spa yoga"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="5"/><path d="M9 13.5 8 21l4-2 4 2-1-7.5"/></svg><span>Planes y paquetes</span></li>
+                  <li class="feat" data-for="tatuajes sastreria"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg><span>Portafolio de trabajos</span></li>
+                  <li class="feat" data-for="restaurante lavanderia tienda"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><span>Domicilios</span></li>
+                  <li class="feat" data-for="conjunto"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13h4l2 3h4l2-3h4M4 13l2-8h12l2 8v6H4z"/></svg><span>Solicitudes PQRS</span></li>
+                </ul>
+              </div>
+              <div class="feat-group" data-group="marketing">
+                <h4 class="feat-group-title">Marketing y automatización</h4>
+                <ul class="feat-list">
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes restaurante veterinaria lavanderia sastreria tienda finca otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Perfil de Empresa en Google</span></li>
+                  <li class="feat" data-for="barberia tatuajes restaurante entrenador tienda spa yoga finca"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg><span>Contenido para redes</span></li>
+                  <li class="feat" data-for="restaurante tienda yoga conjunto"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12 20 4l-4 16-4-6.5z"/><path d="m12 13.5 8-9.5"/></svg><span>Campañas por WhatsApp</span></li>
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes veterinaria entrenador spa finca"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></svg><span>Reseñas de clientes</span></li>
+                  <li class="feat" data-for="spa"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18h4M9.5 9.5l1 1 1-1M13.5 9.5l1 1"/></svg><span>Recepcionista IA</span></li>
+                </ul>
+              </div>
+              <div class="feat-group" data-group="gestion">
+                <h4 class="feat-group-title">Gestión</h4>
+                <ul class="feat-list">
+                  <li class="feat" data-for="barberia restaurante veterinaria tienda spa"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg><span>Inventario</span></li>
+                  <li class="feat" data-for="lavanderia sastreria"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h3l2-5 4 10 2-5h5"/></svg><span>Seguimiento de pedidos</span></li>
+                  <li class="feat" data-for="conjunto"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span>Reserva de zonas comunes</span></li>
+                  <li class="feat" data-for="fisioterapia barberia spa yoga"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 4.5a3 3 0 0 1 0 6M21 20a6 6 0 0 0-4-5.6"/></svg><span>Gestión del equipo</span></li>
+                  <li class="feat" data-for="fisioterapia clinica barberia tatuajes restaurante veterinaria entrenador lavanderia sastreria tienda spa yoga finca conjunto otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16M8 16l4-5 3 3 5-6"/></svg><span>Finanzas y contabilidad</span></li>
+                  <li class="feat" data-for="fisioterapia clinica tatuajes restaurante veterinaria entrenador lavanderia tienda yoga finca conjunto otro"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16M8 16l4-5 3 3 5-6"/></svg><span>Informes y métricas</span></li>
+                  <li class="feat" data-for="clinica"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span>Varias sedes</span></li>
+                  <li class="feat" data-for="clinica restaurante tienda"><svg class="feat-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span>Facturación electrónica DIAN</span><i class="feat-soon">Próximamente</i></li>
+                </ul>
+              </div>
+            </div>
+            <div class="biz-dream" data-biz-dream hidden>
+              <p><strong>¿Su negocio no está en la lista?</strong> Cuéntenos su sueño y armamos la solución a su medida, con lo que su negocio necesita.</p>
+              <a class="btn btn-primary" href="#contact">Cuéntenos su sueño</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- pricing:start -->
-  <section id="planes" class="pricing" lang="es-CO" aria-labelledby="planes-title">
-  <div class="container">
-  <div class="pricing-head">
-  <p class="eyebrow">Planes</p>
-  <h2 id="planes-title">Planes y precios</h2>
-  <p class="section-sub">Una puesta en marcha única para poner su negocio en línea y una mensualidad que lo mantiene funcionando, seguro y al día.</p>
-  </div>
-  <div class="pricing-tabs" data-tabs data-label="Paquetes">
-  <button type="button" class="pricing-tab is-active" id="tab-agenda" data-tab="agenda">Agenda</button>
-  <button type="button" class="pricing-tab" id="tab-presencia" data-tab="presencia">Presencia</button>
-  <button type="button" class="pricing-tab" id="tab-pedidos" data-tab="pedidos">Pedidos</button>
-  <button type="button" class="pricing-tab" id="tab-reservas" data-tab="reservas">Reservas</button>
-  <button type="button" class="pricing-tab" id="tab-comunidad" data-tab="comunidad">Comunidad</button>
-  <button type="button" class="pricing-tab" id="tab-a-medida" data-tab="a-medida">A medida</button>
-  </div>
-  <div class="pricing-panel is-active" id="panel-agenda" data-package="agenda">
-  <h3 class="package-name" id="package-agenda">Agenda</h3>
-  <p class="package-for">Página web con agenda en línea para consultorios y centros de salud y bienestar.</p>
-  <div class="tier-grid">
-  <article class="tier-card" aria-labelledby="tier-agenda-esencial">
-  <h4 class="tier-name" id="tier-agenda-esencial">Esencial</h4>
-  <p class="tier-suits">Para un profesional independiente.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$199.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
-  </div>
-  <ul class="tier-list">
-  <li>Agenda en línea</li>
-  <li>1 sede</li>
-  <li>1 profesional</li>
-  <li>1 cambio pequeño al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Esencial%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="agenda" data-tier="esencial">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card is-highlight" aria-labelledby="tier-agenda-crece">
-  <p class="tier-badge">Más elegido</p>
-  <h4 class="tier-name" id="tier-agenda-crece">Crece</h4>
-  <p class="tier-suits">Para consultorios con equipo.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$350.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$4.000.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Esencial, y además:</p>
-  <ul class="tier-list">
-  <li>Hasta 5 profesionales</li>
-  <li>Recordatorios por WhatsApp — Próximamente</li>
-  <li>Anticipos en línea — Próximamente</li>
-  <li>Gestión de su Perfil de Empresa en Google</li>
-  <li>2 cambios al mes</li>
-  <li>Informe mensual de resultados</li>
-  </ul>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Crece%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="agenda" data-tier="crece">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card" aria-labelledby="tier-agenda-pro">
-  <h4 class="tier-name" id="tier-agenda-pro">Pro</h4>
-  <p class="tier-suits">Para varias sedes y más pacientes.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$6.500.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Crece, y además:</p>
-  <ul class="tier-list">
-  <li>Varias sedes</li>
-  <li>Facturación electrónica DIAN incluida (próximamente)</li>
-  <li>Panel de métricas</li>
-  <li>Soporte prioritario</li>
-  <li>4 cambios al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Pro%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="agenda" data-tier="pro">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-panel" id="panel-presencia" data-package="presencia">
-  <h3 class="package-name" id="package-presencia">Presencia</h3>
-  <p class="package-for">Una página web profesional para cualquier negocio.</p>
-  <div class="tier-grid">
-  <article class="tier-card" aria-labelledby="tier-presencia-esencial">
-  <h4 class="tier-name" id="tier-presencia-esencial">Esencial</h4>
-  <p class="tier-suits">Para empezar con lo esencial.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$79.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$1.200.000</strong> + IVA</p>
-  </div>
-  <ul class="tier-list">
-  <li>Sitio de una página con la plantilla de su sector</li>
-  <li>Botón de WhatsApp</li>
-  <li>Ubicación en Google Maps</li>
-  <li>1 cambio pequeño al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Esencial%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="presencia" data-tier="esencial">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card is-highlight" aria-labelledby="tier-presencia-crece">
-  <p class="tier-badge">Más elegido</p>
-  <h4 class="tier-name" id="tier-presencia-crece">Crece</h4>
-  <p class="tier-suits">Para negocios que quieren crecer.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$149.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$1.900.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Esencial, y además:</p>
-  <ul class="tier-list">
-  <li>Hasta 5 páginas</li>
-  <li>Formulario de contacto</li>
-  <li>Gestión de su Perfil de Empresa en Google</li>
-  <li>SEO local básico</li>
-  <li>2 cambios al mes</li>
-  <li>Informe mensual de visitas</li>
-  </ul>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Crece%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="presencia" data-tier="crece">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card" aria-labelledby="tier-presencia-pro">
-  <h4 class="tier-name" id="tier-presencia-pro">Pro</h4>
-  <p class="tier-suits">Para varias sedes y más contenido.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$249.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$2.900.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Crece, y además:</p>
-  <ul class="tier-list">
-  <li>Hasta 10 páginas y blog</li>
-  <li>Varias sedes</li>
-  <li>Panel de métricas</li>
-  <li>Facturación electrónica DIAN incluida (próximamente)</li>
-  <li>Soporte prioritario</li>
-  <li>4 cambios al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Pro%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="presencia" data-tier="pro">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-panel" id="panel-pedidos" data-package="pedidos">
-  <h3 class="package-name" id="package-pedidos">Pedidos</h3>
-  <p class="package-for">Pedidos en línea para restaurantes.</p>
-  <div class="tier-grid">
-  <article class="tier-card" aria-labelledby="tier-pedidos-esencial">
-  <h4 class="tier-name" id="tier-pedidos-esencial">Esencial</h4>
-  <p class="tier-suits">Para empezar a vender en línea.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$199.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$2.000.000</strong> + IVA</p>
-  </div>
-  <ul class="tier-list">
-  <li>Menú o catálogo en línea</li>
-  <li>Pedidos por WhatsApp</li>
-  <li>1 sede</li>
-  <li>1 cambio pequeño al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Esencial%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="pedidos" data-tier="esencial">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card is-highlight" aria-labelledby="tier-pedidos-crece">
-  <p class="tier-badge">Más elegido</p>
-  <h4 class="tier-name" id="tier-pedidos-crece">Crece</h4>
-  <p class="tier-suits">Para restaurantes que quieren crecer.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$349.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$3.500.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Esencial, y además:</p>
-  <ul class="tier-list">
-  <li>Pedidos en línea con pago</li>
-  <li>Avisos de pedido por WhatsApp</li>
-  <li>Gestión de su Perfil de Empresa en Google</li>
-  <li>2 cambios al mes</li>
-  <li>Informe mensual de ventas</li>
-  </ul>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Crece%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="pedidos" data-tier="crece">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card" aria-labelledby="tier-pedidos-pro">
-  <h4 class="tier-name" id="tier-pedidos-pro">Pro</h4>
-  <p class="tier-suits">Para varias sedes y más pedidos.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$6.000.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Crece, y además:</p>
-  <ul class="tier-list">
-  <li>Varias sedes</li>
-  <li>Facturación electrónica DIAN incluida (próximamente)</li>
-  <li>Panel de métricas</li>
-  <li>Soporte prioritario</li>
-  <li>4 cambios al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Pro%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="pedidos" data-tier="pro">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-panel" id="panel-reservas" data-package="reservas">
-  <h3 class="package-name" id="package-reservas">Reservas</h3>
-  <p class="package-for">Reservas directas para fincas y alojamientos.</p>
-  <div class="tier-grid">
-  <article class="tier-card" aria-labelledby="tier-reservas-esencial">
-  <h4 class="tier-name" id="tier-reservas-esencial">Esencial</h4>
-  <p class="tier-suits">Para empezar a recibir reservas directas.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$249.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
-  </div>
-  <ul class="tier-list">
-  <li>Calendario de disponibilidad</li>
-  <li>Solicitudes de reserva</li>
-  <li>1 propiedad o tipo de unidad</li>
-  <li>1 cambio pequeño al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Esencial%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="reservas" data-tier="esencial">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card is-highlight" aria-labelledby="tier-reservas-crece">
-  <p class="tier-badge">Más elegido</p>
-  <h4 class="tier-name" id="tier-reservas-crece">Crece</h4>
-  <p class="tier-suits">Para alojamientos que quieren crecer.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$399.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$4.500.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Esencial, y además:</p>
-  <ul class="tier-list">
-  <li>Hasta 5 unidades</li>
-  <li>Anticipos en línea</li>
-  <li>Mensajes a huéspedes por WhatsApp</li>
-  <li>Gestión de su Perfil de Empresa en Google</li>
-  <li>2 cambios al mes</li>
-  <li>Informe mensual de ocupación</li>
-  </ul>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Crece%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="reservas" data-tier="crece">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card" aria-labelledby="tier-reservas-pro">
-  <h4 class="tier-name" id="tier-reservas-pro">Pro</h4>
-  <p class="tier-suits">Para varias propiedades y más reservas.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$690.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$7.000.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Crece, y además:</p>
-  <ul class="tier-list">
-  <li>Varias propiedades</li>
-  <li>Facturación electrónica DIAN incluida (próximamente)</li>
-  <li>Panel de métricas</li>
-  <li>Soporte prioritario</li>
-  <li>4 cambios al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Pro%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="reservas" data-tier="pro">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-panel" id="panel-comunidad" data-package="comunidad">
-  <h3 class="package-name" id="package-comunidad">Comunidad</h3>
-  <p class="package-for">Un portal para conjuntos residenciales y edificios.</p>
-  <div class="tier-grid">
-  <article class="tier-card" aria-labelledby="tier-comunidad-esencial">
-  <h4 class="tier-name" id="tier-comunidad-esencial">Esencial</h4>
-  <p class="tier-suits">Para empezar a gestionar el conjunto en línea.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$2.500</span> <span class="price-unit">por unidad al mes + IVA</span></p>
-  <p class="price-min">Mínimo <span class="nowrap">$250.000 / mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$1.500.000</strong> + IVA</p>
-  </div>
-  <ul class="tier-list">
-  <li>Portal del conjunto</li>
-  <li>Avisos y documentos</li>
-  <li>Reserva de zonas comunes</li>
-  <li>1 cambio pequeño al mes</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Esencial%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="comunidad" data-tier="esencial">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card is-highlight" aria-labelledby="tier-comunidad-crece">
-  <p class="tier-badge">Más elegido</p>
-  <h4 class="tier-name" id="tier-comunidad-crece">Crece</h4>
-  <p class="tier-suits">Para conjuntos que quieren hacer todo en línea.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount">$3.500</span> <span class="price-unit">por unidad al mes + IVA</span></p>
-  <p class="price-min">Mínimo <span class="nowrap">$350.000 / mes + IVA</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>$2.500.000</strong> + IVA</p>
-  </div>
-  <p class="tier-lead">Todo lo de Esencial, y además:</p>
-  <ul class="tier-list">
-  <li>Solicitudes en línea (PQRS)</li>
-  <li>Avisos por WhatsApp</li>
-  <li>2 cambios al mes</li>
-  <li>Informe mensual</li>
-  </ul>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Crece%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="comunidad" data-tier="crece">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="tier-card" aria-labelledby="tier-comunidad-pro">
-  <h4 class="tier-name" id="tier-comunidad-pro">Pro</h4>
-  <p class="tier-suits">Para varias torres o conjuntos.</p>
-  <div class="price-block" data-price>
-  <p class="price-label">Mensualidad</p>
-  <p class="price-main"><span class="price-amount price-text">A cotizar</span></p>
-  </div>
-  <div class="price-setup" data-price>
-  <p class="price-label">Puesta en marcha (pago único)</p>
-  <p class="price-setup-value"><strong>A cotizar</strong></p>
-  </div>
-  <ul class="tier-list">
-  <li>Para varias torres o conjuntos</li>
-  </ul>
-  <a class="btn btn-ghost tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Pro%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="plan" data-package="comunidad" data-tier="pro">Solicitar este plan <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-panel" id="panel-a-medida" data-package="a-medida">
-  <h3 class="package-name" id="package-a-medida">A medida</h3>
-  <p class="package-for">Software a la medida de su negocio.</p>
-  <div class="tier-grid tier-grid-single">
-  <article class="tier-card tier-card-custom" aria-labelledby="tier-a-medida-proyecto">
-  <h4 class="tier-name" id="tier-a-medida-proyecto">Proyecto a medida</h4>
-  <div class="price-block" data-price>
-  <p class="price-main"><span class="price-from">Desde</span> <span class="price-amount">$15.000.000</span> <span class="price-unit">por proyecto + IVA</span></p>
-  </div>
-  <p class="tier-suits">Definimos el alcance con usted y le enviamos una propuesta escrita.</p>
-  <p class="tier-suits">Para clientes en Estados Unidos también trabajamos por horas.</p>
-  <a class="btn btn-primary tier-cta" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20cotizar%20un%20proyecto%20a%20medida%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="custom" data-package="a-medida" data-tier="proyecto">Cotizar mi proyecto <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <p class="pricing-common">Todos los planes incluyen su propio dominio, hosting, actualizaciones de seguridad, una copia de seguridad mensual y soporte.</p>
-  <p class="pricing-note">Permanencia mínima de 12 meses · Precios en COP + IVA (19 %)</p>
-  <div class="pricing-block">
-  <h3>Complementos</h3>
-  <p class="block-sub">Agréguelos a cualquier plan.</p>
-  <ul class="addon-list">
-  <li class="addon"><span class="addon-name">Facturación electrónica DIAN <span class="addon-badge">Próximamente</span></span><span class="addon-price" data-price><span class="price-amount">$79.000</span> <span class="price-unit">/ mes + IVA</span></span><span class="addon-note">Disponible próximamente; aún no se puede contratar.</span></li>
-  <li class="addon"><span class="addon-name">Recepcionista IA (asistente por WhatsApp)</span><span class="addon-price" data-price><span class="price-amount">$149.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
-  <li class="addon"><span class="addon-name">Panel de métricas</span><span class="addon-price" data-price><span class="price-amount">$99.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
-  <li class="addon"><span class="addon-name">Contenido para redes sociales (4 publicaciones al mes)</span><span class="addon-price" data-price><span class="price-amount">$290.000</span> <span class="price-unit">/ mes + IVA</span></span></li>
-  <li class="addon"><span class="addon-name">Mensajes adicionales de marketing por WhatsApp</span><span class="addon-price" data-price><span class="addon-rule">Costo + 30 %</span></span></li>
-  <li class="addon"><span class="addon-name">Pagos con tarjeta y QR</span><span class="addon-price" data-price><span class="addon-rule">Tarifa de la pasarela, al costo</span></span></li>
-  </ul>
-  </div>
-  <div class="pricing-block">
-  <h3>Paquetes por sector</h3>
-  <p class="block-sub">Un plan y sus complementos, a un precio menor.</p>
-  <div class="bundle-grid">
-  <article class="bundle-card">
-  <h4>Clínica Completa</h4>
-  <p class="bundle-contents">Agenda Crece + Facturación DIAN + Recepcionista IA</p>
-  <p class="bundle-note">La facturación electrónica DIAN se activará cuando esté disponible.</p>
-  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$578.000</s> <span class="price-amount">$490.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  <a class="btn btn-ghost" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Cl%C3%ADnica%20Completa%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="bundle" data-bundle="clinica-completa">Solicitar este paquete <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="bundle-card">
-  <h4>Finca Directa</h4>
-  <p class="bundle-contents">Reservas Crece + Contenido para redes</p>
-  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$689.000</s> <span class="price-amount">$590.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  <a class="btn btn-ghost" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Finca%20Directa%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="bundle" data-bundle="finca-directa">Solicitar este paquete <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="bundle-card">
-  <h4>Restaurante Propio</h4>
-  <p class="bundle-contents">Pedidos Crece + Facturación DIAN + Contenido para redes</p>
-  <p class="bundle-note">La facturación electrónica DIAN se activará cuando esté disponible.</p>
-  <p class="bundle-price" data-price><s class="bundle-list"><span class="visually-hidden">Precio de lista: </span>$718.000</s> <span class="price-amount">$620.000</span> <span class="price-unit">/ mes + IVA</span></p>
-  <a class="btn btn-ghost" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Restaurante%20Propio%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="bundle" data-bundle="restaurante-propio">Solicitar este paquete <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  <article class="bundle-card">
-  <h4>Conjunto Conectado</h4>
-  <p class="bundle-contents">Comunidad Crece + una Asamblea Virtual al año</p>
-  <p class="bundle-price bundle-price-text" data-price><span class="bundle-base">Precio de Comunidad Crece</span>
-  <span class="bundle-plus">+</span> <span class="price-amount">$300.000</span> <span class="price-unit">por asamblea + IVA</span></p>
-  <a class="btn btn-ghost" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Conjunto%20Conectado%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="bundle" data-bundle="conjunto-conectado">Solicitar este paquete <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </article>
-  </div>
-  </div>
-  <div class="pricing-block pricing-split">
-  <div class="pay-terms">
-  <h3>Forma de pago</h3>
-  <ol class="pay-list">
-  <li>Usted paga una puesta en marcha única y una mensualidad.</li>
-  <li>El pago inicial, que es la puesta en marcha más su primera mensualidad, se paga completo antes de empezar.</li>
-  <li>Después, la mensualidad se paga el día 1 de cada mes.</li>
-  <li>La mensualidad cubre hosting, seguridad, copias de seguridad, los cambios mensuales de su plan y soporte.</li>
-  <li>Permanencia mínima de 12 meses.</li>
-  <li>Precios en pesos colombianos (COP) + IVA (19 %).</li>
-  </ol>
-  </div>
-  <ul class="trust-list">
-  <li>Su dominio y sus datos son suyos.</li>
-  <li>Sin comisión por cita, pedido ni reserva.</li>
-  <li>Usted trabaja directamente con el equipo que construye su sitio.</li>
-  </ul>
-  </div>
-  <div class="pricing-block">
-  <h3>Preguntas frecuentes</h3>
-  <div class="faq-list">
-  <details class="faq-item">
-  <summary>¿Qué cubre la puesta en marcha?</summary>
-  <p>El diseño, la configuración y la puesta en marcha de su sitio con la plantilla de su sector: sus servicios, horarios, fotos y textos, la conexión de su dominio y las pruebas antes del lanzamiento.</p>
-  </details>
-  <details class="faq-item">
-  <summary>¿Qué incluye la mensualidad?</summary>
-  <p>Hosting, actualizaciones de seguridad, una copia de seguridad mensual, soporte y los cambios mensuales incluidos en su plan.</p>
-  </details>
-  <details class="faq-item">
-  <summary>¿De quién son el dominio y los datos?</summary>
-  <p>Suyos. El dominio queda a nombre de su negocio y puede pedir una copia de sus datos cuando quiera.</p>
-  </details>
-  <details class="faq-item">
-  <summary>¿Puedo cambiar de plan?</summary>
-  <p>Sí. Puede subir de plan cuando quiera y el cambio se refleja en la siguiente mensualidad. Para bajar de plan, escríbanos y lo revisamos según su permanencia.</p>
-  </details>
-  <details class="faq-item">
-  <summary>¿Cómo se paga?</summary>
-  <p>Antes de empezar, usted hace un solo pago con la puesta en marcha y su primera mensualidad. Después, la mensualidad se paga el día 1 de cada mes.</p>
-  </details>
-  <details class="faq-item">
-  <summary>¿Los precios incluyen IVA?</summary>
-  <p>No. Todos los precios están en pesos colombianos y no incluyen IVA (19 %).</p>
-  </details>
-  </div>
-  </div>
-  <div class="pricing-cta">
-  <h3>¿No sabe cuál elegir?</h3>
-  <p>Cuéntenos sobre su negocio y le recomendamos el plan indicado.</p>
-  <a class="btn btn-primary" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20ayuda%20para%20elegir%20un%20plan%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="general" data-general="true">Hablar con nosotros <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
-  </div>
   <dialog class="request-dialog" id="request-dialog" aria-labelledby="request-title" aria-describedby="request-intro">
   <form class="request-form" method="post" novalidate data-request-form>
   <div class="request-head">
@@ -547,44 +714,10 @@
   </div>
   <p class="request-intro" id="request-intro">Cuéntenos cómo contactarle y le escribimos.</p>
   <div class="request-errors" role="alert" tabindex="-1" hidden data-request-errors></div>
-  <div class="request-field">
+  <div class="request-field" hidden>
   <label for="request-plan">Plan</label>
   <select id="request-plan" name="plan" data-request-plan aria-describedby="request-plan-error">
-  <option value="general" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20ayuda%20para%20elegir%20un%20plan%20(gtl-ai.com)">Ayuda para elegir un plan</option>
-  <optgroup label="Agenda">
-  <option value="plan:agenda:esencial" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Esencial%20(gtl-ai.com)">Agenda · Esencial</option>
-  <option value="plan:agenda:crece" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Crece%20(gtl-ai.com)">Agenda · Crece</option>
-  <option value="plan:agenda:pro" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Agenda%20%C2%B7%20Pro%20(gtl-ai.com)">Agenda · Pro</option>
-  </optgroup>
-  <optgroup label="Presencia">
-  <option value="plan:presencia:esencial" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Esencial%20(gtl-ai.com)">Presencia · Esencial</option>
-  <option value="plan:presencia:crece" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Crece%20(gtl-ai.com)">Presencia · Crece</option>
-  <option value="plan:presencia:pro" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Presencia%20%C2%B7%20Pro%20(gtl-ai.com)">Presencia · Pro</option>
-  </optgroup>
-  <optgroup label="Pedidos">
-  <option value="plan:pedidos:esencial" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Esencial%20(gtl-ai.com)">Pedidos · Esencial</option>
-  <option value="plan:pedidos:crece" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Crece%20(gtl-ai.com)">Pedidos · Crece</option>
-  <option value="plan:pedidos:pro" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Pedidos%20%C2%B7%20Pro%20(gtl-ai.com)">Pedidos · Pro</option>
-  </optgroup>
-  <optgroup label="Reservas">
-  <option value="plan:reservas:esencial" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Esencial%20(gtl-ai.com)">Reservas · Esencial</option>
-  <option value="plan:reservas:crece" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Crece%20(gtl-ai.com)">Reservas · Crece</option>
-  <option value="plan:reservas:pro" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Reservas%20%C2%B7%20Pro%20(gtl-ai.com)">Reservas · Pro</option>
-  </optgroup>
-  <optgroup label="Comunidad">
-  <option value="plan:comunidad:esencial" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Esencial%20(gtl-ai.com)">Comunidad · Esencial</option>
-  <option value="plan:comunidad:crece" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Crece%20(gtl-ai.com)">Comunidad · Crece</option>
-  <option value="plan:comunidad:pro" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20plan%20Comunidad%20%C2%B7%20Pro%20(gtl-ai.com)">Comunidad · Pro</option>
-  </optgroup>
-  <optgroup label="A medida">
-  <option value="plan:a-medida:proyecto" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20cotizar%20un%20proyecto%20a%20medida%20(gtl-ai.com)">Proyecto a medida</option>
-  </optgroup>
-  <optgroup label="Paquetes por sector">
-  <option value="bundle:clinica-completa" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Cl%C3%ADnica%20Completa%20(gtl-ai.com)">Clínica Completa</option>
-  <option value="bundle:finca-directa" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Finca%20Directa%20(gtl-ai.com)">Finca Directa</option>
-  <option value="bundle:restaurante-propio" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Restaurante%20Propio%20(gtl-ai.com)">Restaurante Propio</option>
-  <option value="bundle:conjunto-conectado" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20paquete%20Conjunto%20Conectado%20(gtl-ai.com)">Conjunto Conectado</option>
-  </optgroup>
+  <option value="general" data-whatsapp="https://wa.me/573192788238?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI%20(gtl-ai.com)">Información general</option>
   </select>
   <p class="request-error" id="request-plan-error" hidden></p>
   </div>
@@ -651,93 +784,190 @@
   </div>
   </dialog>
   <script src="site-config.js?v=5b3037b023" defer></script>
-  <script src="plan-request.js?v=b469aa8aed" defer></script>
-  </div>
-  </section>
+  <script src="plan-request.js?v=f9658f81c3" defer></script>
   <!-- pricing:end -->
 
-  <section id="team" class="team">
+  <!-- Falco: the AI receptionist. A pixel-art carrier pigeon takes an envelope from a client to a shop and back (until Pause), and
+       the three chats play once, when the section comes into view. -->
+  <section id="falco" class="falco" aria-labelledby="falco-title">
     <div class="container">
-      <h2>Founding Team</h2>
-      <p class="section-sub">The people building GTL AI from the ground up.</p>
+      <div class="falco-sky">
+        <span class="falco-end falco-end--from"><svg class="falco-ok" viewBox="0 0 7 6" style="--w: 7; --h: 6" aria-hidden="true" focusable="false"><rect x="6" y="0" width="1" height="1" fill="#6ee7c8"/><rect x="5" y="1" width="2" height="1" fill="#6ee7c8"/><rect x="0" y="2" width="1" height="1" fill="#6ee7c8"/><rect x="4" y="2" width="2" height="1" fill="#6ee7c8"/><rect x="0" y="3" width="2" height="1" fill="#6ee7c8"/><rect x="3" y="3" width="2" height="1" fill="#6ee7c8"/><rect x="1" y="4" width="3" height="1" fill="#6ee7c8"/><rect x="2" y="5" width="1" height="1" fill="#6ee7c8"/></svg><svg class="falco-icon" viewBox="0 0 13 10" style="--w: 13; --h: 10" aria-hidden="true" focusable="false"><rect x="1" y="0" width="11" height="1" fill="#f7f5f2"/><rect x="0" y="1" width="13" height="1" fill="#f7f5f2"/><rect x="0" y="2" width="13" height="1" fill="#f7f5f2"/><rect x="0" y="3" width="2" height="1" fill="#f7f5f2"/><rect x="2" y="3" width="1" height="1" fill="#565668"/><rect x="3" y="3" width="3" height="1" fill="#f7f5f2"/><rect x="6" y="3" width="1" height="1" fill="#565668"/><rect x="7" y="3" width="3" height="1" fill="#f7f5f2"/><rect x="10" y="3" width="1" height="1" fill="#565668"/><rect x="11" y="3" width="2" height="1" fill="#f7f5f2"/><rect x="0" y="4" width="13" height="1" fill="#f7f5f2"/><rect x="0" y="5" width="13" height="1" fill="#f7f5f2"/><rect x="1" y="6" width="11" height="1" fill="#f7f5f2"/><rect x="3" y="7" width="2" height="1" fill="#f7f5f2"/><rect x="2" y="8" width="2" height="1" fill="#f7f5f2"/><rect x="2" y="9" width="1" height="1" fill="#f7f5f2"/></svg></span>
+        <span class="falco-track"><span class="falco-flight"><span class="falco-wave"><svg class="falco-pixel" viewBox="0 0 26 20" aria-hidden="true" focusable="false"><g class="falco-frame falco-frame--a"><rect x="5" y="0" width="3" height="1" fill="#565d75"/><rect x="6" y="1" width="1" height="1" fill="#565d75"/><rect x="7" y="1" width="3" height="1" fill="#7c849c"/><rect x="7" y="2" width="5" height="1" fill="#7c849c"/><rect x="8" y="3" width="2" height="1" fill="#7c849c"/><rect x="10" y="3" width="1" height="1" fill="#16171f"/><rect x="11" y="3" width="3" height="1" fill="#7c849c"/><rect x="18" y="3" width="3" height="1" fill="#a9b0c2"/><rect x="9" y="4" width="2" height="1" fill="#7c849c"/><rect x="11" y="4" width="1" height="1" fill="#16171f"/><rect x="12" y="4" width="3" height="1" fill="#7c849c"/><rect x="17" y="4" width="5" height="1" fill="#a9b0c2"/><rect x="10" y="5" width="3" height="1" fill="#7c849c"/><rect x="13" y="5" width="1" height="1" fill="#16171f"/><rect x="14" y="5" width="2" height="1" fill="#7c849c"/><rect x="17" y="5" width="3" height="1" fill="#a9b0c2"/><rect x="20" y="5" width="1" height="1" fill="#f08a3c"/><rect x="21" y="5" width="1" height="1" fill="#a9b0c2"/><rect x="22" y="5" width="1" height="1" fill="#f7f5f2"/><rect x="23" y="5" width="2" height="1" fill="#565668"/><rect x="11" y="6" width="5" height="1" fill="#7c849c"/><rect x="16" y="6" width="1" height="1" fill="#3fbf9a"/><rect x="17" y="6" width="1" height="1" fill="#9b7fd6"/><rect x="18" y="6" width="2" height="1" fill="#3fbf9a"/><rect x="20" y="6" width="2" height="1" fill="#a9b0c2"/><rect x="7" y="7" width="5" height="1" fill="#a9b0c2"/><rect x="12" y="7" width="3" height="1" fill="#7c849c"/><rect x="15" y="7" width="1" height="1" fill="#a9b0c2"/><rect x="16" y="7" width="2" height="1" fill="#3fbf9a"/><rect x="18" y="7" width="1" height="1" fill="#9b7fd6"/><rect x="19" y="7" width="1" height="1" fill="#3fbf9a"/><rect x="20" y="7" width="1" height="1" fill="#a9b0c2"/><rect x="4" y="8" width="17" height="1" fill="#a9b0c2"/><rect x="0" y="9" width="2" height="1" fill="#565d75"/><rect x="2" y="9" width="18" height="1" fill="#a9b0c2"/><rect x="1" y="10" width="2" height="1" fill="#565d75"/><rect x="3" y="10" width="16" height="1" fill="#a9b0c2"/><rect x="3" y="11" width="2" height="1" fill="#565d75"/><rect x="7" y="11" width="11" height="1" fill="#cfd4e2"/><rect x="11" y="12" width="1" height="1" fill="#e8839a"/><rect x="15" y="12" width="1" height="1" fill="#e8839a"/><rect x="8" y="13" width="11" height="1" fill="#f7f5f2"/><rect x="8" y="14" width="1" height="1" fill="#f7f5f2"/><rect x="9" y="14" width="1" height="1" fill="#b9bccb"/><rect x="10" y="14" width="7" height="1" fill="#f7f5f2"/><rect x="17" y="14" width="1" height="1" fill="#b9bccb"/><rect x="18" y="14" width="1" height="1" fill="#f7f5f2"/><rect x="8" y="15" width="2" height="1" fill="#f7f5f2"/><rect x="10" y="15" width="1" height="1" fill="#b9bccb"/><rect x="11" y="15" width="5" height="1" fill="#f7f5f2"/><rect x="16" y="15" width="1" height="1" fill="#b9bccb"/><rect x="17" y="15" width="2" height="1" fill="#f7f5f2"/><rect x="8" y="16" width="3" height="1" fill="#f7f5f2"/><rect x="11" y="16" width="1" height="1" fill="#b9bccb"/><rect x="12" y="16" width="3" height="1" fill="#d9674f"/><rect x="15" y="16" width="1" height="1" fill="#b9bccb"/><rect x="16" y="16" width="3" height="1" fill="#f7f5f2"/><rect x="8" y="17" width="4" height="1" fill="#f7f5f2"/><rect x="12" y="17" width="3" height="1" fill="#d9674f"/><rect x="15" y="17" width="4" height="1" fill="#f7f5f2"/><rect x="8" y="18" width="11" height="1" fill="#f7f5f2"/></g><g class="falco-frame falco-frame--b" transform="translate(0 -1)"><rect x="18" y="3" width="3" height="1" fill="#a9b0c2"/><rect x="17" y="4" width="5" height="1" fill="#a9b0c2"/><rect x="17" y="5" width="3" height="1" fill="#a9b0c2"/><rect x="20" y="5" width="1" height="1" fill="#f08a3c"/><rect x="21" y="5" width="1" height="1" fill="#a9b0c2"/><rect x="22" y="5" width="1" height="1" fill="#f7f5f2"/><rect x="23" y="5" width="2" height="1" fill="#565668"/><rect x="16" y="6" width="1" height="1" fill="#3fbf9a"/><rect x="17" y="6" width="1" height="1" fill="#9b7fd6"/><rect x="18" y="6" width="2" height="1" fill="#3fbf9a"/><rect x="20" y="6" width="2" height="1" fill="#a9b0c2"/><rect x="7" y="7" width="9" height="1" fill="#a9b0c2"/><rect x="16" y="7" width="2" height="1" fill="#3fbf9a"/><rect x="18" y="7" width="1" height="1" fill="#9b7fd6"/><rect x="19" y="7" width="1" height="1" fill="#3fbf9a"/><rect x="20" y="7" width="1" height="1" fill="#a9b0c2"/><rect x="4" y="8" width="6" height="1" fill="#a9b0c2"/><rect x="10" y="8" width="5" height="1" fill="#7c849c"/><rect x="15" y="8" width="6" height="1" fill="#a9b0c2"/><rect x="0" y="9" width="2" height="1" fill="#565d75"/><rect x="2" y="9" width="7" height="1" fill="#a9b0c2"/><rect x="9" y="9" width="2" height="1" fill="#7c849c"/><rect x="11" y="9" width="1" height="1" fill="#16171f"/><rect x="12" y="9" width="3" height="1" fill="#7c849c"/><rect x="15" y="9" width="5" height="1" fill="#a9b0c2"/><rect x="1" y="10" width="2" height="1" fill="#565d75"/><rect x="3" y="10" width="5" height="1" fill="#a9b0c2"/><rect x="8" y="10" width="2" height="1" fill="#7c849c"/><rect x="10" y="10" width="1" height="1" fill="#16171f"/><rect x="11" y="10" width="3" height="1" fill="#7c849c"/><rect x="14" y="10" width="5" height="1" fill="#a9b0c2"/><rect x="3" y="11" width="2" height="1" fill="#565d75"/><rect x="7" y="11" width="5" height="1" fill="#7c849c"/><rect x="12" y="11" width="6" height="1" fill="#cfd4e2"/><rect x="6" y="12" width="2" height="1" fill="#565d75"/><rect x="8" y="12" width="1" height="1" fill="#7c849c"/><rect x="11" y="12" width="1" height="1" fill="#e8839a"/><rect x="15" y="12" width="1" height="1" fill="#e8839a"/><rect x="8" y="13" width="11" height="1" fill="#f7f5f2"/><rect x="8" y="14" width="1" height="1" fill="#f7f5f2"/><rect x="9" y="14" width="1" height="1" fill="#b9bccb"/><rect x="10" y="14" width="7" height="1" fill="#f7f5f2"/><rect x="17" y="14" width="1" height="1" fill="#b9bccb"/><rect x="18" y="14" width="1" height="1" fill="#f7f5f2"/><rect x="8" y="15" width="2" height="1" fill="#f7f5f2"/><rect x="10" y="15" width="1" height="1" fill="#b9bccb"/><rect x="11" y="15" width="5" height="1" fill="#f7f5f2"/><rect x="16" y="15" width="1" height="1" fill="#b9bccb"/><rect x="17" y="15" width="2" height="1" fill="#f7f5f2"/><rect x="8" y="16" width="3" height="1" fill="#f7f5f2"/><rect x="11" y="16" width="1" height="1" fill="#b9bccb"/><rect x="12" y="16" width="3" height="1" fill="#d9674f"/><rect x="15" y="16" width="1" height="1" fill="#b9bccb"/><rect x="16" y="16" width="3" height="1" fill="#f7f5f2"/><rect x="8" y="17" width="4" height="1" fill="#f7f5f2"/><rect x="12" y="17" width="3" height="1" fill="#d9674f"/><rect x="15" y="17" width="4" height="1" fill="#f7f5f2"/><rect x="8" y="18" width="11" height="1" fill="#f7f5f2"/></g></svg></span></span></span>
+        <span class="falco-end falco-end--to"><svg class="falco-ok" viewBox="0 0 7 6" style="--w: 7; --h: 6" aria-hidden="true" focusable="false"><rect x="6" y="0" width="1" height="1" fill="#6ee7c8"/><rect x="5" y="1" width="2" height="1" fill="#6ee7c8"/><rect x="0" y="2" width="1" height="1" fill="#6ee7c8"/><rect x="4" y="2" width="2" height="1" fill="#6ee7c8"/><rect x="0" y="3" width="2" height="1" fill="#6ee7c8"/><rect x="3" y="3" width="2" height="1" fill="#6ee7c8"/><rect x="1" y="4" width="3" height="1" fill="#6ee7c8"/><rect x="2" y="5" width="1" height="1" fill="#6ee7c8"/></svg><svg class="falco-icon" viewBox="0 0 14 11" style="--w: 14; --h: 11" aria-hidden="true" focusable="false"><rect x="2" y="0" width="10" height="1" fill="#14b8a6"/><rect x="2" y="1" width="10" height="1" fill="#14b8a6"/><rect x="0" y="2" width="1" height="1" fill="#d9674f"/><rect x="1" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="2" y="2" width="1" height="1" fill="#d9674f"/><rect x="3" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="4" y="2" width="1" height="1" fill="#d9674f"/><rect x="5" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="6" y="2" width="1" height="1" fill="#d9674f"/><rect x="7" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="8" y="2" width="1" height="1" fill="#d9674f"/><rect x="9" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="10" y="2" width="1" height="1" fill="#d9674f"/><rect x="11" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="12" y="2" width="1" height="1" fill="#d9674f"/><rect x="13" y="2" width="1" height="1" fill="#f7f5f2"/><rect x="0" y="3" width="1" height="1" fill="#d9674f"/><rect x="1" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="2" y="3" width="1" height="1" fill="#d9674f"/><rect x="3" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="4" y="3" width="1" height="1" fill="#d9674f"/><rect x="5" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="6" y="3" width="1" height="1" fill="#d9674f"/><rect x="7" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="8" y="3" width="1" height="1" fill="#d9674f"/><rect x="9" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="10" y="3" width="1" height="1" fill="#d9674f"/><rect x="11" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="12" y="3" width="1" height="1" fill="#d9674f"/><rect x="13" y="3" width="1" height="1" fill="#f7f5f2"/><rect x="1" y="4" width="12" height="1" fill="#f3e6cf"/><rect x="1" y="5" width="1" height="1" fill="#f3e6cf"/><rect x="2" y="5" width="4" height="1" fill="#7aa2ff"/><rect x="6" y="5" width="2" height="1" fill="#f3e6cf"/><rect x="8" y="5" width="4" height="1" fill="#2a2850"/><rect x="12" y="5" width="1" height="1" fill="#f3e6cf"/><rect x="1" y="6" width="1" height="1" fill="#f3e6cf"/><rect x="2" y="6" width="4" height="1" fill="#7aa2ff"/><rect x="6" y="6" width="2" height="1" fill="#f3e6cf"/><rect x="8" y="6" width="4" height="1" fill="#2a2850"/><rect x="12" y="6" width="1" height="1" fill="#f3e6cf"/><rect x="1" y="7" width="1" height="1" fill="#f3e6cf"/><rect x="2" y="7" width="4" height="1" fill="#7aa2ff"/><rect x="6" y="7" width="2" height="1" fill="#f3e6cf"/><rect x="8" y="7" width="4" height="1" fill="#2a2850"/><rect x="12" y="7" width="1" height="1" fill="#f3e6cf"/><rect x="1" y="8" width="7" height="1" fill="#f3e6cf"/><rect x="8" y="8" width="4" height="1" fill="#2a2850"/><rect x="12" y="8" width="1" height="1" fill="#f3e6cf"/><rect x="1" y="9" width="7" height="1" fill="#f3e6cf"/><rect x="8" y="9" width="4" height="1" fill="#2a2850"/><rect x="12" y="9" width="1" height="1" fill="#f3e6cf"/><rect x="0" y="10" width="14" height="1" fill="#565668"/></svg></span>
+        <button type="button" class="showcase-toggle falco-toggle" data-falco-toggle hidden><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path class="showcase-pause" d="M4 3h3v10H4zM9 3h3v10H9z"/><path class="showcase-play" d="M5 2.5 13.5 8 5 13.5z"/></svg><span class="visually-hidden" data-falco-toggle-label>Pausar animación</span></button>
+      </div>
+      <div class="falco-head">
+        <p class="falco-name"><b>Falco</b><span>Recepcionista con IA</span></p>
+        <h2 id="falco-title">Un recepcionista con IA para tu negocio que organiza la agenda y hace reservas automáticas</h2>
+        <p class="falco-lead">Atiende a tus clientes y responde sus preguntas sobre citas y cambios. A ti te responde sobre tu desempeño financiero, te da resúmenes de tu calendario y te mantiene al día. Es tu asistente personal para tu negocio.</p>
+      </div>
+      <div class="falco-grid">
+        <article class="falco-card">
+          <h3 class="falco-card-title">Atiende a tus clientes</h3>
+          <div class="falco-chat-head"><span class="fc-av fc-av--client" aria-hidden="true">SA</span><span><b>Cliente</b><small>por WhatsApp</small></span></div>
+          <div class="falco-chat">
+            <div class="fc-msg fc-user fc-step" style="--d: 0.5s">¡Hola! ¿Tienen cita de fisioterapia el jueves en la tarde?</div>
+            <div class="fc-msg fc-bot fc-step" style="--d: 1.9s"><span class="fc-dots" aria-hidden="true"><i></i><i></i><i></i></span>El jueves tengo 3:15 p.&nbsp;m. o 5:30 p.&nbsp;m. con Camila. ¿Cuál te reservo?</div>
+            <div class="fc-msg fc-user fc-step" style="--d: 3.1s">A las 3:15, por favor.</div>
+            <div class="fc-msg fc-bot fc-step" style="--d: 4.4s"><span class="fc-dots" aria-hidden="true"><i></i><i></i><i></i></span>Listo: jueves 19 a las 3:15 p.&nbsp;m. Te llega la confirmación por WhatsApp.<span class="fc-pill"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Cita agendada</span></div>
+          </div>
+        </article>
+        <article class="falco-card">
+          <h3 class="falco-card-title">Te resume tu día</h3>
+          <div class="falco-chat-head"><span class="fc-av fc-av--owner" aria-hidden="true">TÚ</span><span><b>Tú, el dueño</b><small>chat con Falco</small></span></div>
+          <div class="falco-chat">
+            <div class="fc-msg fc-user fc-step" style="--d: 0.8s">¿Cómo va mi calendario hoy?</div>
+            <div class="fc-msg fc-bot fc-step" style="--d: 2.2s"><span class="fc-dots" aria-hidden="true"><i></i><i></i><i></i></span>Hoy tienes 18 citas: 15 confirmadas, 2 por confirmar y 1 cancelación. Tu primer espacio libre es a las 2:00 p.&nbsp;m.</div>
+            <div class="fc-msg fc-user fc-step" style="--d: 3.4s">¿Y cómo vamos en ventas?</div>
+            <div class="fc-msg fc-bot fc-step" style="--d: 4.7s"><span class="fc-dots" aria-hidden="true"><i></i><i></i><i></i></span>Llevas $&nbsp;2.340.000 hoy, 8 % más que el martes pasado.</div>
+          </div>
+        </article>
+        <article class="falco-card">
+          <h3 class="falco-card-title">Te da la agenda</h3>
+          <div class="falco-chat-head"><span class="fc-av fc-av--owner" aria-hidden="true">TÚ</span><span><b>Tú, el dueño</b><small>chat con Falco</small></span></div>
+          <div class="falco-chat">
+            <div class="fc-msg fc-user fc-step" style="--d: 1.1s">Dame la agenda de hoy.</div>
+            <div class="fc-msg fc-bot fc-step" style="--d: 2.6s"><span class="fc-dots" aria-hidden="true"><i></i><i></i><i></i></span>Esta es tu agenda de hoy:<ul class="fc-agenda"><li><b>8:00</b><span>Sofía Arango · Fisioterapia</span></li><li><b>9:00</b><span>Mateo Cárdenas · Valoración</span></li><li><b>10:00</b><span>María José Pérez · Fisioterapia</span></li><li><b>11:00</b><span>Daniel Ospina · Rehabilitación</span></li></ul><small class="fc-more">y 14 citas más</small></div>
+          </div>
+        </article>
+      </div>
+      <div class="falco-demo" data-falco-demo>
+        <div class="falco-demo-head">
+          <h3>Pruébalo tú mismo</h3>
+          <p>Elige una pregunta y mira cómo responde Falco.</p>
+          <p class="falco-demo-tag">Demostración: respuestas de ejemplo con los datos de Alba, una clínica ficticia. Todavía no es la IA en vivo.</p>
+        </div>
+        <div class="falco-demo-log" data-falco-log role="log" aria-live="polite" aria-label="Conversación de ejemplo con Falco" tabindex="0">
+          <div class="fc-msg fc-bot">¡Hola! Soy Falco. Elige una pregunta y te respondo con los datos de ejemplo de Alba.</div>
+        </div>
+        <div class="falco-demo-ask">
+          <p class="falco-demo-label" id="falco-ask-label">Pregúntale a Falco:</p>
+          <div class="falco-demo-chips" role="group" aria-labelledby="falco-ask-label">
+            <button type="button" class="biz-chip" data-q="calendar">¿Cómo va mi calendario hoy?</button>
+            <button type="button" class="biz-chip" data-q="tomorrow">Dame la agenda de mañana.</button>
+            <button type="button" class="biz-chip" data-q="sales">¿Cuánto vendí esta semana?</button>
+            <button type="button" class="biz-chip" data-q="unpaid">¿Quién no ha pagado?</button>
+            <button type="button" class="biz-chip" data-q="taxes">¿Cuándo debo pagar impuestos?</button>
+            <button type="button" class="biz-chip" data-q="top">¿Cuál es mi servicio más vendido?</button>
+            <button type="button" class="biz-chip" data-q="friday">¿Tengo espacios libres el viernes?</button>
+            <button type="button" class="biz-chip" data-q="new">¿Cuántos clientes nuevos tuve este mes?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section id="team" class="team" aria-labelledby="team-title">
+    <div class="container">
+      <h2 id="team-title">Por qué nosotros</h2>
+      <div class="why">
+        <p class="why-lead">Somos un equipo de ingenieros de software y contadores profesionales que decidió que las pequeñas empresas también merecen tecnología que impulse su negocio, a un costo bajo.</p>
+        <ul class="why-points">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Somos expertos en implementar esta tecnología a un precio asequible para pymes.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Es una inversión para que usted dedique menos tiempo a las tareas operativas.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Y más tiempo a lo que mejor hace: su sueño y su negocio.</span></li>
+        </ul>
+      </div>
+
+      <h3 class="why-team-title">Equipo fundador</h3>
       <div class="team-grid">
 
         <article class="member-card">
           <div class="member-photo" aria-hidden="true">GM</div>
-          <h3>Gary D. Mendez</h3>
-          <p class="role">Chief Executive Officer</p>
+          <h3>Gary Mendez</h3>
+          <p class="role">Director ejecutivo (CEO)</p>
           <!-- founder-background:start -->
           <!-- founder-background:end -->
-          <div class="member-block">
-            <h4>Goals</h4>
-            <p>Position GTL AI as a category-defining company by pairing bold vision with disciplined execution — expanding our footprint while staying true to a culture of ownership and impact.</p>
-          </div>
-        </article>
-
-        <article class="member-card">
-          <div class="member-photo" aria-hidden="true">JG</div>
-          <h3>Jesus David Garcia</h3>
-          <p class="role">Chief Financial Officer</p>
-          <!-- founder-background:start -->
-          <!-- founder-background:end -->
-          <div class="member-block">
-            <h4>Goals</h4>
-            <p>Build a financial foundation strong enough to support long-term innovation — securing the capital and infrastructure GTL AI needs to grow without compromising discipline.</p>
-          </div>
+          <p class="member-bio">Jugador profesional de squash que vio la oportunidad de ayudar a deportistas, entrenadores y médicos deportivos en su negocio.</p>
+          <ul class="member-points"><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Campeón nacional de squash en Colombia.</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Estuvo entre los 10 mejores del ranking nacional de squash.</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Entrenador personal y entrenador de squash.</span></li></ul>
         </article>
 
         <article class="member-card">
           <div class="member-photo" aria-hidden="true">DR</div>
           <h3>Daniel Rengifo</h3>
-          <p class="role">Chief Data Officer</p>
+          <p class="role">Director de tecnología (CTO)</p>
           <!-- founder-background:start -->
           <!-- founder-background:end -->
-          <div class="member-block">
-            <h4>Goals</h4>
-            <p>Turn data into GTL AI's most durable competitive advantage — building proprietary intelligence systems that get smarter and more valuable over time.</p>
-          </div>
+          <p class="member-bio">Ingeniero de software con más de 10 años de experiencia.</p>
+          <ul class="member-points"><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Ingeniero de Sistemas de la Universidad de los Andes.</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Hoy Senior Fullstack Developer en AgileEngine; antes en Kin + Carta, Anthology (Blackboard) y Trilogy.</span></li></ul>
+          <ul class="member-tags"><li>Java</li><li>Python</li><li>Node.js</li><li>PostgreSQL</li><li>Ruby</li><li>Google Cloud</li><li>Microservicios</li></ul>
+          <a class="member-link" href="https://www.linkedin.com/in/dfrengifo/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn <span class="visually-hidden">(abre en una pestaña nueva)</span></a>
+        </article>
+
+        <article class="member-card">
+          <div class="member-photo" aria-hidden="true">JG</div>
+          <h3>Jesus David Garcia, CFA</h3>
+          <p class="role">Director financiero (CFO)</p>
+          <!-- founder-background:start -->
+          <!-- founder-background:end -->
+          <p class="member-bio">Contador y asesor financiero con más de 10 años de experiencia. Te asesora en tener las cuentas al día y en organizar las finanzas de tu negocio.</p>
+          <ul class="member-points"><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>CFA Charterholder. Contador internacional y administrador de empresas de la Universidad de los Andes, con especialización en Estadística de la Universidad Nacional.</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Experiencia en PwC, Forte Group, IPG y Vivo: presupuestos, proyecciones financieras y análisis de inversiones.</span></li></ul>
+          <ul class="member-tags"><li>FP&amp;A</li><li>Contabilidad NIIF</li><li>Modelos financieros</li><li>Python</li><li>SQL</li><li>Excel</li></ul>
         </article>
 
         <article class="member-card">
           <div class="member-photo" aria-hidden="true">DAR</div>
           <h3>David Andres Ramirez</h3>
-          <p class="role">Chief Technology Officer</p>
+          <p class="role">Director de datos (CDO)</p>
           <!-- founder-background:start -->
           <!-- founder-background:end -->
-          <div class="member-block">
-            <h4>Goals</h4>
-            <p>Build the technical foundation for a generation of AI products that are fast, reliable, and genuinely intelligent — engineered to perform at industry-leading standards.</p>
-          </div>
+          <p class="member-bio">Ingeniero de software con más de 10 años de experiencia.</p>
+          <ul class="member-points"><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Ingeniero de Sistemas y Computación de la Universidad de los Andes; cursa una maestría en Ciencias de la Computación en Georgia Tech.</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Hoy Senior Software Engineer en Amadeus; antes en Achievers, Twilio, Blackboard e IBM.</span></li></ul>
+          <ul class="member-tags"><li>React</li><li>Python</li><li>Java</li><li>Angular</li><li>Flask</li><li>MongoDB</li></ul>
+          <a class="member-link" href="https://www.linkedin.com/in/david-andr%C3%A9s-ram%C3%ADrez-vanegas/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn <span class="visually-hidden">(abre en una pestaña nueva)</span></a>
         </article>
 
+      </div>
+
+      <!-- Why our logo: the story of the character, as a clip that plays once when it comes into view. -->
+      <div class="logo-story" data-logo-story>
+        <figure class="logo-story-film">
+          <video muted playsinline controls preload="none" width="960" height="540" poster="assets/branding/gtl-ai-logo-historia.webp" aria-label="Animación: el carácter 夢, que significa sueño, cambia desde la escritura antigua hasta convertirse en el logo de GTL AI">
+            <source src="assets/branding/gtl-ai-logo-historia.mp4" type="video/mp4">
+          </video>
+          <button type="button" class="logo-story-replay" data-logo-replay hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4.5h4.5"/></svg>Reproducir animación</button>
+        </figure>
+        <div class="logo-story-text">
+          <p class="eyebrow">Nuestro logo</p>
+          <h3><span lang="zh-Hant">夢</span> significa «sueño»</h3>
+          <p>Este carácter chino significa «sueño» y se escribe así desde hace más de 3.000 años. Los avances de la humanidad siempre fueron un sueño primero, y nosotros lo elegimos porque de eso se trata GTL AI: de impulsar tus sueños para hacerlos realidad.</p>
+          <p>Nosotros nos encargamos de la parte técnica, financiera y operativa, mientras usted se enfoca en su negocio y en lo que mejor hace.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="future" class="future">
+  <!-- Quiero saber más: the links and the number and address in it are written by the build from site-config.json. -->
+  <section id="contact" class="contact" aria-labelledby="contact-title">
     <div class="container">
-      <h2>What's Next</h2>
-      <p class="section-sub">Future projects on the GTL AI roadmap.</p>
+      <h2 id="contact-title">Quiero saber más</h2>
+      <ul class="section-sub contact-points">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Te responde un asesor el mismo día hábil.</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Agendas una demostración en vivo para ver cómo funcionaría en tu negocio.</li>
+      </ul>
 
-      <div class="future-grid">
-        <article class="future-card">
-          <span class="future-tag">Long-Term Development · Led by Daniel Rengifo</span>
-          <h3>El Juego</h3>
-          <p>A persistent, AI-driven game world years in the making — where every system, character, and story beat evolves through applied machine learning.</p>
-          <span class="future-tag future-tag--status">In exploration</span>
+      <div class="contact-grid">
+        <article class="contact-card">
+          <span class="contact-icon contact-icon--form"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14.5h4.5"/></svg></span>
+          <h3>Déjenos sus datos</h3>
+          <p>Cuéntenos sobre su negocio en un formulario corto y le escribimos.</p>
+          <a class="btn btn-primary contact-btn" data-contact="request" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI%20(gtl-ai.com)" data-en-href="https://wa.me/573192788238?text=Hi%2C%20I'd%20like%20to%20know%20more%20about%20GTL%20AI%20(gtl-ai.com)" target="_blank" rel="noopener" data-request="general" data-general="true">Hablar con nosotros <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
         </article>
-        <article class="future-card">
-          <span class="future-tag">Led by Gary D. Mendez</span>
-          <h3>Mercado Vivo</h3>
-          <p>A live shopping platform reimagined for the Colombian market — merging real-time video commerce with AI-powered personalization and local logistics.</p>
-          <span class="future-tag future-tag--status">In exploration</span>
+        <article class="contact-card">
+          <span class="contact-icon contact-icon--wa"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span>
+          <h3>WhatsApp</h3>
+          <p>Escríbanos al <span class="nowrap" data-contact-text="whatsapp">+57 319 278 8238</span> y conversemos por chat.</p>
+          <a class="btn contact-btn contact-btn--wa" data-contact="whatsapp" href="https://wa.me/573192788238?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI%20(gtl-ai.com)" data-en-href="https://wa.me/573192788238?text=Hi%2C%20I'd%20like%20to%20know%20more%20about%20GTL%20AI%20(gtl-ai.com)" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>Abrir WhatsApp <span class="visually-hidden">(abre WhatsApp en una pestaña nueva)</span></a>
         </article>
-        <article class="future-card">
-          <span class="future-tag">Led by Jesus David Garcia &amp; David Ramirez</span>
-          <h3>Saldo AI</h3>
-          <p>A personal finance app that acts like a financial advisor in your pocket — AI-driven budgeting, goal tracking, and insight built to make real wealth-building accessible.</p>
-          <span class="future-tag future-tag--status">In exploration</span>
+        <article class="contact-card">
+          <span class="contact-icon contact-icon--mail"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
+          <h3>Correo electrónico</h3>
+          <p>Escríbanos a <a class="contact-address" data-contact="mailto" href="mailto:garydmendez@gtl-ai.com?subject=Quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI" data-en-href="mailto:garydmendez@gtl-ai.com?subject=I'd%20like%20to%20know%20more%20about%20GTL%20AI" data-contact-text="email">garydmendez@gtl-ai.com</a> desde su correo.</p>
+          <div class="contact-mail">
+            <a class="btn contact-btn contact-btn--mail" data-contact="gmail" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=garydmendez%40gtl-ai.com&amp;su=Quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI" data-en-href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=garydmendez%40gtl-ai.com&amp;su=I'd%20like%20to%20know%20more%20about%20GTL%20AI" target="_blank" rel="noopener"><svg class="contact-logo" viewBox="52 42 88 66" aria-hidden="true" focusable="false"><path fill="#4285f4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"/><path fill="#34a853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"/><path fill="#fbbc04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"/><path fill="#ea4335" d="M72 74V48l24 18 24-18v26L96 92"/><path fill="#c5221f" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"/></svg>Gmail <span class="visually-hidden">(abre en una pestaña nueva)</span></a>
+            <a class="btn contact-btn contact-btn--mail" data-contact="outlook" href="https://outlook.live.com/mail/0/deeplink/compose?to=garydmendez%40gtl-ai.com&amp;subject=Quiero%20saber%20m%C3%A1s%20sobre%20GTL%20AI" data-en-href="https://outlook.live.com/mail/0/deeplink/compose?to=garydmendez%40gtl-ai.com&amp;subject=I'd%20like%20to%20know%20more%20about%20GTL%20AI" target="_blank" rel="noopener"><svg class="contact-logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="10" y="5" width="20" height="22" rx="2.5" fill="#28a8ea"/><path d="M10 14.5l10 6.2 10-6.2v10a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 10 24.5z" fill="#0078d4"/><rect x="2" y="9" width="16" height="16" rx="2.5" fill="#0f6cbd"/><ellipse cx="10" cy="17" rx="3.6" ry="4.4" fill="none" stroke="#fff" stroke-width="2.2"/></svg>Outlook <span class="visually-hidden">(abre en una pestaña nueva)</span></a>
+          </div>
         </article>
       </div>
     </div>
@@ -745,12 +975,12 @@
 
 </main>
 
-<footer id="contact" class="site-footer">
+<footer class="site-footer">
   <div class="container footer-inner">
     <div class="logo"><img class="logo-symbol" src="assets/branding/gtl-ai-sticker-1-yume.png" alt="" width="40" height="40" loading="lazy">GTL<span>AI</span></div>
     <a href="mailto:garydmendez@gtl-ai.com" class="footer-email">garydmendez@gtl-ai.com</a>
     <a href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>
-    <p>&copy; 2026 GTL AI. All rights reserved.</p>
+    <p>&copy; 2026 GTL AI. Todos los derechos reservados.</p>
   </div>
 </footer>
 
@@ -803,206 +1033,7 @@
     brandIntroVideo.muted = true;
     brandIntroVideo.play().catch(() => finishBrandIntro(false));
   }
-
-  // Both directions use native forward playback. Only seek when switching clips.
-  document.querySelectorAll('[data-brand-scrub]').forEach((trigger) => {
-    const advance = trigger.querySelector('[data-direction="advance"]');
-    const returning = trigger.querySelector('[data-direction="return"]');
-    const videos = [advance, returning];
-    let active = advance;
-    let initialized = false;
-    let direction = -1;
-    let hovering = false;
-    let touchInteraction = false;
-    let revision = 0;
-    let pendingSwitch;
-    let loading;
-    let endFrame = 0;
-    let heldPosition = 0;
-    let cancelFrameReveal = () => {};
-
-    function revealPresentedFrame(video) {
-      if (trigger.classList.contains('has-video-frame')) return;
-      cancelFrameReveal();
-      const run = revision;
-      function reveal() {
-        if (run !== revision || video !== active || video.seeking || video.readyState < 2) return;
-        trigger.classList.add('has-video-frame');
-      }
-      if (typeof video.requestVideoFrameCallback === 'function') {
-        const id = video.requestVideoFrameCallback(reveal);
-        cancelFrameReveal = () => video.cancelVideoFrameCallback(id);
-      } else {
-        // Older WebKit ports need a paint opportunity after the playing event.
-        let id = requestAnimationFrame(() => { id = requestAnimationFrame(reveal); });
-        cancelFrameReveal = () => cancelAnimationFrame(id);
-      }
-    }
-
-    function progress() {
-      if (heldPosition !== null) return heldPosition;
-      // Firefox rounds media clocks, and WebKit can report a frame beyond duration.
-      const time = active.currentTime;
-      const fraction = active.ended || time >= active.duration - 0.002 ? 1
-        : time <= 0.002 ? 0 : time / active.duration;
-      return Math.max(0, Math.min(1, active === advance ? fraction : 1 - fraction));
-    }
-
-    function prepareFrame(video, time, signal) {
-      return new Promise((resolve) => {
-        function finish(ready) {
-          video.removeEventListener('seeked', check);
-          video.removeEventListener('loadeddata', check);
-          video.removeEventListener('canplay', check);
-          video.removeEventListener('error', failed);
-          signal.removeEventListener('abort', aborted);
-          resolve(ready);
-        }
-        function check() {
-          if (!video.seeking && video.readyState >= 2) finish(true);
-        }
-        function failed() { finish(false); }
-        function aborted() { finish(false); }
-        video.addEventListener('seeked', check);
-        video.addEventListener('loadeddata', check);
-        video.addEventListener('canplay', check);
-        video.addEventListener('error', failed);
-        signal.addEventListener('abort', aborted, { once: true });
-        try {
-          // Even a sub-millisecond seek must clear an ended clip before play():
-          // skipping it would make the browser restart that clip from zero.
-          if (video.currentTime !== time) video.currentTime = time;
-          check();
-        } catch {
-          finish(false);
-        }
-      });
-    }
-
-    async function setDirection(next) {
-      direction = next;
-      cancelAnimationFrame(endFrame);
-      cancelFrameReveal();
-      const run = ++revision;
-      if (pendingSwitch) pendingSwitch.abort();
-      videos.forEach((video) => video.pause());
-      if (direction === 0) return;
-      if (!initialized) {
-        if (direction === -1 && !loading) return;
-        initialize();
-        return;
-      }
-
-      // Preserve accumulated progress, allowing for the clips' slightly different durations.
-      const position = progress();
-      if ((direction === 1 && position >= 1) || (direction === -1 && position <= 0)) return;
-      const target = direction === 1 ? advance : returning;
-      const time = (direction === 1 ? position : 1 - position) * target.duration;
-      if (target !== active || target.seeking) {
-        pendingSwitch = new AbortController();
-        const ready = await prepareFrame(target, time, pendingSwitch.signal);
-        if (!ready || run !== revision) return;
-        // Keep the outgoing frame visible until its counterpart has decoded.
-        active.classList.remove('is-active');
-        active = target;
-        active.classList.add('is-active');
-      }
-      // A timestamp rounded to the endpoint must hold there, never implicitly loop.
-      if (run !== revision || target.ended || target.currentTime >= target.duration) return;
-      heldPosition = null;
-      target.muted = true;
-      target.play().catch(() => {});
-    }
-
-    function primeVideo(video) {
-      if (video.readyState >= 1 && Number.isFinite(video.duration)) return Promise.resolve(true);
-      return new Promise((resolve) => {
-          const source = video.querySelector('source');
-          const timer = setTimeout(() => finish(false), 15000);
-          function finish(ready) {
-            clearTimeout(timer);
-            video.removeEventListener('loadedmetadata', check);
-            video.removeEventListener('canplay', check);
-            video.removeEventListener('error', failed);
-            source.removeEventListener('error', failed);
-            resolve(ready);
-          }
-          // Safari may only preload metadata until play() is requested.
-          function check() { if (video.readyState >= 1 && Number.isFinite(video.duration)) finish(true); }
-          function failed() { finish(false); }
-          video.addEventListener('loadedmetadata', check);
-          video.addEventListener('canplay', check);
-          video.addEventListener('error', failed);
-          source.addEventListener('error', failed, { once: true });
-          video.muted = true;
-          video.preload = 'auto';
-          source.src = source.dataset.src;
-          video.load();
-          check();
-        });
-    }
-
-    function initialize() {
-      if (loading || initialized) return;
-      trigger.setAttribute('aria-busy', 'true');
-      loading = Promise.all(videos.map(primeVideo)).then((ready) => {
-        if (!ready.every(Boolean)) return;
-        initialized = true;
-        advance.classList.add('is-active');
-        trigger.classList.add('is-ready');
-        // Use the latest hover state, not the one present when downloading began.
-        setDirection(direction);
-      }).finally(() => { loading = null; trigger.removeAttribute('aria-busy'); });
-    }
-    videos.forEach((video) => video.addEventListener('playing', () => {
-      const expected = video === advance ? 1 : -1;
-      if (video !== active || direction !== expected) { video.pause(); return; }
-      // Metadata readiness must not uncover an undecoded video surface.
-      revealPresentedFrame(video);
-      let previousTime = video.currentTime;
-      function holdLastFrame() {
-        if (video !== active || video.paused || direction !== expected) return;
-        const time = video.currentTime;
-        // These 25 fps clips end on duration - 0.04. Hold that final decoded frame
-        // before WebKit's end-of-stream clock can briefly wrap back to zero.
-        if (time >= video.duration - 0.04 || (time < previousTime && previousTime >= video.duration - 0.1)) {
-          heldPosition = video === advance ? 1 : 0;
-          video.pause();
-          video.currentTime = video.duration;
-          return;
-        }
-        previousTime = time;
-        endFrame = requestAnimationFrame(holdLastFrame);
-      }
-      cancelAnimationFrame(endFrame);
-      endFrame = requestAnimationFrame(holdLastFrame);
-    }));
-    trigger.addEventListener('pointerenter', (event) => {
-      if (event.pointerType === 'touch') return;
-      hovering = true;
-      if (!brandMotionPreference.matches) setDirection(1);
-    });
-    trigger.addEventListener('pointerleave', (event) => {
-      if (event.pointerType === 'touch') return;
-      hovering = false;
-      if (!brandMotionPreference.matches) setDirection(-1);
-    });
-    // Touch and keyboard users can toggle direction without a hover-capable pointer.
-    trigger.addEventListener('touchstart', () => { touchInteraction = true; }, { passive: true });
-    trigger.addEventListener('click', (event) => {
-      // Safari's synthetic touch click can be a MouseEvent without pointerType.
-      if (touchInteraction || event.detail === 0 || event.pointerType === 'touch' || brandMotionPreference.matches) {
-        touchInteraction = false;
-        setDirection(direction === 1 ? -1 : 1);
-      }
-    });
-    trigger.addEventListener('blur', () => {
-      if (!hovering && !brandMotionPreference.matches) setDirection(-1);
-    });
-    brandMotionPreference.addEventListener('change', () => {
-      if (brandMotionPreference.matches) setDirection(0);
-    });
-  });
 </script>
+<script src="i18n.js?v=582146f1c5" defer onerror="document.documentElement.classList.remove('i18n-pending')"></script>
 </body>
 </html>

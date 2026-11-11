@@ -4,27 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Política de tratamiento de datos personales — GTL AI</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5e2b09168a">
+<script>document.documentElement.classList.add('js')</script>
+<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
+<link rel="stylesheet" href="style.css?v=1d74d8d567">
 </head>
 <body>
 
-<header class="site-header" lang="en">
+<header class="site-header">
   <div class="container header-inner">
     <a href="index.html" class="logo"><img class="logo-symbol" src="assets/branding/gtl-ai-sticker-1-yume.png" alt="" width="40" height="40">GTL<span>AI</span></a>
     <nav class="nav">
-      <a href="index.html#about">About</a>
-      <a href="index.html#planes">Planes</a>
-      <a href="index.html#team">Team</a>
-      <a href="index.html#future">Roadmap</a>
-      <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+      <a href="index.html#features">Funciones</a>
+      <a href="index.html#stories"><span class="nav-long">Historias de clientes</span><span class="nav-short">Historias</span></a>
+      <a href="index.html#falco" class="nav-falco"><span class="nav-long">Falco · Recepcionista IA</span><span class="nav-short">Falco IA</span></a>
+      <a href="index.html#team">Nosotros</a>
+      <div class="lang-switch" data-lang-switch data-i18n="off">
+        <button type="button" class="lang-current" aria-expanded="false" aria-controls="lang-menu" data-lang-current><span class="lang-is lang-is-es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><span>ES</span></span><span class="lang-is lang-is-en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><span>ENG</span></span><svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m3 4.5 3 3 3-3"/></svg></button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+          <li><button type="button" lang="es" data-lang="es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><b>ES</b><span>Español</span></button></li>
+          <li><button type="button" lang="en" data-lang="en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><b>ENG</b><span>English</span></button></li>
+        </ul>
+      </div>
+      <a href="index.html#contact" class="nav-cta">Contáctenos</a>
     </nav>
   </div>
 </header>
 
-<main>
+<main lang="es-CO" data-i18n="off">
+  <p class="container legal-lang-note" lang="en" hidden data-lang-note>This policy is available in Spanish only.</p>
 
   <article class="legal" aria-labelledby="legal-title">
     <div class="container legal-inner">
@@ -93,14 +105,15 @@
 
 </main>
 
-<footer lang="en" id="contact" class="site-footer">
+<footer class="site-footer">
   <div class="container footer-inner">
     <div class="logo"><img class="logo-symbol" src="assets/branding/gtl-ai-sticker-1-yume.png" alt="" width="40" height="40" loading="lazy">GTL<span>AI</span></div>
     <a href="mailto:garydmendez@gtl-ai.com" class="footer-email">garydmendez@gtl-ai.com</a>
     <a aria-current="page" href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>
-    <p>&copy; 2026 GTL AI. All rights reserved.</p>
+    <p>&copy; 2026 GTL AI. Todos los derechos reservados.</p>
   </div>
 </footer>
 
+<script src="i18n.js?v=582146f1c5" defer onerror="document.documentElement.classList.remove('i18n-pending')"></script>
 </body>
 </html>

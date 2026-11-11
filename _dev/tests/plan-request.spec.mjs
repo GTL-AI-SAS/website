@@ -18,15 +18,9 @@ const FORM = config.planRequestMode === 'form';
 const SITE = '(gtl-ai.com)';
 const NEW_TAB_TEXT = '(abre WhatsApp en una pestaña nueva)';
 const BASE = `https://wa.me/${config.whatsappNumber === 'PENDIENTE' ? '' : config.whatsappNumber}?text=`;
+// The plans section was retired: the one request button is "Hablar con nosotros" in Quiero saber más.
 const BUTTONS = [
-  ...data.packages.flatMap((p) => p.tiers.map((t) => ({
-    selector: `#planes a[data-package="${p.code}"][data-tier="${t.code}"]`,
-    text: p.code === 'a-medida' ? `Hola, quiero cotizar un proyecto a medida ${SITE}` : `Hola, quiero información del plan ${p.name} · ${t.name} ${SITE}`,
-  }))),
-  ...data.bundles.items.map((b) => ({
-    selector: `#planes a[data-bundle="${b.code}"]`, text: `Hola, quiero información del paquete ${b.name} ${SITE}`,
-  })),
-  { selector: '#planes a[data-general="true"]', text: `Hola, quiero ayuda para elegir un plan ${SITE}` },
+  { selector: '#contact a[data-general="true"]', text: `Hola, quiero saber más sobre GTL AI ${SITE}` },
 ];
 
 const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
@@ -47,9 +41,10 @@ async function open(page, path = '/', width = 1440) {
 // adds aria-haspopup="dialog"; href, target and rel never change.
 async function checkEveryLink(page, js) {
   const buttonNotice = FORM && js ? FORM_NOTICE_TEXT : NEW_TAB_TEXT;
-  expect(BUTTONS).toHaveLength(21);
-  // The 21 buttons and, in form mode, the dialog's two WhatsApp links (static general-enquiry href, step 8, N4).
-  await expect(page.locator('#planes a[href^="https://wa.me/"]')).toHaveCount(FORM ? 23 : 21);
+  expect(BUTTONS).toHaveLength(1);
+  await expect(page.locator('#planes')).toHaveCount(0);
+  // The button, the WhatsApp card's link and, in form mode, the dialog's two WhatsApp links.
+  await expect(page.locator('a[href^="https://wa.me/"]')).toHaveCount(FORM ? 4 : 2);
   for (const b of BUTTONS) {
     const link = page.locator(b.selector);
     await expect(link, b.selector).toHaveCount(1);
@@ -69,13 +64,14 @@ async function checkEveryLink(page, js) {
       await expect(link, b.selector).toHaveAccessibleName(new RegExp(`${buttonNotice.replace(/[()]/g, '\\$&')}$`));
     }
   }
-  // Every link that opens a new tab, anywhere on the page, carries a notice: the 21 buttons and, in form mode, the
-  // dialog's two WhatsApp links and its privacy link.
+  // Every link that opens a new tab, anywhere on the page, carries a notice: the four in Quiero saber más, the
+  // founders' two LinkedIn links and, in form mode, the dialog's two WhatsApp links and its privacy link.
   const blank = page.locator('a[target="_blank"]');
-  expect(await blank.count()).toBe(FORM ? 24 : 21);
+  expect(await blank.count()).toBe(FORM ? 9 : 6);
   for (const a of await blank.all()) {
     const expected = (await a.getAttribute('data-request')) !== null ? buttonNotice
-      : (await a.getAttribute('data-request-whatsapp')) !== null ? NEW_TAB_TEXT : NEW_TAB_TEXT_GENERIC;
+      : (await a.getAttribute('data-request-whatsapp')) !== null || (await a.getAttribute('data-contact')) === 'whatsapp' ? NEW_TAB_TEXT
+        : NEW_TAB_TEXT_GENERIC;
     await expect(a.locator('.visually-hidden')).toHaveText(expected);
   }
 }
@@ -151,7 +147,7 @@ test.describe('privacy page', () => {
     }
   });
 
-  for (const [name, hash] of [['About', 'about'], ['Planes', 'planes'], ['Team', 'team'], ['Roadmap', 'future'], ['Get in Touch', 'contact']]) {
+  for (const [name, hash] of [['Funciones', 'features'], ['Nosotros', 'team'], ['Contáctenos', 'contact']]) {
     test(`the header link "${name}" reaches the home page section`, async ({ page }) => {
       await open(page, '/privacidad.html');
       await page.locator('.site-header .nav a', { hasText: name }).click();
@@ -168,12 +164,11 @@ test.describe('privacy page', () => {
     await expect(page.locator('footer .footer-email')).toHaveAttribute('href', /^mailto:/);
     await page.locator('.site-header .logo').click();
     await expect(page).toHaveURL(/\/(index(\.html)?)?$/);
-    await expect(page.locator('#planes')).toHaveCount(1);
+    await expect(page.locator('#features')).toHaveCount(1);
   });
 
   test('at 360 px the header fits as on the home page and nothing scrolls sideways', async ({ page }) => {
     await open(page, '/privacidad.html', 360);
-    await expect(page.locator('.nav a[href$="#future"]')).toBeHidden();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
   });
 

@@ -179,7 +179,8 @@ test('no draft marker reaches the page', () => {
   assert.ok(!/data-status|copyStatus/.test(index));
   // PQ1: no status word either. "propuesta" survives only inside Appendix B's A medida sentence.
   assert.doesNotMatch(index, /TBD|PLACEHOLDER/);
-  assert.deepEqual(index.match(/propuesta[^<]*/g), ['propuesta escrita.']);
+  // The plans section (with Appendix B's "propuesta escrita") was retired from the page.
+  assert.equal(index.match(/propuesta[^<]*/g), null);
 });
 
 // ---------- copy (step 8): register, fidelity to Appendix B, field-level draft markers ----------

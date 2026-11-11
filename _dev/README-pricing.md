@@ -1,5 +1,10 @@
 # Pricing section: how to change it
 
+> **Plans retired from the page (2026-11-11).** Each offer is now tailored, so the site no longer shows the plans
+> section or `pricing.js`. The build still validates `pricing.json` and writes, between the `pricing:start` /
+> `pricing:end` markers, only the request form that "Hablar con nosotros" opens (its plan field is hidden and fixed
+> on a general request). `renderSection` and the data stay here in `_dev`, unpublished, for when plans come back.
+
 The "Planes y precios" section on the home page is generated from one data file.
 **Never edit the section in `index.html` by hand**; the check will fail.
 

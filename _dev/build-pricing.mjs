@@ -330,7 +330,16 @@ export const HONEYPOT_STYLE = 'position:absolute;left:-10000px;top:auto;width:1p
 // ever goes into a URL; plan-request.js does the validation and the request. The nickname field is the
 // honeypot: hidden from sight (the inline style above, and CSS), keyboard (tabindex -1) and screen readers
 // (aria-hidden), autocomplete off.
-export function renderRequestDialog(data, config) {
+// The plan field: every plan to choose from or, now that the page shows no plans, a hidden field fixed on a
+// general request (plan-request.js reads it the same way).
+function planField(data, config, plans) {
+  if (plans) return field('plan', 'Plan', planSelect(data, config));
+  const href = whatsappLink(config, CONTACT_MESSAGES.es.whatsapp);
+  const select = `<select id="request-plan" name="plan" data-request-plan aria-describedby="request-plan-error">\n<option value="general" data-whatsapp="${esc(href)}">Información general</option>\n</select>`;
+  return field('plan', 'Plan', select).replace('<div class="request-field"', '<div class="request-field" hidden');
+}
+
+export function renderRequestDialog(data, config, { plans = true } = {}) {
   const L = FIELD_LIMITS;
   return [
     '<dialog class="request-dialog" id="request-dialog" aria-labelledby="request-title" aria-describedby="request-intro">',
@@ -341,7 +350,7 @@ export function renderRequestDialog(data, config) {
     '</div>',
     '<p class="request-intro" id="request-intro">Cuéntenos cómo contactarle y le escribimos.</p>',
     '<div class="request-errors" role="alert" tabindex="-1" hidden data-request-errors></div>',
-    field('plan', 'Plan', planSelect(data, config)),
+    planField(data, config, plans),
     field('name', 'Nombre', textInput('name', 'text', { min: L.name.min, max: L.name.max, autocomplete: 'name', required: true }), { required: true }),
     field('business', 'Negocio', textInput('business', 'text', { min: L.business.min, max: L.business.max, autocomplete: 'organization', required: true, describedBy: ['request-business-hint'] }),
       { required: true, hint: 'El nombre de su negocio, su Instagram o su sitio web.' }),
@@ -565,6 +574,14 @@ export function renderSection(data, config = loadConfig()) {
   return body.split('\n').map((l) => '  ' + l).join('\n');
 }
 
+// What the build writes between the markers since the plans section was retired (each offer is now
+// tailored): in form mode the request form, which "Hablar con nosotros" opens; otherwise nothing.
+// renderSection stays, unused, for when the plans come back.
+export function renderRequestBlock(data, config = loadConfig()) {
+  if (!isFormMode(config)) return '';
+  return renderRequestDialog(data, config, { plans: false }).split('\n').map((l) => '  ' + l).join('\n');
+}
+
 // ---------- versioned asset URLs (PF3) ----------
 
 const toLF = (s) => s.replace(/\r\n/g, '\n');
@@ -632,13 +649,14 @@ export function fileVersion(file, root = SITE_ROOT) {
 // ---------- applying to index.html ----------
 
 // Returns the full index.html (LF) with the section rendered. On the first run it also
-// inserts the markers after About, the "Planes" link, the head script and the pricing.js tag.
+// inserts the markers after the feature tour, the "Planes" link, the head script and the pricing.js tag.
 export function applyToIndex(htmlLF, sectionHTML) {
   let html = htmlLF;
   if (!html.includes(START)) {
-    const aboutEnd = html.indexOf('</section>', html.indexOf('<section id="about"'));
-    if (aboutEnd < 0) throw new Error('index.html: About section not found');
-    const at = aboutEnd + '</section>'.length;
+    const featuresAt = html.indexOf('<section id="features"');
+    const featuresEnd = featuresAt < 0 ? -1 : html.indexOf('</section>', featuresAt);
+    if (featuresEnd < 0) throw new Error('index.html: feature tour section not found');
+    const at = featuresEnd + '</section>'.length;
     html = html.slice(0, at) + `\n\n  ${START}\n  ${END}` + html.slice(at);
     html = html.replace('<a href="#team">Team</a>', `${NAV_LINK}\n      <a href="#team">Team</a>`);
     html = html.replace('<link rel="stylesheet" href="style.css">', `${HEAD_SCRIPT}\n<link rel="stylesheet" href="style.css">`);
@@ -665,14 +683,58 @@ export const footerEmail = (config) => (isPending(config.contactEmail) ? CURRENT
 function backgroundBlock(lines) {
   if (!lines.length) return '';
   const items = lines.map((l) => `              <li>${esc(l)}</li>`).join('\n');
-  return `          <div class="member-block">\n            <h4>Background</h4>\n            <ul>\n${items}\n            </ul>\n          </div>\n`;
+  return `          <div class="member-block">\n            <h4>Trayectoria</h4>\n            <ul>\n${items}\n            </ul>\n          </div>\n`;
 }
 
-// Writes the footer email and each founder's Background list (between the markers in their card).
+// Quiero saber más (#contact): each link in Spanish (href) and in English (data-en-href, which i18n.js
+// puts in place), and the number and address it shows, all from the config.
+export const CONTACT_MESSAGES = {
+  es: { whatsapp: `Hola, quiero saber más sobre GTL AI ${SITE_TAG}`, subject: 'Quiero saber más sobre GTL AI' },
+  en: { whatsapp: `Hi, I'd like to know more about GTL AI ${SITE_TAG}`, subject: "I'd like to know more about GTL AI" },
+};
+
+export function contactLinks(config, lang) {
+  const m = CONTACT_MESSAGES[lang];
+  const email = footerEmail(config);
+  const to = encodeURIComponent(email);
+  const subject = encodeURIComponent(m.subject);
+  const chat = whatsappLink(config, m.whatsapp);
+  return {
+    request: chat,
+    whatsapp: chat,
+    mailto: `mailto:${email}?subject=${subject}`,
+    gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}`,
+    outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${subject}`,
+  };
+}
+
+const CONTACT_LINK = /data-contact="(\w+)" href="[^"]*" data-en-href="[^"]*"/g;
+const CONTACT_TEXT = /(data-contact-text="(\w+)">)[^<]*</g;
+
+function applyContact(html, config) {
+  const es = contactLinks(config, 'es');
+  const en = contactLinks(config, 'en');
+  let links = 0;
+  html = html.replace(CONTACT_LINK, (_, kind) => {
+    if (!Object.hasOwn(es, kind)) throw new Error(`index.html: unknown contact link "${kind}"`);
+    links += 1;
+    return `data-contact="${kind}" href="${esc(es[kind])}" data-en-href="${esc(en[kind])}"`;
+  });
+  if (links !== Object.keys(es).length) throw new Error(`index.html: expected ${Object.keys(es).length} contact links, found ${links}`);
+  return html.replace(CONTACT_TEXT, (_, head, kind) => {
+    const text = { email: footerEmail(config), whatsapp: formatWhatsApp(config.whatsappNumber) }[kind];
+    if (text === undefined) throw new Error(`index.html: unknown contact text "${kind}"`);
+    return `${head}${esc(text)}<`;
+  });
+}
+
+// Writes the footer email, the contact section's links and each founder's Background list (between the
+// markers in their card).
 export function applySiteConfig(htmlLF, config) {
   const email = esc(footerEmail(config));
   if (!FOOTER_EMAIL_LINK.test(htmlLF)) throw new Error('index.html: footer email link not found');
   let html = htmlLF.replace(FOOTER_EMAIL_LINK, `<a href="mailto:${email}" class="footer-email">${email}</a>`);
+  html = applyContact(html, config);
   const names = Object.keys(config.founders || {});
   const seen = new Set();
   // Within one card only: a card without markers is never matched across into the next.
@@ -694,8 +756,6 @@ export function wiringProblems(htmlLF) {
   const bare = stripVersions(htmlLF); // PF3: the tags are compared without their ?v= stamps
   if (!bare.includes(HEAD_SCRIPT)) problems.push('head script that adds the "js" class is missing');
   else if (bare.indexOf(HEAD_SCRIPT) > bare.indexOf('href="style.css"')) problems.push('head script must come before the stylesheet');
-  if (!bare.includes(JS_TAG)) problems.push('pricing.js script tag is missing');
-  if (!bare.includes(NAV_LINK)) problems.push('"Planes" header link is missing');
   if (!footerOf(bare).includes(FOOTER_LINK)) problems.push('"Privacidad" footer link is missing');
   return problems;
 }
@@ -727,16 +787,15 @@ const headerOf = (htmlLF) => (htmlLF.match(/<header class="site-header">[\s\S]*?
 const footerOf = (htmlLF) => (htmlLF.match(/<footer [^>]*class="site-footer"[\s\S]*?<\/footer>/) || [''])[0];
 
 // The site's header and footer, taken from index.html so they are never typed twice. On the
-// privacy page their in-page links point to index.html, they keep the home page's English
-// (lang="en"), and the "Privacidad" link marks the current page.
+// privacy page their in-page links point to index.html and the "Privacidad" link marks the current page.
 export function sharedChrome(indexLF) {
   const header = headerOf(indexLF);
   const footer = footerOf(indexLF);
   if (!header || !footer) throw new Error('index.html: site header or footer not found');
   const relink = (s) => s.replace(/href="#"/g, 'href="index.html"').replace(/href="#([^"]+)"/g, 'href="index.html#$1"');
   return {
-    header: relink(header).replace('<header class="site-header">', '<header class="site-header" lang="en">'),
-    footer: relink(footer).replace(/<footer /, '<footer lang="en" ').replace(FOOTER_LINK, FOOTER_LINK.replace('<a ', '<a aria-current="page" ')),
+    header: relink(header),
+    footer: relink(footer).replace(FOOTER_LINK, FOOTER_LINK.replace('<a ', '<a aria-current="page" ')),
   };
 }
 
@@ -829,7 +888,7 @@ function main(argv) {
   const versionOf = (file) => (file === 'site-config.js' ? assetVersion(siteConfigBytes) : fileVersion(file));
   let next;
   try {
-    next = applySiteConfig(applyToIndex(current, renderSection(data, config)), config);
+    next = applySiteConfig(applyToIndex(current, renderRequestBlock(data, config)), config);
   } catch (e) {
     console.error('site-config.json is invalid:\n  - ' + e.message);
     return 1;

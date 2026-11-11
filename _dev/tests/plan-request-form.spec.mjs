@@ -27,12 +27,11 @@ const POLICY_MISMATCH = 'La política de privacidad se actualizó. Recargue la p
 const WA = (text) => `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(text)}`;
 // Test data only.
 const LEAD = { name: 'Prueba Playwright', business: 'Negocio de Prueba', phone: '+57 300 000 0000', email: 'prueba@example.com', city: 'Ciudad Prueba', message: 'Mensaje de prueba.' };
-const BUTTON = {
-  plan: '#planes a[data-package="agenda"][data-tier="crece"]',
-  custom: '#planes a[data-package="a-medida"][data-tier="proyecto"]',
-  bundle: '#planes a[data-bundle="clinica-completa"]',
-  general: '#planes a[data-general="true"]',
-};
+// The plans section was retired: the one button left is "Hablar con nosotros" in Quiero saber más, a general request.
+const BUTTON = { general: '#contact a[data-general="true"]' };
+BUTTON.plan = BUTTON.general;
+BUTTON.bundle = BUTTON.general;
+const GENERAL = { packageCode: null, tierCode: null, bundleCode: null };
 const SEL = {
   dialog: '#request-dialog', form: '[data-request-form]', success: '[data-request-success]', banner: '[data-request-banner]',
   retry: '[data-request-retry]', submit: '[data-request-submit]', errors: '[data-request-errors]',
@@ -70,7 +69,6 @@ async function open(page, width = 1440) {
 }
 
 async function openDialog(page, selector = BUTTON.plan) {
-  if (selector === BUTTON.custom) await page.locator('#tab-a-medida').click();
   await page.locator(selector).click();
   await expect(page.locator(SEL.dialog)).toBeVisible();
   return page.locator(SEL.dialog);
@@ -103,16 +101,16 @@ async function timeOutFirstRequest(page, requests) {
 }
 
 test.describe('the request form', () => {
-  test('the script takes over the 21 buttons: aria-haspopup, the notice, and the WhatsApp href kept', async ({ page }) => {
+  test('the script takes over "Hablar con nosotros": aria-haspopup, the notice, and the WhatsApp href kept', async ({ page }) => {
     const { requests } = await setup(page, created);
     await open(page);
-    const buttons = page.locator('#planes a[data-request]');
-    await expect(buttons).toHaveCount(21);
-    for (const a of await buttons.all()) {
-      await expect(a).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(a).toHaveAttribute('href', /^https:\/\/wa\.me\//);
-      await expect(a.locator('.visually-hidden')).toHaveText(FORM_NOTICE_TEXT);
-    }
+    await expect(page.locator('#planes')).toHaveCount(0);
+    const buttons = page.locator('a[data-request]');
+    await expect(buttons).toHaveCount(1);
+    const a = buttons.first();
+    await expect(a).toHaveAttribute('aria-haspopup', 'dialog');
+    await expect(a).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+    await expect(a.locator('.visually-hidden')).toHaveText(FORM_NOTICE_TEXT);
     await expect(page.locator(SEL.dialog)).toBeHidden();
     expect(requests).toEqual([]);
   });
@@ -121,7 +119,7 @@ test.describe('the request form', () => {
     const { requests, real } = await setup(page, created);
     await open(page);
     await openDialog(page, BUTTON.plan);
-    await expect(page.locator('#request-plan')).toHaveValue('plan:agenda:crece');
+    await expect(page.locator('#request-plan')).toHaveValue('general');
     await fill(page);
     await submit(page);
     await expect(page.locator(SEL.success)).toBeVisible();
@@ -135,46 +133,27 @@ test.describe('the request form', () => {
     expect(r.contentType).toMatch(/^application\/json/);
     expect(r.key).toMatch(UUID_V4);
     expect(Object.keys(r.body)).toEqual(KEYS);
-    expect(r.body).toEqual({ packageCode: 'agenda', tierCode: 'crece', bundleCode: null, ...LEAD, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
+    expect(r.body).toEqual({ ...GENERAL, ...LEAD, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
     // The success view's WhatsApp link carries the plan only.
     const wa = page.locator(`${SEL.success} [data-request-whatsapp]`);
-    await expect(wa).toHaveAttribute('href', WA('Hola, quiero información del plan Agenda · Crece (gtl-ai.com)'));
+    await expect(wa).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
     await expect(wa).toHaveAttribute('target', '_blank');
     for (const v of Object.values(LEAD)) expect(await wa.getAttribute('href')).not.toContain(encodeURIComponent(v));
     expect(real).toEqual([]);
   });
 
-  for (const [kind, codes] of [
-    ['bundle', { packageCode: null, tierCode: null, bundleCode: 'clinica-completa' }],
-    ['custom', { packageCode: 'a-medida', tierCode: 'proyecto', bundleCode: null }],
-    ['general', { packageCode: null, tierCode: null, bundleCode: null }],
-  ]) {
-    test(`the ${kind} button preselects its plan, and empty optional values are sent as null`, async ({ page }) => {
-      const { requests } = await setup(page, created);
-      await open(page);
-      await openDialog(page, BUTTON[kind]);
-      const expectedValue = kind === 'bundle' ? 'bundle:clinica-completa' : kind === 'custom' ? 'plan:a-medida:proyecto' : 'general';
-      await expect(page.locator('#request-plan')).toHaveValue(expectedValue);
-      await fill(page, { name: LEAD.name, business: LEAD.business, phone: LEAD.phone, email: '', city: '  ', message: '' });
-      await submit(page);
-      await expect(page.locator(SEL.success)).toBeVisible();
-      expect(requests).toHaveLength(1);
-      expect(requests[0].body).toEqual({ ...codes, name: LEAD.name, business: LEAD.business, phone: LEAD.phone, email: null, city: null, message: null, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
-    });
-  }
-
-  test('changing the plan in the dialog changes the codes sent and the WhatsApp link', async ({ page }) => {
+  test('the plan field is hidden and fixed on a general request; empty optional values are sent as null', async ({ page }) => {
     const { requests } = await setup(page, created);
     await open(page);
-    await openDialog(page, BUTTON.plan);
-    await page.locator('#request-plan').selectOption('bundle:finca-directa');
-    await fill(page);
+    await openDialog(page, BUTTON.general);
+    await expect(page.locator('#request-plan')).toHaveValue('general');
+    await expect(page.locator('#request-plan')).toBeHidden();
+    await expect(page.locator('#request-plan option')).toHaveCount(1);
+    await fill(page, { name: LEAD.name, business: LEAD.business, phone: LEAD.phone, email: '', city: '  ', message: '' });
     await submit(page);
     await expect(page.locator(SEL.success)).toBeVisible();
-    expect(requests[0].body.packageCode).toBeNull();
-    expect(requests[0].body.tierCode).toBeNull();
-    expect(requests[0].body.bundleCode).toBe('finca-directa');
-    await expect(page.locator(`${SEL.success} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero información del paquete Finca Directa (gtl-ai.com)'));
+    expect(requests).toHaveLength(1);
+    expect(requests[0].body).toEqual({ ...GENERAL, name: LEAD.name, business: LEAD.business, phone: LEAD.phone, email: null, city: null, message: null, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
   });
 
   test('a 500 keeps the values and offers a retry; the retry reuses the key and a replayed 200 is success', async ({ page }) => {
@@ -187,7 +166,7 @@ test.describe('the request form', () => {
     await expect(banner).toBeVisible();
     await expect(banner).toContainText('no está disponible en este momento');
     await expect(page.locator(SEL.retry)).toBeVisible();
-    await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero información del plan Agenda · Crece (gtl-ai.com)'));
+    await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
     expect(await values(page)).toEqual(LEAD);
     expect(await page.evaluate(() => document.activeElement.matches('[data-request-retry]'))).toBe(true);
     await page.locator(SEL.retry).click();
@@ -293,13 +272,13 @@ test.describe('the request form', () => {
       await page.keyboard.press('Escape');
       await expect(page.locator(SEL.dialog)).toBeHidden();
       await openDialog(page, BUTTON.bundle);
-      await expect(page.locator('#request-plan')).toHaveValue('bundle:clinica-completa');
-      await expect(page.locator('#request-plan')).toBeFocused();
+      await expect(page.locator('#request-plan')).toHaveValue('general');
+      await expect(page.locator('#request-name')).toBeFocused();
       expect(await values(page)).toEqual(LEAD);
       await expect(page.locator(SEL.banner)).toBeVisible();
       await expect(page.locator('[data-request-banner-text]')).toHaveText(bannerText);
       await expect(page.locator(SEL.retry)).toBeVisible();
-      await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero información del paquete Clínica Completa (gtl-ai.com)'));
+      await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
       await page.locator(SEL.retry).click();
       await expect(page.locator(SEL.success)).toBeVisible();
       expect(requests).toHaveLength(2);
@@ -307,28 +286,6 @@ test.describe('the request form', () => {
       expect(requests[1].body).toEqual(requests[0].body);
     });
   }
-
-  test('after a 500, reopening from a different plan hides the banner and uses a new key', async ({ page }) => {
-    const { requests } = await setup(page, sequence(failed, created));
-    await open(page);
-    await openDialog(page, BUTTON.plan);
-    await fill(page);
-    await submit(page);
-    await expect(page.locator(SEL.retry)).toBeVisible();
-    await page.locator(`${SEL.form} [data-request-close]`, { hasText: 'Cancelar' }).click();
-    await expect(page.locator(SEL.dialog)).toBeHidden();
-    await openDialog(page, BUTTON.bundle);
-    await expect(page.locator('#request-plan')).toHaveValue('bundle:clinica-completa');
-    await expect(page.locator(SEL.banner)).toBeHidden();
-    expect(await values(page)).toEqual(LEAD);
-    await submit(page);
-    await expect(page.locator(SEL.success)).toBeVisible();
-    expect(requests).toHaveLength(2);
-    expect(requests[1].key).toMatch(UUID_V4);
-    expect(requests[1].key).not.toBe(requests[0].key);
-    expect(requests[0].body.packageCode).toBe('agenda');
-    expect(requests[1].body.bundleCode).toBe('clinica-completa');
-  });
 
   test('after a 500, a changed field, then closing and reopening from the same plan hides the banner and uses a new key', async ({ page }) => {
     const { requests } = await setup(page, sequence(failed, created));
@@ -341,7 +298,7 @@ test.describe('the request form', () => {
     await page.keyboard.press('Escape');
     await expect(page.locator(SEL.dialog)).toBeHidden();
     await openDialog(page, BUTTON.plan);
-    await expect(page.locator('#request-plan')).toHaveValue('plan:agenda:crece');
+    await expect(page.locator('#request-plan')).toHaveValue('general');
     await expect(page.locator(SEL.banner)).toBeHidden();
     expect(await values(page)).toEqual({ ...LEAD, city: 'Otra Ciudad' });
     await submit(page);
@@ -374,7 +331,8 @@ test.describe('the request form', () => {
     };
     for (const [field, message] of Object.entries(expected)) {
       const error = page.locator(`#request-${field}-error`);
-      await expect(error, field).toBeVisible();
+      // The plan field is hidden (fixed on a general request): its error reaches the visitor through the summary.
+      if (field !== 'plan') await expect(error, field).toBeVisible();
       await expect(error, field).toHaveText(message);
       const control = page.locator(`#request-${field}`);
       await expect(control, field).toHaveAttribute('aria-invalid', 'true');
@@ -385,7 +343,7 @@ test.describe('the request form', () => {
     await expect(summary).toHaveAttribute('role', 'alert');
     await expect(summary.locator('li')).toHaveCount(8);
     await expect(summary.locator('li').first()).toHaveText('Plan: Elija un plan de la lista.');
-    expect(await focusedId(page)).toBe('request-plan');
+    expect(await focusedId(page)).toBe('request-name');
     expect(await values(page)).toEqual(LEAD);
     await expect(page.locator(SEL.banner)).toBeHidden();
     expect(requests).toHaveLength(1);
@@ -401,7 +359,7 @@ test.describe('the request form', () => {
     await expect(banner).toBeVisible();
     await expect(banner).toHaveText(/Recibimos varias solicitudes suyas en poco tiempo\. Espere unos minutos e inténtelo de nuevo, o escríbanos por WhatsApp\./);
     await expect(page.locator(SEL.retry)).toBeHidden();
-    await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero información del paquete Clínica Completa (gtl-ai.com)'));
+    await expect(page.locator(`${SEL.banner} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
     expect(await values(page)).toEqual(LEAD);
   });
 
@@ -447,7 +405,7 @@ test.describe('the request form', () => {
       await expect(banner).toBeVisible();
       await expect(banner.locator('[data-request-banner-text]')).toHaveText('No pudimos registrar su solicitud. Puede intentarlo de nuevo o escribirnos por WhatsApp.');
       await expect(page.locator(SEL.retry)).toBeHidden();
-      await expect(banner.locator('[data-request-whatsapp]')).toHaveAttribute('href', WA('Hola, quiero información del plan Agenda · Crece (gtl-ai.com)'));
+      await expect(banner.locator('[data-request-whatsapp]')).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
       await expect(page.locator('.request-error:visible')).toHaveCount(0);
       await expect(page.locator(SEL.errors)).toBeHidden();
       expect(await values(page)).toEqual(LEAD);
@@ -572,7 +530,7 @@ test.describe('the request form', () => {
       }
       // Tab from the plan <select> to the Cancelar button: every field in order and never the honeypot, which sits
       // between message and consent in the markup. Ids only: whether a link is in the tab order is up to the engine.
-      expect(await focusedId(page)).toBe('request-plan');
+      expect(await focusedId(page)).toBe('request-name');
       const visited = [];
       for (let i = 0; i < 20; i++) {
         await page.keyboard.press('Tab');
@@ -584,7 +542,7 @@ test.describe('the request form', () => {
       }
       expect(visited).not.toContain('request-nickname');
       expect(visited.filter((id) => id.startsWith('request-') || id === 'submit' || id === 'close')).toEqual(
-        ['request-name', 'request-business', 'request-phone', 'request-email', 'request-city', 'request-message', 'request-consent', 'submit', 'close']);
+        ['request-business', 'request-phone', 'request-email', 'request-city', 'request-message', 'request-consent', 'submit', 'close']);
       expect(requests).toEqual([]);
     });
   }
@@ -633,8 +591,8 @@ test.describe('accessibility', () => {
   test('focus moves into the dialog, Esc closes it and focus returns to the button', async ({ page }) => {
     await setup(page, created);
     await open(page);
-    await openDialog(page, BUTTON.bundle);
-    expect(await focusedId(page)).toBe('request-plan');
+    await openDialog(page, BUTTON.general);
+    expect(await focusedId(page)).toBe('request-name');
     expect(await page.evaluate(() => document.querySelector('#request-dialog').contains(document.activeElement))).toBe(true);
     await page.keyboard.press('Escape');
     await expect(page.locator(SEL.dialog)).toBeHidden();
@@ -657,7 +615,7 @@ test.describe('accessibility', () => {
     await openDialog(page);
     await expect(page.locator(SEL.dialog)).toHaveAttribute('aria-labelledby', 'request-title');
     await expect(page.locator(SEL.dialog)).toHaveAttribute('aria-describedby', 'request-intro');
-    for (const [id, name] of [['request-plan', 'Plan'], ['request-name', 'Nombre (obligatorio)'], ['request-business', 'Negocio (obligatorio)'],
+    for (const [id, name] of [['request-name', 'Nombre (obligatorio)'], ['request-business', 'Negocio (obligatorio)'],
       ['request-phone', 'Teléfono o WhatsApp'], ['request-email', 'Correo electrónico'], ['request-city', 'Ciudad'], ['request-message', 'Mensaje']]) {
       await expect(page.locator(`#${id}`), id).toHaveAccessibleName(name);
     }
@@ -687,9 +645,11 @@ test.describe('accessibility', () => {
       await page.locator(BUTTON.plan).focus();
       await page.keyboard.press('Enter');
       await expect(page.locator(SEL.dialog)).toBeVisible();
-      expect(await focusedId(page)).toBe('request-plan');
+      expect(await focusedId(page)).toBe('request-name');
       const visited = [];
-      const typed = { name: LEAD.name, business: LEAD.business, phone: LEAD.phone, email: LEAD.email, city: LEAD.city, message: LEAD.message };
+      // The form opens on the name field.
+      await page.keyboard.type(LEAD.name);
+      const typed = { business: LEAD.business, phone: LEAD.phone, email: LEAD.email, city: LEAD.city, message: LEAD.message };
       for (let i = 0; i < 14; i++) {
         await page.keyboard.press('Tab');
         const id = await focusedId(page);
@@ -700,13 +660,13 @@ test.describe('accessibility', () => {
         if (await page.evaluate(() => document.activeElement.matches('[data-request-submit]'))) break;
       }
       expect(visited).not.toContain('request-nickname');
-      expect(visited.filter((id) => id.startsWith('request-'))).toEqual(['request-name', 'request-business', 'request-phone', 'request-email', 'request-city', 'request-message', 'request-consent']);
+      expect(visited.filter((id) => id.startsWith('request-'))).toEqual(['request-business', 'request-phone', 'request-email', 'request-city', 'request-message', 'request-consent']);
       expect(await page.locator('#request-consent').isChecked()).toBe(true);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
       await page.keyboard.press('Enter');
       await expect(page.locator(SEL.success)).toBeVisible();
       expect(requests).toHaveLength(1);
-      expect(requests[0].body).toEqual({ packageCode: 'agenda', tierCode: 'crece', bundleCode: null, ...LEAD, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
+      expect(requests[0].body).toEqual({ ...GENERAL, ...LEAD, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
       await page.keyboard.press('Escape');
       await expect(page.locator(SEL.dialog)).toBeHidden();
       await expect(page.locator(BUTTON.plan)).toBeFocused();
@@ -751,13 +711,13 @@ test.describe('without JavaScript', () => {
     await context.route(`${REAL_API}/**`, (r) => r.abort());
     await open(page);
     const link = page.locator(BUTTON.plan);
-    await expect(link).toHaveAttribute('href', WA('Hola, quiero información del plan Agenda · Crece (gtl-ai.com)'));
+    await expect(link).toHaveAttribute('href', WA('Hola, quiero saber más sobre GTL AI (gtl-ai.com)'));
     await expect(link).toHaveAttribute('target', '_blank');
     expect(await link.getAttribute('aria-haspopup')).toBeNull();
     const [popup] = await Promise.all([context.waitForEvent('page'), link.click()]);
     await popup.waitForLoadState();
     expect(popup.url()).toBe(await link.getAttribute('href'));
-    expect(new URL(popup.url()).searchParams.get('text')).toBe('Hola, quiero información del plan Agenda · Crece (gtl-ai.com)');
+    expect(new URL(popup.url()).searchParams.get('text')).toBe('Hola, quiero saber más sobre GTL AI (gtl-ai.com)');
     await popup.close();
     await expect(page.locator(SEL.dialog)).toBeHidden();
     expect(await page.locator(SEL.dialog).getAttribute('open')).toBeNull();

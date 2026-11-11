@@ -15,9 +15,8 @@ mkdirSync(shotDir, { recursive: true });
 export const SECTIONS = {
   header: '.site-header',
   hero: '.hero',
-  about: '#about',
+  features: '#features',
   team: '#team',
-  future: '#future',
   footer: 'footer.site-footer',
 };
 

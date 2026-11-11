@@ -4,16 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Política de tratamiento de datos personales — GTL AI</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 {{header}}
 
-<main>
+<main lang="es-CO" data-i18n="off">
+  <p class="container legal-lang-note" lang="en" hidden data-lang-note>This policy is available in Spanish only.</p>
 
   <article class="legal" aria-labelledby="legal-title">
     <div class="container legal-inner">
@@ -84,5 +89,6 @@
 
 {{footer}}
 
+<script src="i18n.js" defer onerror="document.documentElement.classList.remove('i18n-pending')"></script>
 </body>
 </html>

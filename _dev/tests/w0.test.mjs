@@ -17,18 +17,18 @@ const index = LF(readFileSync(INDEX_PATH, 'utf8'));
 const privacy = LF(readFileSync(PRIVACY_PATH, 'utf8'));
 
 // The kickoff's "Founder lines" block, written out independently of site-config.json:
-// every founder is NONE, so no Background list appears.
+// every founder is NONE, so no Trayectoria (Background) list appears.
 const KICKOFF_FOUNDER_LINES = {
-  'Gary D. Mendez': [],
-  'Jesus David Garcia': [],
+  'Gary Mendez': [],
   'Daniel Rengifo': [],
+  'Jesus David Garcia, CFA': [],
   'David Andres Ramirez': [],
 };
 
 const cards = (html) => [...html.matchAll(/<article class="member-card">([\s\S]*?)<\/article>/g)].map((m) => m[1]);
 const nameOf = (card) => card.match(/<h3>([^<]*)<\/h3>/)[1];
 const backgroundOf = (card) => {
-  const block = card.match(/<h4>Background<\/h4>\s*<ul>([\s\S]*?)<\/ul>/);
+  const block = card.match(/<h4>Trayectoria<\/h4>\s*<ul>([\s\S]*?)<\/ul>/);
   return block ? [...block[1].matchAll(/<li>([^<]*)<\/li>/g)].map((m) => m[1]) : null;
 };
 const unescape = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
@@ -93,12 +93,9 @@ test('the link check reads single-quoted attributes too', () => {
   assert.ok(errors.some((e) => /file missing\.png does not exist/.test(e)));
 });
 
-test('the roadmap cards are information, not links', () => {
-  const future = index.match(/<section id="future"[\s\S]*?<\/section>/)[0];
-  assert.equal((future.match(/<article class="future-card">/g) || []).length, 3);
-  assert.doesNotMatch(future, /<a[\s>]/);
-  assert.doesNotMatch(future, /Explore the project/);
-  assert.equal((future.match(/<span class="future-tag future-tag--status">In exploration<\/span>/g) || []).length, 3);
+test('the roadmap became Quiero saber más, and no project pages are linked', () => {
+  assert.doesNotMatch(index, /<section id="future"/);
+  assert.match(index, /<section id="contact" class="contact"/);
   assert.doesNotMatch(index + privacy, /projects\//);
 });
 
@@ -108,14 +105,14 @@ test('no "Achievements" heading or list remains anywhere', () => {
   for (const [name, html] of [['index.html', index], ['privacidad.html', privacy]]) {
     assert.doesNotMatch(html, /Achievements/i, name);
   }
-  // Each founder card keeps name, role and Goals; the only other heading allowed is Background.
+  // Each founder card has its name, role and a short bio; the only heading allowed inside is Trayectoria (Background).
   const c = cards(index);
   assert.equal(c.length, 4);
   for (const card of c) {
     assert.match(card, /<p class="role">/);
-    assert.match(card, /<h4>Goals<\/h4>/);
+    assert.match(card, /<p class="member-bio">/);
     const headings = [...card.matchAll(/<h4>([^<]*)<\/h4>/g)].map((m) => m[1]);
-    assert.ok(headings.every((h) => h === 'Goals' || h === 'Background'), headings.join());
+    assert.ok(headings.every((h) => h === 'Trayectoria'), headings.join());
   }
 });
 
@@ -150,8 +147,8 @@ test('the build renders given lines exactly and escaped, only for that founder, 
 test('the config rejects more than three lines, empty lines and a founder without a card', () => {
   const bad = (founders) => validateConfig({ ...config, founders });
   assert.deepEqual(bad(KICKOFF_FOUNDER_LINES), []);
-  assert.ok(bad({ 'Gary D. Mendez': ['a', 'b', 'c', 'd'] }).some((e) => /founders\.Gary/.test(e)));
-  assert.ok(bad({ 'Gary D. Mendez': [''] }).some((e) => /founders\.Gary/.test(e)));
+  assert.ok(bad({ 'Gary Mendez': ['a', 'b', 'c', 'd'] }).some((e) => /founders\.Gary/.test(e)));
+  assert.ok(bad({ 'Gary Mendez': [''] }).some((e) => /founders\.Gary/.test(e)));
   assert.ok(bad(undefined).some((e) => /founders is required/.test(e)));
   assert.throws(() => applySiteConfig(index, { ...config, founders: { ...KICKOFF_FOUNDER_LINES, 'Someone Else': [] } }), /Someone Else/);
 });
@@ -161,7 +158,8 @@ test('the config rejects more than three lines, empty lines and a founder withou
 test('the title and meta description are the contract\'s', () => {
   assert.equal(index.match(/<title>([^<]*)<\/title>/g).length, 1);
   assert.equal(index.match(/<title>([^<]*)<\/title>/)[1],
-    'GTL AI | Páginas web con agenda, pedidos y reservas en línea en Colombia');
+    'GTL AI | Impulsando sueños');
+  assert.ok(index.includes('<link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png">'), 'the 夢 logo is the tab icon');
   const desc = index.match(/<meta name="description" content="([^"]*)">/g);
   assert.equal(desc.length, 1);
   assert.equal(unescape(desc[0].match(/content="([^"]*)"/)[1]),
@@ -169,15 +167,29 @@ test('the title and meta description are the contract\'s', () => {
   assert.ok(index.indexOf('<meta name="description"') < index.indexOf('</head>'));
 });
 
-test('the hero buttons go to #planes and #team', () => {
+test('the hero buttons go to #contact and #team (the plans section was retired)', () => {
   const actions = index.match(/<div class="hero-actions">([\s\S]*?)<\/div>/)[1];
   const links = [...actions.matchAll(/<a href="([^"]*)" class="([^"]*)">([^<]*)<\/a>/g)].map((m) => [m[1], m[2], unescape(m[3])]);
   assert.deepEqual(links, [
-    ['#planes', 'btn btn-primary', 'See plans & pricing'],
-    ['#team', 'btn btn-ghost', 'Meet the founders'],
+    ['#contact', 'btn btn-primary', 'Quiero saber más'],
+    ['#team', 'btn btn-ghost', 'Por qué nosotros'],
   ]);
-  assert.match(index, /<section id="planes"/);
+  assert.doesNotMatch(index, /<section id="planes"/);
+  assert.match(index, /<section id="contact"/);
   assert.match(index, /<section id="team"/);
+});
+
+test('Por qué nosotros: who we are, then the founders with their bios, roles and LinkedIn where given', () => {
+  const team = index.match(/<section id="team"[\s\S]*?<\/section>/)[0];
+  assert.match(team, /<h2 id="team-title">Por qué nosotros<\/h2>/);
+  assert.match(team, /ingenieros de software y contadores profesionales/);
+  assert.match(team, /precio asequible para pymes/);
+  assert.match(team, /su sueño y su negocio/);
+  assert.deepEqual(cards(index).map(nameOf), ['Gary Mendez', 'Daniel Rengifo', 'Jesus David Garcia, CFA', 'David Andres Ramirez']);
+  const roles = cards(index).map((c) => c.match(/<p class="role">([^<]*)<\/p>/)[1]);
+  assert.deepEqual(roles, ['Director ejecutivo (CEO)', 'Director de tecnología (CTO)', 'Director financiero (CFO)', 'Director de datos (CDO)']);
+  const links = cards(index).map((c) => (c.match(/<a class="member-link" href="([^"]*)" target="_blank" rel="noopener">/) || [])[1] || null);
+  assert.deepEqual(links, [null, 'https://www.linkedin.com/in/dfrengifo/', null, 'https://www.linkedin.com/in/david-andr%C3%A9s-ram%C3%ADrez-vanegas/']);
 });
 
 // ---------- the footer email ----------

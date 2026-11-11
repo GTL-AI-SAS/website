@@ -10,21 +10,28 @@ YUV 4:2:0 pixels and `+faststart`. Its normal clip has a 300 KB budget. Reduced-
 visitors see the still image without downloading the video. December selects a
 holiday clip and its matching still.
 
-The About animation loads its two native MP4 URLs only after interaction. Native
-URLs preserve Safari byte-range support; do not replace them with Blob URLs or
-wait for hidden videos to decode every frame before making the control usable.
-Both directions play forwards. Switching seeks to the matching normalized position.
+The About block and its Yume hover animation were replaced by the feature tour
+(`#features`, `showcase.js`). Its two clips and still are kept, unpublished, in
+`_dev/internal/retired-about/` on the machine that retired them, and in Git history.
 
-The 512 px, 25 fps About clips use H.264 baseline with `-g 1 -bf 0 -pix_fmt yuv420p`
-and `-movflags +faststart`. Independent frames cost more bytes than long GOP clips,
-but make the direction switches precise across engines. They are not part of the
-initial page transfer. Playback holds the final frame before end-of-stream.
-Their `?rev=` URLs use the first ten hex digits of each file's SHA-256; update
-them when re-encoding so visitors do not reuse an older cached clip.
+## Feature tour photos
 
-Run branding tests in Chromium, Firefox and WebKit. The delayed-load tests use a
-real HTTP server with range responses because native WebKit media requests can
-bypass Playwright route interception. The endpoint tests allow a rounded media
-clock to hold the outgoing frame, but must never allow a clip to restart.
-WebKit touch emulation covers the iPhone layout; it does not replace a physical
-iPhone check.
+The Alba screens in the feature tour and the customer stories use nine stock photos, cropped and saved as WebP in
+`assets/showcase/` (each under 40 KB; the asset audit checks they are referenced and small).
+All are from Unsplash under the [Unsplash License](https://unsplash.com/license), which
+allows commercial use without attribution; they are credited here anyway. Replace them
+with approved client material when it is available.
+
+| File | Shows | Photographer | Unsplash photo |
+| --- | --- | --- | --- |
+| `alba-runner.webp` | A runner at sunrise (landing and booking heroes) | Tikkho Maciel | `2-_WkjmC8x4` |
+| `alba-fisioterapia.webp` | Knee electrotherapy (Fisioterapia card) | Terry Shultz P.T. (@elektrikpm) | `EQ-53WaTNC4` |
+| `alba-masaje.webp` | A back massage (Masaje terapéutico card) | Ale Romo | `CLiwQXx7kT8` |
+| `alba-pilates.webp` | A reformer studio (Pilates clínico card) | Ahmet Kurt (@ahmetkurt) | `Dvoq367wWg8` |
+| `story-fisioterapia.webp` | The runner again, wide (Alba's story) | Tikkho Maciel | `2-_WkjmC8x4` |
+| `story-clinica.webp` | A dentist with a patient (Sonríe Dental's story) | Ozkan Guner | `rRgjO2Y1g1E` |
+| `story-barberia.webp` | A barber with a straight razor (El Bigote's story) | Agustin Fernandez | `1Pmp9uxK8X8` |
+| `story-tatuajes.webp` | A tattoo artist at work (Tinta Norte's story) | Bradley Andrews | `QPP5b_25Huk` |
+| `story-restaurante.webp` | Arepas on the grill (La Fonda de Rosita's story) | Leila Issa | `4C_k18o_tnk` |
+
+Run the branding test in Chromium, Firefox and WebKit.
