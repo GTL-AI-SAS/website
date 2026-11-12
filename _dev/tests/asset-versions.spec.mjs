@@ -19,6 +19,7 @@ const FORM = config.planRequestMode === 'form';
 const EXPECTED = {
   '/': ['style.css', 'showcase.js', ...(FORM ? ['site-config.js', 'plan-request.js'] : []), 'i18n.js'],
   '/privacidad.html': ['style.css', 'i18n.js'],
+  '/precios.html': ['style.css', ...(FORM ? ['site-config.js', 'plan-request.js'] : []), 'precios.js', 'i18n.js'],
 };
 
 test.describe('versioned asset URLs', () => {

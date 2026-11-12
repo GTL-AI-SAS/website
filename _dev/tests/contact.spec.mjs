@@ -31,16 +31,16 @@ test.describe('Quiero saber más', () => {
 
   test('the links carry the number and the address from the config', async ({ page }) => {
     await open(page);
-    expect(config.whatsappNumber).toBe('573192788238');
+    expect(config.whatsappNumber).toBe('573197810259');
     await expect(link(page, 'whatsapp')).toHaveAttribute('href', ES.whatsapp);
-    expect(ES.whatsapp).toContain('https://wa.me/573192788238?text=');
-    await expect(section(page).locator('[data-contact-text="whatsapp"]')).toHaveText('+57 319 278 8238');
-    await expect(link(page, 'mailto')).toHaveText('garydmendez@gtl-ai.com');
+    expect(ES.whatsapp).toContain('https://wa.me/573197810259?text=');
+    await expect(section(page).locator('[data-contact-text="whatsapp"]')).toHaveText('+57 319 781 0259');
+    await expect(link(page, 'mailto')).toHaveText('gtlai@gtl-ai.com');
     await expect(link(page, 'mailto')).toHaveAttribute('href', ES.mailto);
     await expect(link(page, 'gmail')).toHaveAttribute('href', ES.gmail);
     await expect(link(page, 'outlook')).toHaveAttribute('href', ES.outlook);
-    expect(ES.gmail).toContain('to=garydmendez%40gtl-ai.com');
-    expect(ES.outlook).toContain('to=garydmendez%40gtl-ai.com');
+    expect(ES.gmail).toContain('to=gtlai%40gtl-ai.com');
+    expect(ES.outlook).toContain('to=gtlai%40gtl-ai.com');
     for (const kind of ['whatsapp', 'gmail', 'outlook']) {
       await expect(link(page, kind)).toHaveAttribute('target', '_blank');
       await expect(link(page, kind)).toHaveAttribute('rel', 'noopener');

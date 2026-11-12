@@ -26,6 +26,9 @@ export const INDEX_PATH = join(here, '..', 'index.html');
 export const CONFIG_PATH = join(here, 'site-config.json');
 export const PRIVACY_TEMPLATE_PATH = join(here, 'templates', 'privacidad.html');
 export const PRIVACY_PATH = join(here, '..', 'privacidad.html');
+// The pricing page (precios.html), written from its template when the template is there.
+export const PRICES_TEMPLATE_PATH = join(here, 'templates', 'precios.html');
+export const PRICES_PATH = join(here, '..', 'precios.html');
 export const SITE_CONFIG_JS_PATH = join(here, '..', 'site-config.js');
 // The published site: both pages and every file they load sit at this root (PF3 hashes the files from here).
 export const SITE_ROOT = join(here, '..');
@@ -788,15 +791,49 @@ const footerOf = (htmlLF) => (htmlLF.match(/<footer [^>]*class="site-footer"[\s\
 
 // The site's header and footer, taken from index.html so they are never typed twice. On the
 // privacy page their in-page links point to index.html and the "Privacidad" link marks the current page.
-export function sharedChrome(indexLF) {
+export const PRICES_LINK = '<a href="precios.html">Precios</a>';
+export function sharedChrome(indexLF, page = 'privacidad.html') {
   const header = headerOf(indexLF);
   const footer = footerOf(indexLF);
   if (!header || !footer) throw new Error('index.html: site header or footer not found');
   const relink = (s) => s.replace(/href="#"/g, 'href="index.html"').replace(/href="#([^"]+)"/g, 'href="index.html#$1"');
+  const current = (s, link) => s.replace(link, link.replace('<a ', '<a aria-current="page" '));
   return {
-    header: relink(header),
-    footer: relink(footer).replace(FOOTER_LINK, FOOTER_LINK.replace('<a ', '<a aria-current="page" ')),
+    header: page === 'precios.html' ? current(relink(header), PRICES_LINK) : relink(header),
+    footer: page === 'privacidad.html' ? current(relink(footer), FOOTER_LINK) : relink(footer),
   };
+}
+
+// ---------- the pricing page ----------
+
+// The WhatsApp message behind each button of the pricing page, in Spanish (href) and English (data-en-href).
+// With the script the buttons open the request form instead, with the plan noted in the message.
+export const PRICES_MESSAGES = {
+  presencia: { es: `Hola, me interesa el plan Presencia ${SITE_TAG}`, en: `Hi, I'm interested in the Presence plan ${SITE_TAG}` },
+  agenda: { es: `Hola, me interesa el plan Agenda ${SITE_TAG}`, en: `Hi, I'm interested in the Calendar plan ${SITE_TAG}` },
+  gestion: { es: `Hola, me interesa el plan Gestión ${SITE_TAG}`, en: `Hi, I'm interested in the Management plan ${SITE_TAG}` },
+  completo: { es: `Hola, me interesa el plan Completo ${SITE_TAG}`, en: `Hi, I'm interested in the Complete plan ${SITE_TAG}` },
+  medida: { es: `Hola, quiero cotizar un plan a medida ${SITE_TAG}`, en: `Hi, I'd like a quote for a custom plan ${SITE_TAG}` },
+  demo: { es: `Hola, quiero agendar una demostración de GTL AI ${SITE_TAG}`, en: `Hi, I'd like to book a demo of GTL AI ${SITE_TAG}` },
+  chat: { es: `Hola, quiero saber más sobre GTL AI ${SITE_TAG}`, en: `Hi, I'd like to know more about GTL AI ${SITE_TAG}` },
+};
+
+// Fills the template: {{header}}, {{footer}}, {{requestDialog}} (the form, in form mode) and {{wa.<key>}}, which
+// becomes that button's href and data-en-href. An unknown key is an error.
+export function renderPrices(template, data, config, chrome) {
+  const html = toLF(template).replace(/\{\{([\w.]+)\}\}/g, (_, key) => {
+    if (key === 'header') return chrome.header;
+    if (key === 'footer') return chrome.footer;
+    if (key === 'requestDialog') return renderRequestBlock(data, config);
+    const wa = key.match(/^wa\.(\w+)$/);
+    if (wa && Object.hasOwn(PRICES_MESSAGES, wa[1])) {
+      const m = PRICES_MESSAGES[wa[1]];
+      return `href="${esc(whatsappLink(config, m.es))}" data-en-href="${esc(whatsappLink(config, m.en))}"`;
+    }
+    throw new Error(`precios template: unknown value {{${key}}}`);
+  });
+  if (/\{\{/.test(html)) throw new Error('precios template: unbalanced placeholder');
+  return html;
 }
 
 // Fills the template: {{key}} takes a value from the map (already HTML), and the
@@ -896,8 +933,14 @@ function main(argv) {
   const privacyRaw = existsSync(PRIVACY_PATH) ? readFileSync(PRIVACY_PATH, 'utf8') : null;
   const privacyCurrent = privacyRaw === null ? null : toLF(privacyRaw);
   const privacyRendered = renderPrivacy(readFileSync(PRIVACY_TEMPLATE_PATH, 'utf8'), config, sharedChrome(next));
+  // The pricing page: only where its template is (a scratch copy of the build without it skips the page).
+  const pricesOn = existsSync(PRICES_TEMPLATE_PATH);
+  const pricesRaw = pricesOn && existsSync(PRICES_PATH) ? readFileSync(PRICES_PATH, 'utf8') : null;
+  const pricesCurrent = pricesRaw === null ? null : toLF(pricesRaw);
   let privacyNext;
+  let pricesNext = null;
   try {
+    if (pricesOn) pricesNext = versionAssets(renderPrices(readFileSync(PRICES_TEMPLATE_PATH, 'utf8'), data, config, sharedChrome(next, 'precios.html')), versionOf);
     next = versionAssets(next, versionOf);
     privacyNext = versionAssets(privacyRendered, versionOf);
   } catch (e) {
@@ -911,6 +954,10 @@ function main(argv) {
     const privacyEol = privacyRaw && privacyRaw.includes('\r\n') ? '\r\n' : '\n';
     if (privacyNext !== privacyCurrent) writeFileSync(PRIVACY_PATH, privacyNext.replace(/\n/g, privacyEol));
     console.log(privacyNext === privacyCurrent ? 'privacidad.html already up to date.' : 'privacidad.html updated from its template, site-config.json and the asset versions.');
+    if (pricesOn) {
+      if (pricesNext !== pricesCurrent) writeFileSync(PRICES_PATH, pricesNext);
+      console.log(pricesNext === pricesCurrent ? 'precios.html already up to date.' : 'precios.html updated from its template, site-config.json and the asset versions.');
+    }
     if (siteConfigNext !== siteConfigCurrent) writeFileSync(SITE_CONFIG_JS_PATH, siteConfigBytes);
     console.log(siteConfigNext === siteConfigCurrent ? 'site-config.js already up to date.' : 'site-config.js updated from site-config.json.');
     return 0;
@@ -937,6 +984,15 @@ function main(argv) {
   }
   if (privacyCurrent !== null) {
     for (const p of assetVersionProblems(privacyCurrent, onDisk)) { console.error(`privacidad.html: ${p}`); failed = true; }
+  }
+  if (pricesOn) {
+    if (pricesCurrent === null) {
+      console.error('precios.html is missing. Run: npm --prefix _dev run pricing:build');
+      failed = true;
+    } else {
+      if (pricesNext !== pricesCurrent) { reportDiff('precios.html', pricesCurrent, pricesNext); failed = true; }
+      for (const p of assetVersionProblems(pricesCurrent, onDisk)) { console.error(`precios.html: ${p}`); failed = true; }
+    }
   }
   if (siteConfigCurrent === null) {
     console.error('site-config.js is missing. Run: npm --prefix _dev run pricing:build');

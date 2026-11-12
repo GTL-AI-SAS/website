@@ -94,7 +94,7 @@
     var endpoint = cfg.apiBaseUrl.replace(/\/+$/, '') + ENDPOINT;
     var timeoutMs = typeof cfg.requestTimeoutMs === 'number' && cfg.requestTimeoutMs > 0 ? cfg.requestTimeoutMs : DEFAULT_TIMEOUT_MS;
     // retry: the banner text of the last network/timeout/5xx failure while its key may still be replayed, else null.
-    var state = { opener: null, key: null, inFlight: false, locked: false, succeeded: false, retry: null };
+    var state = { opener: null, key: null, inFlight: false, locked: false, succeeded: false, retry: null, note: null };
 
     // ---------- the buttons ----------
 
@@ -133,9 +133,19 @@
       select.value = planValue(a);
       if (select.selectedIndex < 0) select.value = 'general';
       updateWhatsApp();
+      // A button may bring a note for the message (the plan asked about, on the pricing page). It fills an empty
+      // message or replaces the note of the button before, never what the visitor wrote; a new note is a change.
+      var note = a.getAttribute('data-message');
+      var message = el('message');
+      var noted = false;
+      if (note && message && message.value !== note && (!message.value || message.value === state.note)) {
+        message.value = note;
+        noted = true;
+      }
+      if (note) state.note = note;
       if (state.locked) {
         showBanner(POLICY_MISMATCH, false, false);
-      } else if (state.retry !== null && select.value === before) {
+      } else if (state.retry !== null && select.value === before && !noted) {
         // Reopened from the same plan with nothing changed after a network error, a timeout or a 5xx: the first
         // request may have been stored, so the key is kept (the API replays it) and the banner comes back (A2 §2).
         showBanner(state.retry, true, false);

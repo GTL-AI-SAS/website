@@ -96,11 +96,15 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+/* The header uses the full width of the window: the logo and the sections on the left, the language switch
+   and Contáctenos on the right. */
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  column-gap: clamp(20px, 3vw, 44px);
+  max-width: none;
   height: 72px;
+  padding-inline: clamp(16px, 2.5vw, 32px);
 }
 
 .logo {
@@ -125,6 +129,7 @@ a {
 
 .nav {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 32px;
   font-size: 0.95rem;
@@ -249,6 +254,7 @@ a {
    without JavaScript (Spanish only) it is not shown. */
 .lang-switch {
   position: relative;
+  margin-left: auto;
 }
 
 html:not(.js) .lang-switch {
@@ -5975,6 +5981,753 @@ html:not(.js) .falco-demo {
   }
 }
 
+/* Pricing page (precios.html): the tiers, what each plan brings, the add-ons, what comes with every plan,
+   the questions and a call to book a demo. Tiers sit four across, two on tablets and one on phones. */
+
+.pr-hero {
+  padding: clamp(40px, 6vw, 72px) 0 clamp(40px, 5vw, 64px);
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(50% 40% at 20% 0%, rgba(110, 231, 200, 0.1), transparent 70%),
+    radial-gradient(50% 40% at 85% 10%, rgba(122, 162, 255, 0.12), transparent 70%),
+    var(--bg);
+}
+
+.pr-hero-head {
+  max-width: 780px;
+  margin: 0 auto clamp(32px, 4vw, 48px);
+  text-align: center;
+}
+
+.pr-hero h1 {
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  text-wrap: balance;
+}
+
+.pr-hero .eyebrow {
+  margin-bottom: 10px;
+}
+
+.pr-hero-head .section-sub {
+  margin: 14px 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  text-wrap: pretty;
+}
+
+.pr-tiers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pr-tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--card);
+}
+
+.pr-tier--top {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 24px 50px -30px rgba(110, 231, 200, 0.55);
+}
+
+.pr-badge {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #06110d;
+  font: 700 0.7rem/1 var(--font-head);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pr-tier h2, .pr-custom h2 {
+  font-size: 1.3rem;
+}
+
+.pr-tagline {
+  min-height: 2.9em;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.pr-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+
+.pr-amount {
+  font: 700 clamp(1.6rem, 2.3vw, 2rem)/1.1 var(--font-head);
+  white-space: nowrap;
+}
+
+.pr-unit {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.pr-tier .btn, .pr-custom .btn {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pr-hero .btn:focus-visible, .pr-cta .btn:focus-visible, .price-strip .btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.pr-lead {
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pr-list {
+  display: grid;
+  gap: 9px;
+  list-style: none;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.pr-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 4px 8px;
+}
+
+.pr-list li > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.pr-list svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pr-list .feat-soon {
+  margin-left: 24px;
+}
+
+.pr-custom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-top: 16px;
+  padding: 22px 24px;
+  border: 1px dashed rgba(122, 162, 255, 0.6);
+  border-radius: 18px;
+  background: rgba(122, 162, 255, 0.07);
+}
+
+.pr-custom > div {
+  flex: 1 1 320px;
+}
+
+.pr-custom p:not(.pr-price) {
+  margin-top: 4px;
+  color: var(--text-dim);
+}
+
+.pr-notes {
+  display: grid;
+  gap: 6px;
+  margin-top: 26px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.pr-notes strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.pr-section {
+  padding: clamp(48px, 6vw, 80px) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-section--alt {
+  background: var(--bg-alt);
+}
+
+.pr-section h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  text-wrap: balance;
+}
+
+.pr-section .section-sub {
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+
+.pr-promises {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pr-addons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pr-addon, .pr-promise {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.pr-addon h3, .pr-promise h3 {
+  font-size: 1.12rem;
+}
+
+.pr-since {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.pr-addon p:not(.pr-price), .pr-promise p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.pr-addon .pr-price {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.pr-addon .pr-amount {
+  font-size: 1.4rem;
+}
+
+.pr-promises {
+  margin-top: clamp(20px, 3vw, 32px);
+}
+
+.pr-promise-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.pr-promise-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pr-faq {
+  max-width: 780px;
+  margin-top: clamp(16px, 2vw, 24px);
+  border-top: 1px solid var(--border);
+}
+
+.pr-q {
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-q summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding: 14px 4px;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.pr-q summary::-webkit-details-marker {
+  display: none;
+}
+
+.pr-q summary::after {
+  content: '';
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.pr-q[open] summary::after {
+  transform: rotate(-135deg);
+}
+
+.pr-q summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pr-q p {
+  padding: 0 4px 18px;
+  color: var(--text-dim);
+}
+
+.pr-cta {
+  border-bottom: 0;
+  background:
+    radial-gradient(50% 70% at 50% 100%, rgba(110, 231, 200, 0.1), transparent 70%),
+    var(--bg);
+  text-align: center;
+}
+
+.pr-cta .section-sub {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+.pr-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pr-cta .btn {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Pricing page, the features by category. Each category opens (one at a time, with the brand gradient round the
+   open one); inside, the functions are listed on the left and the one selected, by a click, by focus or by a mouse
+   passing over it, takes the gradient and shows its description and picture on the right. precios.js runs it;
+   without it (no JavaScript, or .no-precios when it fails) every function is listed with its description. */
+.pr-cats {
+  display: grid;
+  gap: 14px;
+}
+
+.pr-cat {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+}
+
+.pr-cat[open] {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(90deg, #6ee7c8, #7aa2ff 55%, #c4a6ff) border-box;
+}
+
+.pr-cat summary {
+  display: flex;
+  align-items: center;
+  gap: 8px 14px;
+  min-height: 68px;
+  padding: 16px 24px;
+  border-radius: 20px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.pr-cat summary::-webkit-details-marker {
+  display: none;
+}
+
+.pr-cat summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pr-cat-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  min-width: 0;
+}
+
+.pr-cat-title {
+  font: 600 clamp(1.1rem, 1.8vw, 1.35rem)/1.2 var(--font-head);
+}
+
+.pr-cat summary .pr-since {
+  margin: 0;
+  align-self: center;
+}
+
+.pr-cat-chevron {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s ease;
+}
+
+.pr-cat[open] .pr-cat-chevron {
+  transform: rotate(180deg);
+}
+
+.pr-cat-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px 32px;
+  padding: 4px 24px 24px;
+}
+
+.pr-fns {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pr-fn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 46px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  font: 500 1.02rem/1.3 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pr-fn:hover, .pr-fn.is-active {
+  background: rgba(242, 243, 245, 0.05);
+}
+
+.pr-fn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The selected function: its name in the gradient (every stop keeps 7:1 or more on the card). */
+.pr-fn.is-active .pr-fn-name {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .pr-fn.is-active .pr-fn-name {
+    background-image: linear-gradient(90deg, #6ee7c8, #7aa2ff 60%, #c4a6ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@media (forced-colors: active) {
+  .pr-fn.is-active .pr-fn-name {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    text-decoration: underline;
+  }
+}
+
+.pr-fn-panel {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pr-fn-panel[hidden],
+html.js:not(.no-precios) .pr-fn-panel:not(.is-active) {
+  display: none;
+}
+
+.pr-fn-panel h4 {
+  font-size: 1.12rem;
+}
+
+.pr-fn-panel p {
+  color: var(--text-dim);
+}
+
+/* Without the script: no list to pick from, every function with its text, and no pictures. */
+html:not(.js) .pr-fns, html.no-precios .pr-fns,
+html:not(.js) .pr-preview, html.no-precios .pr-preview {
+  display: none;
+}
+
+html:not(.js) .pr-cat-body, html.no-precios .pr-cat-body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+html:not(.js) .pr-fn-panels, html.no-precios .pr-fn-panels {
+  display: grid;
+  gap: 18px;
+}
+
+/* The pictures: the clinic's own screens in small, in its light palette and the device's font. */
+.pr-preview {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  margin-top: 8px;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: 16px;
+  background: #f4efe9;
+  color: #2a2850;
+  font: 400 14px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  text-align: left;
+}
+
+.pr-fn-panel.is-active .pv-card {
+  animation: pv-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pv-in {
+  from { transform: translateY(12px) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-fn-panel.is-active .pv-card {
+    animation: none;
+  }
+}
+
+.pr-preview i { font-style: normal; }
+.pr-preview b { font-weight: 600; }
+.pr-preview small { color: #5f5c77; font-size: 0.86em; }
+
+.pv-card {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 390px);
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 40px -22px rgba(42, 40, 80, 0.45);
+}
+
+.pv-head { padding-bottom: 8px; border-bottom: 1px solid #ebe6df; font-weight: 700; }
+.pv-foot { padding-top: 8px; border-top: 1px solid #ebe6df; color: #5f5c77; font-size: 0.86em; }
+.pv-row { display: flex; align-items: center; gap: 10px; }
+.pv-main { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.pv-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pv-av { display: grid; flex: none; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #dcd9f7; color: #3f37a6; font-size: 0.72em; font-weight: 700; }
+.pv-av--lg { width: 44px; height: 44px; font-size: 0.86em; }
+.pv-pill { flex: none; padding: 3px 9px; border-radius: 999px; font-size: 0.78em; font-weight: 600; white-space: nowrap; }
+.pv-pill--ok { background: #e1f0e7; color: #2f6b55; }
+.pv-pill--warn { background: #fbebc8; color: #7a5410; }
+.pv-pill--info { background: #ecebfb; color: #4b42b8; }
+.pv-bar { height: 6px; margin-top: 6px; overflow: hidden; border-radius: 999px; background: #ece8e2; }
+.pv-bar i { display: block; height: 100%; border-radius: inherit; background: #6157d6; }
+
+.pv-chat { display: grid; gap: 8px; }
+.pv-msg { max-width: 86%; padding: 8px 11px; border-radius: 14px; font-size: 0.92em; }
+.pv-msg--in { justify-self: start; border-bottom-left-radius: 4px; background: #f1ede7; }
+.pv-msg--out { justify-self: end; border-bottom-right-radius: 4px; background: #e5e2fb; }
+
+.pv-page { gap: 0; padding: 0; overflow: hidden; }
+.pv-chrome { display: flex; align-items: center; gap: 5px; padding: 8px 10px; background: #efeae3; }
+.pv-chrome i { width: 8px; height: 8px; border-radius: 50%; background: #ec6a5e; }
+.pv-chrome i:nth-child(2) { background: #f4bf4f; }
+.pv-chrome i:nth-child(3) { background: #61c554; }
+.pv-chrome span { margin: 0 auto; padding: 2px 14px; border-radius: 999px; background: #fff; color: #5f5c77; font-size: 0.8em; }
+.pv-hero { display: grid; gap: 6px; padding: 22px 18px; background: linear-gradient(160deg, #fdf3ea, #f8e9ee 55%, #ebe8fb); }
+.pv-hero small { color: #a23f2a; font-size: 0.68em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.pv-hero b { font: 400 1.7em/1.05 Georgia, 'Times New Roman', serif; }
+.pv-cta { justify-self: start; padding: 7px 13px; border-radius: 8px; background: #b9503a; color: #fff; font-size: 0.86em; font-weight: 600; }
+.pv-cta--block { justify-self: stretch; background: #6157d6; text-align: center; }
+.pv-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px; }
+.pv-tiles span { padding: 10px 6px; border-radius: 8px; background: #f6f3ef; font-size: 0.8em; font-weight: 600; text-align: center; }
+
+.pv-search { padding: 8px 14px; border: 1px solid #dcd6ce; border-radius: 999px; }
+.pv-result { display: flex; align-items: flex-start; gap: 10px; padding: 9px; border-radius: 10px; }
+.pv-result--top { background: #e1f0e7; }
+.pv-rank { display: grid; flex: none; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #2f6b55; color: #fff; font-size: 0.8em; }
+.pv-rank--dim { background: #ebe6df; color: #5f5c77; }
+
+.pv-map { position: relative; height: 72px; border-radius: 10px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 2px, transparent 2px) 0 0 / 34px 100%, linear-gradient(rgba(255, 255, 255, 0.7) 2px, transparent 2px) 0 0 / 100% 24px, #d7e8dc; }
+.pv-pin { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px; border: 3px solid #fff; border-radius: 50%; background: #d9674f; }
+.pv-stars { display: inline-flex; gap: 1px; vertical-align: -2px; }
+.pv-star { width: 13px; height: 13px; fill: #e0a93b; }
+.pv-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pv-chips span { padding: 5px 11px; border: 1px solid #dcd6ce; border-radius: 999px; font-size: 0.84em; font-weight: 600; }
+.pv-chips .is-on { border-color: #6157d6; background: #ecebfb; color: #4b42b8; }
+
+.pv-cal { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pv-cal > div { display: grid; gap: 6px; }
+.pv-cal > div > small { font-weight: 600; text-align: center; }
+.pv-ev { display: flex; flex-direction: column; padding: 7px 9px; border-left: 3px solid; border-radius: 6px; font-size: 0.86em; }
+.pv-ev b { color: #4a4766; font-size: 0.72em; letter-spacing: 0.05em; text-transform: uppercase; }
+.pv-ev--a { border-color: #d9674f; background: #fbe0d8; }
+.pv-ev--b { border-color: #3f8f72; background: #ddeee4; }
+.pv-ev--c { border-color: #4a8fd1; background: #dceaf7; }
+.pv-ev--d { border-color: #e0a93b; background: #fcebc7; }
+
+.pv-steps { display: flex; gap: 6px; }
+.pv-steps span { flex: 1; padding-top: 6px; border-top: 3px solid #ece8e2; color: #5f5c77; font-size: 0.74em; font-weight: 600; }
+.pv-steps .is-on { border-color: #6157d6; color: #2a2850; }
+.pv-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.pv-slots span { padding: 7px 0; border: 1px solid #dcd6ce; border-radius: 8px; font-size: 0.88em; font-weight: 600; text-align: center; }
+.pv-slots .is-on { border-color: #6157d6; background: #6157d6; color: #fff; }
+.pv-total { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #ebe6df; font-size: 1.05em; font-weight: 700; }
+
+.pv-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pv-kpis span { display: flex; flex-direction: column; padding: 8px; border: 1px solid #ebe6df; border-radius: 8px; }
+.pv-kpis b { font-size: 0.95em; white-space: nowrap; }
+.pv-kpis--big b { font-size: 1.25em; }
+.pv-kpis em { color: #2f6b55; font-size: 0.78em; font-style: normal; font-weight: 600; }
+.pv-bars { display: grid; grid-template-columns: repeat(6, 1fr); align-items: end; height: 90px; border-bottom: 1px solid #d3ccc2; }
+.pv-bars span { display: flex; align-items: flex-end; justify-content: center; gap: 2px; height: 100%; }
+.pv-bars i { width: 10px; border-radius: 3px 3px 0 0; background: #6157d6; }
+.pv-bars .pv-out { background: #d9674f; }
+.pv-axis { display: grid; grid-template-columns: repeat(6, 1fr); color: #5f5c77; font-size: 0.74em; text-align: center; }
+.pv-spark { width: 100%; height: 50px; fill: none; stroke: #2f8f6a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.pv-spark path { vector-effect: non-scaling-stroke; }
+
+.pv-review { display: grid; gap: 3px; padding: 10px; border-radius: 10px; background: #f6f3ef; }
+.pv-review b { font-weight: 500; }
+.pv-track { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.pv-track span { padding-top: 8px; border-top: 4px solid #ece8e2; color: #5f5c77; font-size: 0.72em; font-weight: 600; }
+.pv-track .is-done { border-color: #3f8f72; color: #2f6b55; }
+.pv-track .is-on { border-color: #6157d6; color: #4b42b8; }
+.pv-hbar { display: grid; grid-template-columns: 6em minmax(0, 1fr) 3em; align-items: center; gap: 8px; font-size: 0.9em; }
+.pv-hbar i { display: block; height: 12px; border-radius: 0 4px 4px 0; background: #d9674f; }
+.pv-hbar b { text-align: right; }
+
+/* Tablets and phones: the functions become a row of buttons above the description and the picture. */
+@media (max-width: 800px) {
+  .pr-cat summary {
+    padding: 14px 16px;
+  }
+  .pr-cat-body {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 4px 16px 18px;
+  }
+  .pr-fns {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pr-fn {
+    min-height: 42px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.92rem;
+  }
+  .pr-fn.is-active {
+    border-color: rgba(110, 231, 200, 0.6);
+  }
+  .pr-preview {
+    min-height: 0;
+    font-size: 13px;
+  }
+}
+
+/* On the home page: one line of pricing before the contact options. */
+.price-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: clamp(32px, 4vw, 48px);
+  padding: 16px 22px;
+  border: 1px solid rgba(110, 231, 200, 0.3);
+  border-radius: 16px;
+  background: var(--accent-dim);
+}
+
+.price-strip p {
+  color: var(--text-dim);
+}
+
+.price-strip strong {
+  color: var(--text);
+}
+
+.price-strip .btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 1099px) {
+  .pr-tiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+  .pr-tagline {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .pr-promises {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .pr-tiers, .pr-promises, .pr-addons {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pr-custom .btn, .pr-cta .btn, .price-strip .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Shared helpers (they lived with the plans section, which was retired). */
 
 .visually-hidden {
@@ -5996,7 +6749,7 @@ html:not(.js) .falco-demo {
 /* Header at phone widths (PF1, JD 2026-10-13; the language switch moved the breakpoints below): tighten the nav below 400 px. */
 
 /* What the header keeps as it narrows: tighter links below 900 px; Historias goes below 820 px, Nosotros below
-   520 px, Funciones below 460 px and Falco below 340 px. The language switch and Contáctenos always stay. */
+   700 px, Funciones below 460 px and Falco below 375 px. Precios, the language switch and Contáctenos always stay. */
 @media (min-width: 641px) and (max-width: 900px) {
   .nav {
     gap: 18px;
@@ -6013,7 +6766,7 @@ html:not(.js) .falco-demo {
   }
 }
 
-@media (max-width: 519px) {
+@media (max-width: 699px) {
   .nav a[href$="#team"] {
     display: none;
   }
@@ -6025,9 +6778,19 @@ html:not(.js) .falco-demo {
   }
 }
 
-@media (max-width: 339px) {
+@media (max-width: 374px) {
   .nav a[href$="#falco"] {
     display: none;
+  }
+}
+
+/* The narrowest phones: a little less air, so Precios still fits beside the switch and Contáctenos. */
+@media (max-width: 339px) {
+  .header-inner {
+    padding-inline: 10px;
+  }
+  .nav {
+    gap: 5px;
   }
 }
 

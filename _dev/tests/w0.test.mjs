@@ -198,7 +198,7 @@ const footerLink = (html) => html.match(/<a href="mailto:([^"]*)" class="footer-
 
 test('the footer carries contactEmail from the config (index and privacy page); PENDIENTE would keep the old address', () => {
   // PQ1 set the address; the pre-PQ1 one must be gone from both pages.
-  assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
+  assert.equal(config.contactEmail, 'gtlai@gtl-ai.com');
   assert.equal(footerEmail(config), config.contactEmail);
   assert.deepEqual(footerLink(index), [config.contactEmail, config.contactEmail]);
   assert.deepEqual(footerLink(privacy), [config.contactEmail, config.contactEmail]);

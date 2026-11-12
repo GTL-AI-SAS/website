@@ -11,18 +11,18 @@ async function open(page, width = 1440, url = '/') {
 }
 
 test.describe('page layout', () => {
-  test('the sections come in order, there are no plans or prices, and the header links reach their sections', async ({ page }) => {
+  test('the sections come in order, the plans live on their own page, and the header links reach their sections', async ({ page }) => {
     await open(page);
     expect(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id || s.className)))
       .toEqual(['hero', 'features', 'clients', 'stories', 'falco', 'team', 'contact']);
     await expect(page.locator('#planes')).toHaveCount(0);
     await expect(page.locator('a[href$="#planes"]')).toHaveCount(0);
-    // No plan prices: the only amounts left are inside the example clinic's screens and websites.
-    await expect(page.locator('.pricing, .tier-card, .price-amount')).toHaveCount(0);
+    // The plans are on precios.html; the home page only has one line that points there.
+    await expect(page.locator('.pricing, .tier-card, .price-amount, .pr-tier')).toHaveCount(0);
     await expect(page.getByText('Planes y precios')).toHaveCount(0);
-    await expect(page.getByText('+ IVA')).toHaveCount(0);
+    await expect(page.locator('.price-strip a')).toHaveAttribute('href', 'precios.html');
     const nav = await page.locator('.nav a').allInnerTexts();
-    expect(nav.map((t) => t.trim())).toEqual(['Funciones', 'Historias de clientes', 'Falco · Recepcionista IA', 'Nosotros', 'Contáctenos']);
+    expect(nav.map((t) => t.trim())).toEqual(['Funciones', 'Historias de clientes', 'Falco · Recepcionista IA', 'Precios', 'Nosotros', 'Contáctenos']);
     for (const [href, target] of [['#features', '#features'], ['#stories', '#stories-title'], ['#falco', '#falco-title'], ['#team', '#team-title'], ['#contact', '#contact-title']]) {
       await page.locator(`.nav a[href="${href}"]`).click();
       await expect(page).toHaveURL(new RegExp(`${href}$`));
@@ -35,12 +35,12 @@ test.describe('page layout', () => {
       await open(page, width, url);
       return (await page.locator('.nav a').evaluateAll((els) => els.filter((a) => a.offsetParent).map((a) => a.innerText.trim())));
     };
-    expect(await shown(1099)).toEqual(['Funciones', 'Historias', 'Falco IA', 'Nosotros', 'Contáctenos']);
-    expect(await shown(800)).toEqual(['Funciones', 'Falco IA', 'Nosotros', 'Contáctenos']);
-    expect(await shown(500)).toEqual(['Funciones', 'Falco IA', 'Contáctenos']);
-    expect(await shown(390)).toEqual(['Falco IA', 'Contáctenos']);
-    expect(await shown(320)).toEqual(['Contáctenos']);
-    expect(await shown(1440, '/?lang=en')).toEqual(['Features', 'Customer stories', 'Falco · AI Receptionist', 'About us', 'Get in Touch']);
+    expect(await shown(1099)).toEqual(['Funciones', 'Historias', 'Falco IA', 'Precios', 'Nosotros', 'Contáctenos']);
+    expect(await shown(800)).toEqual(['Funciones', 'Falco IA', 'Precios', 'Nosotros', 'Contáctenos']);
+    expect(await shown(500)).toEqual(['Funciones', 'Falco IA', 'Precios', 'Contáctenos']);
+    expect(await shown(390)).toEqual(['Falco IA', 'Precios', 'Contáctenos']);
+    expect(await shown(320)).toEqual(['Precios', 'Contáctenos']);
+    expect(await shown(1440, '/?lang=en')).toEqual(['Features', 'Customer stories', 'Falco · AI Receptionist', 'Pricing', 'About us', 'Get in Touch']);
     const falco = page.locator('.nav .nav-falco');
     expect(await falco.evaluate((el) => getComputedStyle(el).animationName)).toBe('dream-flow');
     expect(await falco.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('linear-gradient');
@@ -77,6 +77,27 @@ test.describe('page layout', () => {
     await expect(story.locator('[data-logo-replay]')).toHaveText('Play animation');
     await expect(story.locator('.logo-story-text')).toContainText('We take care of the technical, financial and operational side');
     expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+  });
+
+  test('the header spans the window: logo and sections on the left, language and Contáctenos on the right', async ({ page }) => {
+    for (const width of [1440, 1920, 390]) {
+      await open(page, width);
+      const box = (sel) => page.locator(sel).first().evaluate((el) => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, mid: r.top + r.height / 2 }; });
+      const logo = await box('.site-header .logo');
+      const link = await box('.site-header .nav a:not(.nav-cta) >> visible=true');
+      const lang = await box('.site-header .lang-switch');
+      const cta = await box('.site-header .nav-cta');
+      expect(logo.left, `${width}`).toBeLessThanOrEqual(33);
+      expect(width - cta.right, `${width}`).toBeLessThanOrEqual(33);
+      // The sections follow the logo; the switch sits just before Contáctenos, with free space between the two groups.
+      expect(link.left - logo.right, `${width}`).toBeLessThanOrEqual(48);
+      expect(cta.left - lang.right, `${width}`).toBeLessThanOrEqual(34);
+      expect(lang.left, `${width}`).toBeGreaterThan(link.right);
+      for (const b of [link, lang, cta]) expect(Math.abs(b.mid - logo.mid), `${width}`).toBeLessThan(4);
+    }
+    // The same header on the other pages.
+    await open(page, 1440, '/precios');
+    expect(await page.locator('.site-header .nav-cta').evaluate((el) => window.innerWidth - el.getBoundingClientRect().right)).toBeLessThanOrEqual(33);
   });
 
   test('the hero buttons lead to Quiero saber más and Por qué nosotros', async ({ page }) => {

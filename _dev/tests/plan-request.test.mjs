@@ -178,8 +178,8 @@ test('the committed config is valid and holds JD\'s PQ1 inputs, the Pass B go-li
   assert.deepEqual(validateConfig(config), []);
   assert.equal(config.planRequestMode, 'form');
   assert.equal(config.apiBaseUrl, 'https://api.gtl-ai.com');
-  assert.equal(config.whatsappNumber, '573192788238');
-  assert.equal(config.contactEmail, 'garydmendez@gtl-ai.com');
+  assert.equal(config.whatsappNumber, '573197810259');
+  assert.equal(config.contactEmail, 'gtlai@gtl-ai.com');
   assert.equal(config.controller.name, 'GTL AI S.A.S');
   assert.equal(config.controller.nit, '902.117.320-8');
   assert.equal(config.controller.city, 'Bogotá D.C.');
@@ -187,7 +187,7 @@ test('the committed config is valid and holds JD\'s PQ1 inputs, the Pass B go-li
   assert.equal(config.privacyPolicyVersion, '1.2');
   assert.equal(config.privacyPolicyDate, '2026-10-30');
   assert.equal(formatDateEs(config.privacyPolicyDate), '30 de octubre de 2026');
-  assert.equal(formatWhatsApp(config.whatsappNumber), '+57 319 278 8238');
+  assert.equal(formatWhatsApp(config.whatsappNumber), '+57 319 781 0259');
   assert.deepEqual(validateConfig(TEST_CONFIG), []);
   assert.deepEqual(validateConfig(PENDING_CONFIG), []);
   assert.deepEqual(validateConfig(FORM_CONFIG), []);
