@@ -10,8 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
-<link rel="stylesheet" href="style.css?v=f2d88ab25e">
+<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'||l==='fr'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
+<link rel="stylesheet" href="style.css?v=009c3d6fd6">
 </head>
 <body>
 
@@ -25,10 +25,11 @@
       <a href="precios.html">Precios</a>
       <a href="index.html#team">Nosotros</a>
       <div class="lang-switch" data-lang-switch data-i18n="off">
-        <button type="button" class="lang-current" aria-expanded="false" aria-controls="lang-menu" data-lang-current><span class="lang-is lang-is-es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><span>ES</span></span><span class="lang-is lang-is-en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><span>ENG</span></span><svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m3 4.5 3 3 3-3"/></svg></button>
+        <button type="button" class="lang-current" aria-expanded="false" aria-controls="lang-menu" data-lang-current><span class="lang-is lang-is-es"><img class="lang-flag" src="assets/flags/co.svg" alt="" width="20" height="14"><span>ES</span></span><span class="lang-is lang-is-en"><img class="lang-flag" src="assets/flags/us.svg" alt="" width="20" height="14" loading="lazy"><span>ENG</span></span><span class="lang-is lang-is-fr"><img class="lang-flag" src="assets/flags/fr.svg" alt="" width="20" height="14" loading="lazy"><span>FRA</span></span><svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m3 4.5 3 3 3-3"/></svg></button>
         <ul class="lang-menu" id="lang-menu" hidden>
-          <li><button type="button" lang="es" data-lang="es"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg><b>ES</b><span>Español</span></button></li>
-          <li><button type="button" lang="en" data-lang="en"><svg class="lang-flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg><b>ENG</b><span>English</span></button></li>
+          <li><button type="button" lang="es" data-lang="es"><img class="lang-flag" src="assets/flags/co.svg" alt="" width="20" height="14" loading="lazy"><b aria-hidden="true">ES</b><span>Español</span></button></li>
+          <li><button type="button" lang="en" data-lang="en"><img class="lang-flag" src="assets/flags/us.svg" alt="" width="20" height="14" loading="lazy"><b aria-hidden="true">ENG</b><span>English</span></button></li>
+          <li><button type="button" lang="fr" data-lang="fr"><img class="lang-flag" src="assets/flags/fr.svg" alt="" width="20" height="14" loading="lazy"><b aria-hidden="true">FRA</b><span>Français</span></button></li>
         </ul>
       </div>
       <a href="index.html#contact" class="nav-cta">Contáctenos</a>
@@ -36,8 +37,9 @@
   </div>
 </header>
 
-<main lang="es-CO" data-i18n="off">
-  <p class="container legal-lang-note" lang="en" hidden data-lang-note>This policy is available in Spanish only.</p>
+<main lang="es-CO">
+  <p class="container legal-lang-note" lang="en" hidden data-lang-note="en" data-i18n="off">This is a translation. The Spanish version of this policy is the one that applies.</p>
+  <p class="container legal-lang-note" lang="fr" hidden data-lang-note="fr" data-i18n="off">Ceci est une traduction. Seule la version en espagnol de cette politique fait foi.</p>
 
   <article class="legal" aria-labelledby="legal-title">
     <div class="container legal-inner">
@@ -111,10 +113,12 @@
     <div class="logo"><img class="logo-symbol" src="assets/branding/gtl-ai-sticker-1-yume.png" alt="" width="40" height="40" loading="lazy">GTL<span>AI</span></div>
     <a href="mailto:gtlai@gtl-ai.com" class="footer-email">gtlai@gtl-ai.com</a>
     <a aria-current="page" href="privacidad.html" class="footer-privacy" lang="es-CO">Privacidad</a>
+    <a href="https://www.instagram.com/gtl_ai_/" class="footer-social" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg><span class="visually-hidden">Instagram de GTL AI</span> <span class="visually-hidden">(abre en una pestaña nueva)</span></a>
     <p>&copy; 2026 GTL AI. Todos los derechos reservados.</p>
+    <p class="footer-company" data-i18n="off"><span>GTL AI S.A.S</span> <span class="nowrap">NIT 902.117.320-8</span> <span>Cra. 47 #104B-15, Bogotá, Colombia</span></p>
   </div>
 </footer>
 
-<script src="i18n.js?v=1caef63b99" defer onerror="document.documentElement.classList.remove('i18n-pending')"></script>
+<script src="i18n.js?v=d1fd04de3b" defer onerror="document.documentElement.classList.remove('i18n-pending')"></script>
 </body>
 </html>

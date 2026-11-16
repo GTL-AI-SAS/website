@@ -7,6 +7,7 @@ import { loadConfig, contactLinks } from '../build-pricing.mjs';
 const config = loadConfig();
 const ES = contactLinks(config, 'es');
 const EN = contactLinks(config, 'en');
+const FR = contactLinks(config, 'fr');
 
 async function open(page, url = '/', width = 1440) {
   await page.setViewportSize({ width, height: 900 });
@@ -67,6 +68,15 @@ test.describe('Quiero saber más', () => {
     await expect(link(page, 'whatsapp')).toContainText('Open WhatsApp');
     for (const kind of Object.keys(EN)) await expect(link(page, kind), kind).toHaveAttribute('href', EN[kind]);
     expect(EN.whatsapp).toContain('Hi%2C%20I');
+    // And in French (BF-W1).
+    await page.locator('[data-lang-current]').click();
+    await page.locator('.lang-menu [data-lang="fr"]').click();
+    await expect(section(page).locator('h2')).toHaveText('Je veux en savoir plus');
+    await expect(link(page, 'request')).toContainText('Parler avec nous');
+    await expect(link(page, 'whatsapp')).toContainText('Ouvrir WhatsApp');
+    for (const kind of Object.keys(FR)) await expect(link(page, kind), kind).toHaveAttribute('href', FR[kind]);
+    expect(FR.whatsapp).toContain('Bonjour%2C%20je%20souhaite');
+    expect(decodeURIComponent(FR.gmail + FR.outlook)).toContain('Je souhaite en savoir plus sur GTL AI');
     await page.locator('[data-lang-current]').click();
     await page.locator('.lang-menu [data-lang="es"]').click();
     for (const kind of Object.keys(ES)) await expect(link(page, kind), kind).toHaveAttribute('href', ES[kind]);
@@ -74,7 +84,7 @@ test.describe('Quiero saber más', () => {
 
   for (const width of [320, 360, 390, 768]) {
     test(`on a ${width} px screen the cards stack, the buttons are easy to tap and nothing scrolls sideways`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, url, width);
         await section(page).scrollIntoViewIfNeeded();
         expect(await page.evaluate(() => document.documentElement.scrollWidth), url).toBeLessThanOrEqual(width);
@@ -95,8 +105,8 @@ test.describe('Quiero saber más', () => {
     expect(new Set(tops).size).toBe(1);
   });
 
-  test('axe finds no serious or critical violations in the section, in both languages', async ({ page }) => {
-    for (const url of ['/?lang=es', '/?lang=en']) {
+  test('axe finds no serious or critical violations in the section, in every language', async ({ page }) => {
+    for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
       await open(page, url);
       const r = await new AxeBuilder({ page }).include('#contact').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact));

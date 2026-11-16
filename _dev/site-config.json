@@ -9,7 +9,22 @@
     "name": "GTL AI S.A.S",
     "nit": "902.117.320-8",
     "city": "Bogotá D.C.",
-    "address": "Carrera 47 # 104B-15"
+    "address": "Carrera 47 # 104B-15",
+    "footerAddress": "Cra. 47 #104B-15, Bogotá, Colombia"
+  },
+  "instagramUrl": "https://www.instagram.com/gtl_ai_/",
+  "launch": {
+    "enabled": false,
+    "liveFrom": "2026-11-27T00:00:00-05:00",
+    "demos": [
+      { "name": "Fisioterapia deportiva", "description": "Para centros de fisioterapia y rehabilitación deportiva.", "url": "https://demo-fisio-deportiva.gtl-ai.com" },
+      { "name": "Fisioterapia", "description": "Para consultorios de fisioterapia.", "url": "https://demo-fisio-general.gtl-ai.com" },
+      { "name": "Odontología", "description": "Para consultorios y clínicas odontológicas.", "url": "https://demo-odontologia.gtl-ai.com" },
+      { "name": "Estética", "description": "Para centros de estética.", "url": "https://demo-estetica.gtl-ai.com" },
+      { "name": "Nutrición", "description": "Para consultorios de nutrición.", "url": "https://demo-nutricion.gtl-ai.com" },
+      { "name": "Psicología", "description": "Para consultorios de psicología.", "url": "https://demo-psicologia.gtl-ai.com" },
+      { "name": "Veterinaria", "description": "Para clínicas y consultorios veterinarios.", "url": "https://demo-veterinaria.gtl-ai.com" }
+    ]
   },
   "apiBaseUrl": "https://api.gtl-ai.com",
   "founders": {

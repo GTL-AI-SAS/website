@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { waitForFonts } from './helpers.mjs';
+import { SECTIONS, waitForFonts } from './helpers.mjs';
 
 // Clients (#clients): two rows of logos drifting in opposite directions, between the feature tour and the plans.
 // The logos are placeholders (fictional businesses) until real client logos are approved.
@@ -21,7 +21,7 @@ test.describe('clients', () => {
   test('sits right after the feature tour, with its claim and line', async ({ page }) => {
     await open(page);
     expect(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id || s.className)))
-      .toEqual(['hero', 'features', 'clients', 'stories', 'falco', 'team', 'contact']);
+      .toEqual(SECTIONS);
     await expect(section(page).locator('h2')).toHaveText('Clientes reales creando su sueño con nosotros');
     await expect(section(page).locator('.clients-note')).toHaveText('Una pequeña inversión con retorno inmediato en más clientes y mejor gestión.');
   });
@@ -71,11 +71,28 @@ test.describe('clients', () => {
     await expect(section(page).locator('[data-clients-toggle]')).toHaveText('Pause logos');
     await expect(section(page).locator('.cl-fonda').first()).toContainText('la fonda de');
     expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+    // The note that the businesses are made up is for French only (BF-W1, decision 1).
+    await expect(section(page).locator('.example-note')).toBeHidden();
+  });
+
+  test('in French the logos are illustrative examples: no "real clients" and a visible note that the businesses are made up', async ({ page }) => {
+    await open(page, '/?lang=fr');
+    await expect(section(page).locator('h2')).toHaveText('Exemples illustratifs : des entreprises qui construisent leur rêve');
+    await expect(section(page).locator('h2')).not.toContainText(/r[ée]el|vrais|clients/i);
+    await expect(section(page).locator('.example-note')).toBeVisible();
+    await expect(section(page).locator('.example-note')).toHaveText('Exemples illustratifs : ces entreprises sont fictives.');
+    await expect(section(page).locator('.clients-note')).toHaveText('Un petit investissement au retour immédiat : plus de clients et une meilleure gestion.');
+    await expect(section(page).locator('[data-clients-toggle]')).toHaveText('Mettre les logos en pause');
+    expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+    // In Spanish the section is as it was.
+    await page.goto('/?lang=es');
+    await expect(section(page).locator('h2')).toHaveText('Clientes reales creando su sueño con nosotros');
+    await expect(section(page).locator('.example-note')).toBeHidden();
   });
 
   for (const width of [320, 360, 390, 768, 1024, 1440]) {
-    test(`at ${width} px nothing scrolls sideways and every logo fits its tile, in both languages`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+    test(`at ${width} px nothing scrolls sideways and every logo fits its tile, in every language`, async ({ page }) => {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, url, width);
         await section(page).scrollIntoViewIfNeeded();
         expect(await page.evaluate(() => document.documentElement.scrollWidth), url).toBeLessThanOrEqual(width);
@@ -88,8 +105,8 @@ test.describe('clients', () => {
     });
   }
 
-  test('axe finds no serious or critical violations in the section, in both languages', async ({ page }) => {
-    for (const url of ['/?lang=es', '/?lang=en']) {
+  test('axe finds no serious or critical violations in the section, in every language', async ({ page }) => {
+    for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
       await open(page, url);
       const r = await new AxeBuilder({ page }).include('#clients').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact));

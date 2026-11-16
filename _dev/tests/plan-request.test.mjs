@@ -138,14 +138,17 @@ test('messages follow the data: renamed package, tier and bundle in a fixture', 
 // Quiero saber más adds four on the page: the form button, WhatsApp, Gmail and Outlook.
 const NEW_TAB_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT}</span>`;
 const GENERIC_SPAN = `<span class="visually-hidden">${NEW_TAB_TEXT_GENERIC}</span>`;
-// Links to other sites that open a new tab: the privacy link in the form, Gmail, Outlook and the founders' LinkedIn.
-const GENERIC_LINK = /href="privacidad\.html"|data-contact="(gmail|outlook)"|class="member-link"/;
+// Links to other sites that open a new tab: the privacy link in the form, Gmail, Outlook, the founders' LinkedIn,
+// the footer's Instagram (BF-W1), which every page carries, and with release 2 the demos' links.
+const GENERIC_LINK = /href="privacidad\.html"|data-contact="(gmail|outlook)"|class="member-link"|class="footer-social"|class="btn btn-ghost demo-link"/;
+// Release 2 (launch.enabled in the config) adds one "Ver demo" link per demo to the home page.
+const DEMO_LINKS = config.launch.enabled ? config.launch.demos.length : 0;
 test('every target="_blank" link carries the hidden new-tab notice', () => {
   assert.equal(NEW_TAB_TEXT, '(abre WhatsApp en una pestaña nueva)');
   assert.equal(NEW_TAB_TEXT_GENERIC, '(abre en una pestaña nueva)');
   for (const [name, html, count] of [['rendered section', renderSection(data, TEST_CONFIG), 21],
-    ['rendered section, form mode', renderSection(data, FORM_CONFIG), 24], ['index.html', index, formMode ? 9 : 6],
-    ['privacidad.html', privacy, 0]]) {
+    ['rendered section, form mode', renderSection(data, FORM_CONFIG), 24], ['index.html', index, (formMode ? 10 : 7) + DEMO_LINKS],
+    ['privacidad.html', privacy, 1]]) {
     const blank = [...html.matchAll(/<a\b[^>]*\btarget="_blank"[^>]*>([\s\S]*?)<\/a>/g)];
     assert.equal(blank.length, count, name);
     for (const [a, inner] of blank) {
@@ -156,7 +159,10 @@ test('every target="_blank" link carries the hidden new-tab notice', () => {
   // The visible label: the link's text without its icons and its hidden notice.
   const labels = [...index.matchAll(/target="_blank"[^>]*>([\s\S]*?)<\/a>/g)]
     .map((m) => m[1].replace(/<span class="visually-hidden">[^<]*<\/span>/g, '').replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '').trim());
-  const others = ['Hablar con nosotros', 'Abrir WhatsApp', 'Gmail', 'Outlook', 'LinkedIn'];
+  // The Instagram link is an icon: no visible label, its name is hidden text.
+  assert.equal(labels.filter((l) => l === '').length, 1);
+  assert.match(index, /class="footer-social"[^>]*>(?:(?!<\/a>)[\s\S])*<span class="visually-hidden">Instagram de GTL AI<\/span>/);
+  const others = ['', 'Hablar con nosotros', 'Abrir WhatsApp', 'Gmail', 'Outlook', 'LinkedIn', ...(DEMO_LINKS ? ['Ver demo'] : [])];
   assert.deepEqual([...new Set(labels)].sort(), (formMode
     ? ['Escribir por WhatsApp', 'política de tratamiento de datos personales', ...others]
     : others).sort());

@@ -2,6 +2,8 @@
 // privacy page from _dev/templates/privacidad.html into privacidad.html (PF2). Both read
 // _dev/site-config.json for the WhatsApp number, the contact email and the controller.
 // W0: the build also writes the footer email and the founders' Background lists from site-config.json.
+// BF-W1: and the footer's company line (name, NIT, address) and Instagram link, each contact link in French
+// too, and, while launch.enabled is true in site-config.json, the launch banner and the demos section.
 // PF2 Pass B: the build also writes site-config.js (window.GTL_CONFIG for plan-request.js) and, in form
 // mode, the request <dialog> and its script tags inside the pricing markers.
 // PF3: every local stylesheet and script a page loads is referenced as <file>?v=<first 10 hex of its SHA-256>; the
@@ -182,6 +184,17 @@ export function validateConfig(c) {
   req(!filled(c.contactEmail) || c.contactEmail === PENDING || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.contactEmail),
     'contactEmail is not an email address');
   req(c.controller && filled(c.controller.name) && filled(c.controller.nit), 'controller: name and nit are required');
+  // BF-W1: the address as the footer writes it, the company's Instagram, and the launch banner and demos.
+  req(c.controller && filled(c.controller.footerAddress), 'controller.footerAddress is required (the address as the footer shows it)');
+  req(typeof c.instagramUrl === 'string' && /^https:\/\/www\.instagram\.com\/[A-Za-z0-9._]+\/$/.test(c.instagramUrl),
+    'instagramUrl must be an https://www.instagram.com/<account>/ address');
+  const launch = c.launch;
+  req(launch && typeof launch.enabled === 'boolean', 'launch.enabled must be true or false');
+  req(launch && typeof launch.liveFrom === 'string' && /[+-]\d{2}:\d{2}$|Z$/.test(launch.liveFrom) && !Number.isNaN(Date.parse(launch.liveFrom)),
+    'launch.liveFrom must be a date and time with its offset (for example 2026-11-27T00:00:00-05:00)');
+  req(launch && Array.isArray(launch.demos) && launch.demos.length > 0
+    && launch.demos.every((d) => d && filled(d.name) && filled(d.description) && typeof d.url === 'string' && /^https:\/\/[^\s/]+$/.test(d.url)),
+    'launch.demos: each demo needs a name, a description and an https:// address with no path');
   req(filled(c.replyTime), 'replyTime is required');
   req(filled(c.privacyPolicyVersion), 'privacyPolicyVersion is required');
   req(/^\d{4}-\d{2}-\d{2}$/.test(c.privacyPolicyDate) && !Number.isNaN(Date.parse(c.privacyPolicyDate)),
@@ -337,8 +350,8 @@ export const HONEYPOT_STYLE = 'position:absolute;left:-10000px;top:auto;width:1p
 // general request (plan-request.js reads it the same way).
 function planField(data, config, plans) {
   if (plans) return field('plan', 'Plan', planSelect(data, config));
-  const href = whatsappLink(config, CONTACT_MESSAGES.es.whatsapp);
-  const select = `<select id="request-plan" name="plan" data-request-plan aria-describedby="request-plan-error">\n<option value="general" data-whatsapp="${esc(href)}">Información general</option>\n</select>`;
+  const href = (lang) => esc(whatsappLink(config, CONTACT_MESSAGES[lang].whatsapp));
+  const select = `<select id="request-plan" name="plan" data-request-plan aria-describedby="request-plan-error">\n<option value="general" data-whatsapp="${href('es')}" data-whatsapp-en="${href('en')}" data-whatsapp-fr="${href('fr')}">Información general</option>\n</select>`;
   return field('plan', 'Plan', select).replace('<div class="request-field"', '<div class="request-field" hidden');
 }
 
@@ -689,12 +702,15 @@ function backgroundBlock(lines) {
   return `          <div class="member-block">\n            <h4>Trayectoria</h4>\n            <ul>\n${items}\n            </ul>\n          </div>\n`;
 }
 
-// Quiero saber más (#contact): each link in Spanish (href) and in English (data-en-href, which i18n.js
-// puts in place), and the number and address it shows, all from the config.
+// Quiero saber más (#contact): each link in Spanish (href), in English (data-en-href) and in French
+// (data-fr-href; i18n.js puts the page's language in place), and the number and address it shows, all from the config.
 export const CONTACT_MESSAGES = {
   es: { whatsapp: `Hola, quiero saber más sobre GTL AI ${SITE_TAG}`, subject: 'Quiero saber más sobre GTL AI' },
   en: { whatsapp: `Hi, I'd like to know more about GTL AI ${SITE_TAG}`, subject: "I'd like to know more about GTL AI" },
+  fr: { whatsapp: `Bonjour, je souhaite en savoir plus sur GTL AI ${SITE_TAG}`, subject: 'Je souhaite en savoir plus sur GTL AI' },
 };
+// The languages a link has besides Spanish, in the order their attributes are written.
+export const LINK_LANGS = ['en', 'fr'];
 
 export function contactLinks(config, lang) {
   const m = CONTACT_MESSAGES[lang];
@@ -711,17 +727,16 @@ export function contactLinks(config, lang) {
   };
 }
 
-const CONTACT_LINK = /data-contact="(\w+)" href="[^"]*" data-en-href="[^"]*"/g;
+const CONTACT_LINK = /data-contact="(\w+)" href="[^"]*" data-en-href="[^"]*"(?: data-fr-href="[^"]*")?/g;
 const CONTACT_TEXT = /(data-contact-text="(\w+)">)[^<]*</g;
 
 function applyContact(html, config) {
   const es = contactLinks(config, 'es');
-  const en = contactLinks(config, 'en');
   let links = 0;
   html = html.replace(CONTACT_LINK, (_, kind) => {
     if (!Object.hasOwn(es, kind)) throw new Error(`index.html: unknown contact link "${kind}"`);
     links += 1;
-    return `data-contact="${kind}" href="${esc(es[kind])}" data-en-href="${esc(en[kind])}"`;
+    return `data-contact="${kind}" href="${esc(es[kind])}"${LINK_LANGS.map((l) => ` data-${l}-href="${esc(contactLinks(config, l)[kind])}"`).join('')}`;
   });
   if (links !== Object.keys(es).length) throw new Error(`index.html: expected ${Object.keys(es).length} contact links, found ${links}`);
   return html.replace(CONTACT_TEXT, (_, head, kind) => {
@@ -731,12 +746,96 @@ function applyContact(html, config) {
   });
 }
 
-// Writes the footer email, the contact section's links and each founder's Background list (between the
-// markers in their card).
+// ---------- the footer's company line and Instagram link (BF-W1) ----------
+
+// The legal name, the NIT and the address as the footer writes it, from the config; data-i18n="off" because they
+// read the same in every language.
+const FOOTER_COMPANY = /<p class="footer-company" data-i18n="off">[\s\S]*?<\/p>/;
+export const footerCompany = (config) => `<p class="footer-company" data-i18n="off"><span>${esc(config.controller.name)}</span> `
+  + `<span class="nowrap">NIT ${esc(config.controller.nit)}</span> <span>${esc(config.controller.footerAddress)}</span></p>`;
+const FOOTER_SOCIAL = /<a href="[^"]*" class="footer-social"/;
+
+// ---------- the launch banner and the demos section (BF-W1, release 2) ----------
+
+// One switch, launch.enabled in site-config.json: off, nothing is written between the markers; on, the banner goes
+// above the header of every page and the demos section after the stories. The banner needs its script: it picks the
+// text by the visitor's clock against launch.liveFrom (00:00 in Bogotá on 27 November), and closes.
+export const BANNER_START = '<!-- launch-banner:start -->';
+export const BANNER_END = '<!-- launch-banner:end -->';
+export const DEMOS_START = '<!-- launch-demos:start -->';
+export const DEMOS_END = '<!-- launch-demos:end -->';
+export const BANNER_TEXT = {
+  before: ['Lanzamiento oficial este Black Friday, viernes 27 de noviembre.', 'Vea las demos por especialidad.'],
+  after: ['Ya estamos en vivo: sitios web con agenda en línea para cada especialidad.', 'Vea las demos.'],
+};
+const BANNER_SCRIPT = "<script>(function(){var b=document.querySelector('[data-launch-banner]');if(!b)return;"
+  + "var at=Date.parse(b.getAttribute('data-live-from')),state;"
+  + "function show(){var live=Date.now()>=at;state=live?'after':'before';"
+  + "try{if(localStorage.getItem('gtl-launch-closed')===state){b.hidden=true;return}}catch(e){}"
+  + "b.hidden=false;[].forEach.call(b.querySelectorAll('[data-launch-text]'),function(n){n.hidden=n.getAttribute('data-launch-text')!==state});"
+  + "if(!live&&at-Date.now()<2e9)setTimeout(show,at-Date.now())}"
+  + "b.querySelector('[data-launch-close]').addEventListener('click',function(){b.hidden=true;try{localStorage.setItem('gtl-launch-closed',state)}catch(e){}});"
+  + "show()})();</script>";
+
+export function renderLaunchBanner(config) {
+  if (!config.launch.enabled) return '';
+  const part = (i, tag) => ['before', 'after'].map((s) => `<${tag} data-launch-text="${s}"${s === 'after' ? ' hidden' : ''}>${esc(BANNER_TEXT[s][i])}</${tag}>`).join('');
+  return [
+    `<aside class="launch-banner" aria-label="Lanzamiento" data-launch-banner data-live-from="${esc(new Date(config.launch.liveFrom).toISOString())}">`,
+    '  <div class="container launch-banner-inner">',
+    `    <p>${part(0, 'span')} <a href="#demos">${part(1, 'span')}</a></p>`,
+    '    <button type="button" class="launch-banner-close" data-launch-close aria-label="Cerrar aviso">&times;</button>',
+    '  </div>',
+    '</aside>',
+    BANNER_SCRIPT,
+  ].join('\n');
+}
+
+export function renderLaunchDemos(config) {
+  if (!config.launch.enabled) return '';
+  const card = (d, i) => `        <li class="demo-card"><h3 id="demo-${i + 1}-title">${esc(d.name)}</h3><p>${esc(d.description)}</p>`
+    + `<a class="btn btn-ghost demo-link" id="demo-${i + 1}-link" aria-labelledby="demo-${i + 1}-link demo-${i + 1}-title" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">`
+    + `Ver demo <span class="visually-hidden">${NEW_TAB_TEXT_GENERIC}</span></a></li>`;
+  return [
+    '  <section id="demos" class="demos" aria-labelledby="demos-title">',
+    '    <div class="container">',
+    '      <h2 id="demos-title">Demos por especialidad</h2>',
+    '      <p class="section-sub">Sitios de muestra con agenda en línea, uno por especialidad. Los datos son de ejemplo.</p>',
+    '      <ul class="demos-grid">',
+    ...config.launch.demos.map(card),
+    '      </ul>',
+    '    </div>',
+    '  </section>',
+  ].join('\n');
+}
+
+function between(html, start, end, inner, what) {
+  const s = html.indexOf(start);
+  const e = html.indexOf(end);
+  if (s < 0 || e < s) throw new Error(`index.html: the ${what} markers are missing or out of order`);
+  const indent = html.slice(html.lastIndexOf('\n', e) + 1, e);
+  return html.slice(0, s + start.length) + '\n' + (inner ? inner + '\n' : '') + indent + html.slice(e);
+}
+
+// The banner as the other pages carry it (above their header), or '' while the launch is off.
+const bannerOf = (htmlLF) => {
+  const s = htmlLF.indexOf(BANNER_START);
+  const e = htmlLF.indexOf(BANNER_END);
+  return s < 0 || e < s ? '' : htmlLF.slice(s + BANNER_START.length, e).trim();
+};
+
+// Writes the footer email, the company line and the Instagram link, the contact section's links, the launch
+// banner and demos, and each founder's Background list (between the markers in their card).
 export function applySiteConfig(htmlLF, config) {
   const email = esc(footerEmail(config));
   if (!FOOTER_EMAIL_LINK.test(htmlLF)) throw new Error('index.html: footer email link not found');
   let html = htmlLF.replace(FOOTER_EMAIL_LINK, `<a href="mailto:${email}" class="footer-email">${email}</a>`);
+  if (!FOOTER_COMPANY.test(html)) throw new Error('index.html: the footer company line (p.footer-company) was not found');
+  html = html.replace(FOOTER_COMPANY, () => footerCompany(config));
+  if (!FOOTER_SOCIAL.test(html)) throw new Error('index.html: the footer Instagram link (a.footer-social) was not found');
+  html = html.replace(FOOTER_SOCIAL, () => `<a href="${esc(config.instagramUrl)}" class="footer-social"`);
+  html = between(html, BANNER_START, BANNER_END, renderLaunchBanner(config), 'launch banner');
+  html = between(html, DEMOS_START, DEMOS_END, renderLaunchDemos(config), 'launch demos');
   html = applyContact(html, config);
   const names = Object.keys(config.founders || {});
   const seen = new Set();
@@ -798,28 +897,31 @@ export function sharedChrome(indexLF, page = 'privacidad.html') {
   if (!header || !footer) throw new Error('index.html: site header or footer not found');
   const relink = (s) => s.replace(/href="#"/g, 'href="index.html"').replace(/href="#([^"]+)"/g, 'href="index.html#$1"');
   const current = (s, link) => s.replace(link, link.replace('<a ', '<a aria-current="page" '));
+  const banner = bannerOf(indexLF);
+  const top = (h) => (banner ? `${relink(banner)}\n\n${h}` : h);
   return {
-    header: page === 'precios.html' ? current(relink(header), PRICES_LINK) : relink(header),
+    header: top(page === 'precios.html' ? current(relink(header), PRICES_LINK) : relink(header)),
     footer: page === 'privacidad.html' ? current(relink(footer), FOOTER_LINK) : relink(footer),
   };
 }
 
 // ---------- the pricing page ----------
 
-// The WhatsApp message behind each button of the pricing page, in Spanish (href) and English (data-en-href).
+// The WhatsApp message behind each button of the pricing page, in Spanish (href), English (data-en-href) and
+// French (data-fr-href).
 // With the script the buttons open the request form instead, with the plan noted in the message.
 export const PRICES_MESSAGES = {
-  presencia: { es: `Hola, me interesa el plan Presencia ${SITE_TAG}`, en: `Hi, I'm interested in the Presence plan ${SITE_TAG}` },
-  agenda: { es: `Hola, me interesa el plan Agenda ${SITE_TAG}`, en: `Hi, I'm interested in the Calendar plan ${SITE_TAG}` },
-  gestion: { es: `Hola, me interesa el plan Gestión ${SITE_TAG}`, en: `Hi, I'm interested in the Management plan ${SITE_TAG}` },
-  completo: { es: `Hola, me interesa el plan Completo ${SITE_TAG}`, en: `Hi, I'm interested in the Complete plan ${SITE_TAG}` },
-  medida: { es: `Hola, quiero cotizar un plan a medida ${SITE_TAG}`, en: `Hi, I'd like a quote for a custom plan ${SITE_TAG}` },
-  demo: { es: `Hola, quiero agendar una demostración de GTL AI ${SITE_TAG}`, en: `Hi, I'd like to book a demo of GTL AI ${SITE_TAG}` },
-  chat: { es: `Hola, quiero saber más sobre GTL AI ${SITE_TAG}`, en: `Hi, I'd like to know more about GTL AI ${SITE_TAG}` },
+  presencia: { es: `Hola, me interesa el plan Presencia ${SITE_TAG}`, en: `Hi, I'm interested in the Presence plan ${SITE_TAG}`, fr: `Bonjour, la formule Présence m'intéresse ${SITE_TAG}` },
+  agenda: { es: `Hola, me interesa el plan Agenda ${SITE_TAG}`, en: `Hi, I'm interested in the Calendar plan ${SITE_TAG}`, fr: `Bonjour, la formule Agenda m'intéresse ${SITE_TAG}` },
+  gestion: { es: `Hola, me interesa el plan Gestión ${SITE_TAG}`, en: `Hi, I'm interested in the Management plan ${SITE_TAG}`, fr: `Bonjour, la formule Gestion m'intéresse ${SITE_TAG}` },
+  completo: { es: `Hola, me interesa el plan Completo ${SITE_TAG}`, en: `Hi, I'm interested in the Complete plan ${SITE_TAG}`, fr: `Bonjour, la formule Complet m'intéresse ${SITE_TAG}` },
+  medida: { es: `Hola, quiero cotizar un plan a medida ${SITE_TAG}`, en: `Hi, I'd like a quote for a custom plan ${SITE_TAG}`, fr: `Bonjour, je souhaite un devis pour une formule sur mesure ${SITE_TAG}` },
+  demo: { es: `Hola, quiero agendar una demostración de GTL AI ${SITE_TAG}`, en: `Hi, I'd like to book a demo of GTL AI ${SITE_TAG}`, fr: `Bonjour, je souhaite planifier une démonstration de GTL AI ${SITE_TAG}` },
+  chat: { es: `Hola, quiero saber más sobre GTL AI ${SITE_TAG}`, en: `Hi, I'd like to know more about GTL AI ${SITE_TAG}`, fr: `Bonjour, je souhaite en savoir plus sur GTL AI ${SITE_TAG}` },
 };
 
 // Fills the template: {{header}}, {{footer}}, {{requestDialog}} (the form, in form mode) and {{wa.<key>}}, which
-// becomes that button's href and data-en-href. An unknown key is an error.
+// becomes that button's href, data-en-href and data-fr-href. An unknown key is an error.
 export function renderPrices(template, data, config, chrome) {
   const html = toLF(template).replace(/\{\{([\w.]+)\}\}/g, (_, key) => {
     if (key === 'header') return chrome.header;
@@ -828,7 +930,7 @@ export function renderPrices(template, data, config, chrome) {
     const wa = key.match(/^wa\.(\w+)$/);
     if (wa && Object.hasOwn(PRICES_MESSAGES, wa[1])) {
       const m = PRICES_MESSAGES[wa[1]];
-      return `href="${esc(whatsappLink(config, m.es))}" data-en-href="${esc(whatsappLink(config, m.en))}"`;
+      return `href="${esc(whatsappLink(config, m.es))}"${LINK_LANGS.map((l) => ` data-${l}-href="${esc(whatsappLink(config, m[l]))}"`).join('')}`;
     }
     throw new Error(`precios template: unknown value {{${key}}}`);
   });

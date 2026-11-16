@@ -105,12 +105,13 @@ test('no "Achievements" heading or list remains anywhere', () => {
   for (const [name, html] of [['index.html', index], ['privacidad.html', privacy]]) {
     assert.doesNotMatch(html, /Achievements/i, name);
   }
-  // Each founder card has its name, role and a short bio; the only heading allowed inside is Trayectoria (Background).
+  // Each founder card has its name, role and a short bio (Gary Mendez: his four lines, BF-W1); the only heading
+  // allowed inside is Trayectoria (Background).
   const c = cards(index);
   assert.equal(c.length, 4);
   for (const card of c) {
     assert.match(card, /<p class="role">/);
-    assert.match(card, /<p class="member-bio">/);
+    assert.match(card, nameOf(card) === 'Gary Mendez' ? /<ul class="member-points">/ : /<p class="member-bio">/);
     const headings = [...card.matchAll(/<h4>([^<]*)<\/h4>/g)].map((m) => m[1]);
     assert.ok(headings.every((h) => h === 'Trayectoria'), headings.join());
   }
@@ -179,15 +180,35 @@ test('the hero buttons go to #contact and #team (the plans section was retired)'
   assert.match(index, /<section id="team"/);
 });
 
-test('Por qué nosotros: who we are, then the founders with their bios, roles and LinkedIn where given', () => {
+test('Por qué nosotros: Expertise-as-Software, then the founders with their bios, roles and LinkedIn where given', () => {
   const team = index.match(/<section id="team"[\s\S]*?<\/section>/)[0];
   assert.match(team, /<h2 id="team-title">Por qué nosotros<\/h2>/);
-  assert.match(team, /ingenieros de software y contadores profesionales/);
-  assert.match(team, /precio asequible para pymes/);
-  assert.match(team, /su sueño y su negocio/);
+  // BF-W1, decision 9: the heading and its three paragraphs, each from its first words to its last.
+  assert.match(team, /<h3 class="why-heading">Expertise-as-Software: la evolución del SaaS<\/h3>/);
+  const why = [...team.matchAll(/<p class="why-text">([^<]*)<\/p>/g)].map((m) => m[1]);
+  assert.equal(why.length, 3);
+  assert.match(why[0], /^El SaaS le vende una herramienta que usted tiene que aprender a usar\. .* lo convertimos en su propio software\.$/);
+  assert.match(why[1], /^Nuestros paquetes de software incluyen .* Como complemento, ofrecemos asesoría financiera y tributaria con contador público\.$/);
+  assert.match(why[2], /^Es una forma innovadora .* somos pioneros en llevarla a Colombia y a toda Latinoamérica\. Somos una empresa multinacional, con sede en Bogotá y en París, y existimos para una sola cosa: ayudarle a hacer realidad su sueño\.$/);
+  // The second paragraph names the four plans in precios.html's order, and its add-on.
+  const precios = readFileSync(join(here, '..', '..', 'precios.html'), 'utf8');
+  const plans = [...precios.matchAll(/<article class="pr-tier[^"]*" data-tier="[^"]+">\s*(?:<span class="pr-badge">[^<]*<\/span>)?<h2>([^<]*)<\/h2>/g)].map((m) => m[1]);
+  assert.deepEqual(plans, ['Presencia', 'Agenda', 'Gestión', 'Completo']);
+  assert.deepEqual(plans.map((p) => why[1].indexOf(`${p}, su`) >= 0 || why[1].indexOf(`${p}, todo`) >= 0), [true, true, true, true]);
+  assert.ok(plans.map((p) => why[1].indexOf(`${p},`)).every((v, i, a) => i === 0 || v > a[i - 1]));
+  assert.ok(precios.includes('<h3>Asesorías financieras y tributarias</h3>'));
+  assert.ok(precios.includes('Con un contador público:'));
+  assert.doesNotMatch(team, /ingenieros de software y contadores profesionales|precio asequible para pymes/);
   assert.deepEqual(cards(index).map(nameOf), ['Gary Mendez', 'Daniel Rengifo', 'Jesus David Garcia, CFA', 'David Andres Ramirez']);
   const roles = cards(index).map((c) => c.match(/<p class="role">([^<]*)<\/p>/)[1]);
-  assert.deepEqual(roles, ['Director ejecutivo (CEO)', 'Director de tecnología (CTO)', 'Director financiero (CFO)', 'Director de datos (CDO)']);
+  // BF-W1: Daniel Rengifo is COO (was CTO) and David Andres Ramirez is CTO (was CDO).
+  assert.deepEqual(roles, ['Director ejecutivo (CEO)', 'Director de operaciones (COO)', 'Director financiero (CFO)', 'Director de tecnología (CTO)']);
+  assert.doesNotMatch(team, /CDO|Director de datos/);
+  const [gary, daniel, , david] = cards(index);
+  assert.deepEqual([...gary.matchAll(/<li>.*?<span>([^<]*)<\/span><\/li>/g)].map((m) => m[1]), ['Investigador y desarrollador de productos de IA',
+    'PhD en arquitectura de diseño conversacional con IA', 'Emprendedor en serie', 'Exjugador de squash del PSA Challenger Tour']);
+  assert.match(daniel, /<p class="member-bio">Lidera nuestra sede en París y las operaciones de GTL AI\. /);
+  assert.match(david, /<p class="member-bio">Lidera la tecnología de GTL AI\. /);
   const links = cards(index).map((c) => (c.match(/<a class="member-link" href="([^"]*)" target="_blank" rel="noopener">/) || [])[1] || null);
   assert.deepEqual(links, [null, 'https://www.linkedin.com/in/dfrengifo/', null, 'https://www.linkedin.com/in/david-andr%C3%A9s-ram%C3%ADrez-vanegas/']);
 });

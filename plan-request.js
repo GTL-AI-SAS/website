@@ -172,10 +172,12 @@
     form.addEventListener('change', renewKey);
     select.addEventListener('change', updateWhatsApp);
 
-    // The WhatsApp links in the banner and the success view carry the selected plan's message only.
+    // The WhatsApp links in the banner and the success view carry the selected plan's message only, in the page's
+    // language where the build wrote one (data-whatsapp-en, data-whatsapp-fr), else in Spanish.
     function updateWhatsApp() {
       var option = select.options[select.selectedIndex];
-      var href = option ? option.getAttribute('data-whatsapp') : null;
+      var lang = (document.documentElement.lang || '').slice(0, 2).toLowerCase();
+      var href = option ? (/^[a-z]{2}$/.test(lang) && option.getAttribute('data-whatsapp-' + lang)) || option.getAttribute('data-whatsapp') : null;
       // The build gives both links the general-enquiry href, so the markup is valid before this runs (step 8, N4).
       whatsappLinks.forEach(function (a) {
         if (href) a.setAttribute('href', href);

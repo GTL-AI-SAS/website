@@ -10,15 +10,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
-<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
+<script>try{var l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('gtl-lang');if(l==='en'||l==='fr'){document.documentElement.classList.add('i18n-pending');setTimeout(function(){document.documentElement.classList.remove('i18n-pending')},3000)}}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 {{header}}
 
-<main lang="es-CO" data-i18n="off">
-  <p class="container legal-lang-note" lang="en" hidden data-lang-note>This policy is available in Spanish only.</p>
+<main lang="es-CO">
+  <p class="container legal-lang-note" lang="en" hidden data-lang-note="en" data-i18n="off">This is a translation. The Spanish version of this policy is the one that applies.</p>
+  <p class="container legal-lang-note" lang="fr" hidden data-lang-note="fr" data-i18n="off">Ceci est une traduction. Seule la version en espagnol de cette politique fait foi.</p>
 
   <article class="legal" aria-labelledby="legal-title">
     <div class="container legal-inner">

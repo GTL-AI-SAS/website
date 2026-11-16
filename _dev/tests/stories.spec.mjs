@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { waitForFonts } from './helpers.mjs';
+import { SECTIONS, waitForFonts } from './helpers.mjs';
 
 // Customer stories (#stories): the kinds of business as tabs; each shows the client's site, a quote and what changed.
 // The businesses and quotes are made up until approved client stories replace them.
@@ -33,7 +33,7 @@ test.describe('customer stories', () => {
   test('sit after the logos and before Por qué nosotros; Fisioterapia is the default', async ({ page }) => {
     await open(page);
     expect(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id || s.className)))
-      .toEqual(['hero', 'features', 'clients', 'stories', 'falco', 'team', 'contact']);
+      .toEqual(SECTIONS);
     const list = section(page).getByRole('tablist', { name: 'Historias de clientes' });
     await expect(list.getByRole('tab')).toHaveCount(6);
     for (const [code, kind, name] of STORIES) await expect(page.locator(`#story-tab-${code}`)).toHaveText(`${kind}${name}`);
@@ -89,11 +89,42 @@ test.describe('customer stories', () => {
     await expect(page.locator('#story-fisioterapia blockquote')).toContainText('The time I used to lose');
     await expect(page.locator('#story-fisioterapia .story-copy strong')).toHaveText('Muévete sin dolor');
     expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+    // The made-up site's address shows, and the French note does not (BF-W1, decision 1).
+    await expect(page.locator('#story-fisioterapia .story-url')).toBeVisible();
+    await expect(section(page).locator('.example-note')).toBeHidden();
+  });
+
+  test('in French the stories are example scenarios: a visible note, no quotation, and no address of a made-up site', async ({ page }) => {
+    await open(page, '/?lang=fr');
+    await expect(section(page).locator('h2')).toHaveText('Moins de temps administratif, plus de temps pour votre entreprise et ce que vous faites le mieux');
+    await expect(section(page).locator('.example-note')).toBeVisible();
+    await expect(section(page).locator('.example-note')).toHaveText('Exemples illustratifs : les entreprises, les personnes et les situations présentées ici sont fictives.');
+    await expect(section(page).getByRole('tablist', { name: 'Exemples de scénarios' })).toBeVisible();
+    await expect(page.locator('#story-tab-negocio')).toHaveText('Choisissez VOTRE activité15 types d’activité');
+    for (const [code] of STORIES) {
+      await page.locator(`#story-tab-${code}`).click();
+      const quote = page.locator(`#story-${code} blockquote`);
+      // The space before the colon is a no-break space, as French writes it (\s matches it).
+      await expect(quote).toHaveText(/^Exemple\s:\s/);
+      await expect(quote).not.toContainText(/[“”«»"]/);
+      // A scenario, not a quotation, and credited to no one.
+      await expect(quote).toHaveAttribute('role', 'none');
+      await expect(page.locator(`#story-${code} figcaption`)).toBeHidden();
+      await expect(page.locator(`#story-${code} .story-url`)).toBeHidden();
+      await expect(page.locator(`#story-${code} .story-point`).first()).toBeVisible();
+    }
+    await expect(section(page).locator('a[href*=".co"]')).toHaveCount(0);
+    expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+    // Back in Spanish, each story is a quotation again, with its person.
+    await page.evaluate(() => window.gtlI18n.set('es'));
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es-CO');
+    await expect(section(page).locator('blockquote[role]')).toHaveCount(0);
+    await expect(page.locator(`#story-${STORIES.at(-1)[0]} figcaption`)).toBeVisible();
   });
 
   for (const width of [320, 360, 390, 768, 1024, 1440]) {
-    test(`at ${width} px nothing scrolls sideways and the selected story fits, in both languages`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+    test(`at ${width} px nothing scrolls sideways and the selected story fits, in every language`, async ({ page }) => {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, url, width);
         for (const [code] of [...STORIES, ['negocio']]) {
           await page.locator(`#story-tab-${code}`).click();
@@ -107,9 +138,9 @@ test.describe('customer stories', () => {
     });
   }
 
-  test('axe finds no serious or critical violations in any story, in both languages', async ({ page }) => {
+  test('axe finds no serious or critical violations in any story, in every language', async ({ page }) => {
     test.setTimeout(90_000); // twelve axe runs: six tabs in two languages
-    for (const url of ['/?lang=es', '/?lang=en']) {
+    for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
       await open(page, url);
       for (const [code] of [...STORIES, ['negocio']]) {
         await page.locator(`#story-tab-${code}`).click();

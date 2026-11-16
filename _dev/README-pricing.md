@@ -25,17 +25,18 @@ npx --prefix _dev playwright install chromium firefox webkit
 
 ## Change a price or a text
 
-1. Edit `_dev/pricing.json`.
-   - Amounts are whole pesos without separators and without IVA: `350000`, not `350.000`.
-   - A bundle's list price is computed from its parts. Never type it.
-   - Once JD confirms a price, change its `"status"` from `"propuesta"` to `"confirmado"`.
-   - Draft text is marked per field: `"suits": { "text": "…", "copyStatus": "PENDIENTE-COPY" }`.
-     Once JD approves it, remove its `"copyStatus"` (keeping `{ "text": "…" }` or a plain string is fine).
-     Never put `copyStatus` on a tier, package or block object; a unit test rejects it.
-   - An add-on that is not available yet (PQ1: DIAN) carries `"badge": "Próximamente"` and a `"note"` line; a bundle may
-     carry a `"note"` under its contents line. Delete them once the add-on is available.
-   - Every text addresses the buyer as *usted*; a unit test rejects tú forms (tu, puedes, escríbenos, …).
-2. Regenerate the section:
+1. Edit the prices where they live now (BF-W1, November 2026), all written by hand, VAT included, in the site's
+   format (`$&nbsp;100.000`):
+   - `_dev/templates/precios.html`: the four plan cards, A medida, the conditions line, the add-ons (Falco) and the
+     FAQ. `precios.html` is built from it; never edit `precios.html` itself.
+   - `index.html`: the home page's price line in `#contact` ("Planes desde $ 100.000 al mes, IVA incluido").
+   - `i18n.js`: the English and French of every text you changed (keyed by the Spanish), then
+     `npm --prefix _dev run i18n:check`, which must print nothing.
+
+   **`_dev/pricing.json` holds no price that the site shows.** It is an older catalogue (other plans, prices without
+   IVA), kept only because the build still validates it and the lead API's `CatalogSiteSyncTest` reads its package
+   codes. Don't edit it to change a price. Taking it out of the build is on the follow-up list.
+2. Regenerate the pages:
    ```powershell
    npm --prefix _dev run pricing:build
    ```
@@ -48,9 +49,10 @@ npx --prefix _dev playwright install chromium firefox webkit
    the tests never reuse a server that is already running there. The form tests (`plan-request-form.spec.mjs`)
    simulate the API with Playwright route interception on the site's own origin; no request ever reaches
    `api.gtl-ai.com`, and the real origin is blocked and asserted untouched.
-   `tests/pricing.test.mjs` holds its own copy of the approved figures. When a figure changes
-   on purpose, update that copy in the same commit.
-4. Review the diff and commit `pricing.json` and `index.html` together.
+   The prices on the pages are checked by `tests/bf-w1.test.mjs` and `tests/precios.spec.mjs`; when a price changes
+   on purpose, update them in the same commit. (`tests/pricing.test.mjs` checks the older catalogue in
+   `pricing.json`, not the pages.)
+4. Review the diff and commit the template, the built `precios.html`, `index.html` and `i18n.js` together.
 
 ## Look at the page locally
 
@@ -67,13 +69,15 @@ Then open http://localhost:4174/#planes. Use port 4174 only.
 | `npm --prefix _dev run pricing:check` | Fails if `index.html`, `privacidad.html` or `site-config.js` differs from what `pricing.json`, `site-config.json` and the privacy template generate (line endings normalised), if the head script, `pricing.js` tag, "Planes" link or footer "Privacidad" link is missing, or if a price appears outside the generated block, or if a `?v=` stamp on a stylesheet or script is malformed or differs from the file's current hash (PF3: the file was edited without a rebuild). A hand edit to any of the three files, or to a file they load, is caught. |
 | `npm --prefix _dev run pricing:release-check` | Runs the check above, then lists every price still `propuesta`, every draft field still `PENDIENTE-COPY` by its path (for example `packages[agenda].tiers[crece].suits`), every config value still `PENDIENTE` or missing (`whatsappNumber`, `contactEmail`, `controller.city`, `controller.address`), every line of `privacidad.html` that still contains `PENDIENTE`, and, in form mode only, an `apiBaseUrl` that is not `https://`. It fails while any remain. |
 | `npm --prefix _dev run links` | Checks every `href`/`src` in the built pages: anchors have their id, local files exist (`site-config.js`, `plan-request.js`, `privacidad.html`, …). |
+| `npm --prefix _dev run i18n:check` | Lists every text on the three pages, in the scripts and in the launch banner and demos (switched off and on) that has no English or no French translation in `i18n.js`, and any problem in the tables. It prints nothing when there is none. `-- --later` also lists the Spanish that stays on purpose (text inside images, and the drawn screens and logos marked `data-i18n="off"`); `-- --unused` also lists table entries that no page or script uses. |
 
 ## Before merging to `main` (by hand, since there is no CI)
 
 1. `npm --prefix _dev run pricing:release-check` must pass: every price confirmed, no draft text, the config complete
    and the privacy text approved.
-2. `npm --prefix _dev run test:unit` and `npm --prefix _dev run test:e2e` must pass.
-3. Only then merge. The merge publishes the site.
+2. `npm --prefix _dev run i18n:check` must print nothing: every text has its English and French.
+3. `npm --prefix _dev run test:unit` and `npm --prefix _dev run test:e2e` must pass.
+4. Only then merge. The merge publishes the site.
 
 ## How the page works
 
@@ -124,7 +128,9 @@ into the HTML.
 | `contactEmail` | The email for clients and privacy requests, shown on the privacy page. `"PENDIENTE"` until JD gives it. |
 | `replyTime` | The reply-time promise shown in the form's success view. |
 | `privacyPolicyVersion`, `privacyPolicyDate` | Shown at the end of the privacy page, and the version is sent with every form request as `policyVersion`. **It must equal Railway's `POLICY_VERSION`**, or every submission is a 422 and the form tells the visitor to reload. The date is `YYYY-MM-DD` and is written out, e.g. "30 de octubre de 2026". |
-| `controller` | The data controller: `name`, `nit`, `city` and `address` (the city and the street address are `"PENDIENTE"` until JD gives them). |
+| `controller` | The data controller: `name`, `nit`, `city` and `address` (the release check fails while the city or the street address is `"PENDIENTE"`), and `footerAddress`, the address as the footer of every page writes it (BF-W1: "Cra. 47 #104B-15, Bogotá, Colombia"; the privacy policy keeps `address`). |
+| `instagramUrl` | BF-W1: the company's Instagram, linked from the footer of every page. The build accepts only an `https://www.instagram.com/<account>/` address. |
+| `launch` | BF-W1, release 2: `enabled` (the switch, `false` until release 2), `liveFrom` (when the banner's text changes, with its offset: `2026-11-27T00:00:00-05:00` is 00:00 in Bogotá on 27 November) and `demos`, one `{ "name", "description", "url" }` per card of the demos section, in order. See "Release 2" below. |
 | `apiBaseUrl` | `null` in WhatsApp mode. In form mode, the `https://` address of the plan-request API (`https://api.gtl-ai.com`); the release check fails on anything else. |
 
 After changing it, run `npm --prefix _dev run pricing:build` and commit `site-config.json`, `index.html`,
@@ -175,3 +181,38 @@ live since 2026-10-30, and Railway runs `POLICY_VERSION` `1.2`. `privacyPolicyDa
 If the policy version on the site and on Railway ever differ, every submission is answered with 422
 `policy_version_mismatch` and the form shows "La política de privacidad se actualizó. Recargue la página para continuar.";
 fix the variable (or the config) and the mismatch ends.
+
+## Languages: Spanish, English and French (BF-W1)
+
+- The pages are written in Spanish. `i18n.js` (at the root, loaded last on every page) holds the English and French
+  tables, keyed by the Spanish text, and swaps every text, the attributes it translates (`aria-label`, `alt`, `title`,
+  `placeholder`, …), the title and the description when the visitor picks ENG or FRA in the header's menu; ES brings
+  back the page as written. The choice is kept in `localStorage` (`gtl-lang`), and `?lang=es`, `?lang=en` or `?lang=fr`
+  in the address sets it.
+- A new or changed Spanish text needs its English and French entries in `i18n.js` in the same commit; `i18n:check`
+  lists any that is missing. The French is formal (*vous*); `i18n.js` adds the no-break spaces French wants before
+  `? ! : ;` and inside `« »` when it writes a text.
+- `data-i18n="off"` keeps a part as written in every language (the client logos and their names, the footer's company
+  line, and the drawn screens of the sample clinic and of the story sites, which stay in Spanish). `data-lang-note="fr"` (or `"en fr"`) marks a
+  note shown only in those languages: in French, that the client logos and stories are fictitious examples; on the
+  privacy page, a first line saying the Spanish version applies. `data-en-href` and `data-fr-href` give a link its
+  address in that language (the WhatsApp messages and email subjects).
+- The privacy page is translated too. Its Spanish text is the one that applies, and its version is the same in every language.
+- The form sends the same fields and the same `policyVersion` in every language. Only what the visitor reads changes,
+  including the message a plan's button writes in the form, which is in the visitor's language.
+
+## Release 2: the launch banner and the demos (BF-W1)
+
+Built and switched off. **To switch it on, one line:** in `_dev/site-config.json`, under `launch`, change
+`"enabled": false` to `"enabled": true`; then run `npm --prefix _dev run pricing:build`, the checks and tests above, and merge.
+The build then writes:
+
+- the banner, between `<!-- launch-banner:start -->` and `<!-- launch-banner:end -->` above the header of
+  `index.html`, and above the header of the pricing and privacy pages, where its link points to `index.html#demos`;
+- the "Demos por especialidad" section, between `<!-- launch-demos:start -->` and `<!-- launch-demos:end -->`, after the stories.
+
+The banner's text changes by itself at `launch.liveFrom` by the visitor's clock (00:00 in Bogotá on Friday 27 November),
+so nothing has to be published that day. A visitor can close it; it comes back once, with the new text, after the
+launch. Without JavaScript the banner is not shown. Switched off, nothing is written between the markers and the pages
+are as before. The demos' names and descriptions are in Spanish in the config, and their English and French are in
+`i18n.js`; `i18n:check` renders the section with the switch on, so a missing translation is caught before release 2.

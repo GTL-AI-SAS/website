@@ -8,6 +8,7 @@
     "pricing:check": "node build-pricing.mjs --check",
     "pricing:release-check": "node build-pricing.mjs --release",
     "links": "node scripts/check-links.mjs",
+    "i18n:check": "node scripts/check-i18n.mjs",
     "test:unit": "node --test \"tests/*.test.mjs\"",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",

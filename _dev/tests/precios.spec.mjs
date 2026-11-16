@@ -12,10 +12,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const config = loadConfig();
 const html = readFileSync(join(here, '..', '..', 'precios.html'), 'utf8');
 const TIERS = [
-  ['presencia', 'Presencia', '$ 50.000'],
-  ['agenda', 'Agenda', '$ 179.000'],
-  ['gestion', 'Gestión', '$ 299.000'],
-  ['completo', 'Completo', '$ 449.000'],
+  ['presencia', 'Presencia', '$ 100.000', 'Présence'],
+  ['agenda', 'Agenda', '$ 200.000', 'Agenda'],
+  ['gestion', 'Gestión', '$ 300.000', 'Gestion'],
+  ['completo', 'Completo', '$ 500.000', 'Complet'],
 ];
 const clean = (t) => t.replace(/\s+/g, ' ').trim();
 
@@ -28,7 +28,7 @@ async function open(page, url = '/precios', width = 1440) {
 test.describe('pricing page', () => {
   test('the header\'s Precios link and the home page\'s strip lead to it', async ({ page }) => {
     await open(page, '/');
-    await expect(page.locator('#contact .price-strip')).toContainText('Planes desde $ 50.000 al mes + IVA, sin costo de instalación.');
+    await expect(page.locator('#contact .price-strip')).toContainText('Planes desde $ 100.000 al mes, IVA incluido, sin costo de instalación.');
     await page.locator('#contact .price-strip a').click();
     await expect(page).toHaveURL(/\/precios(\.html)?$/);
     await page.goto('/');
@@ -47,7 +47,7 @@ test.describe('pricing page', () => {
     for (const [code, , price] of TIERS) {
       const card = page.locator(`.pr-tier[data-tier="${code}"]`);
       expect(clean(await card.locator('.pr-amount').textContent())).toBe(price);
-      await expect(card.locator('.pr-unit')).toHaveText('/ mes + IVA');
+      await expect(card.locator('.pr-unit')).toHaveText('/ mes, IVA incluido');
       expect(await card.locator('.pr-list li').count()).toBeGreaterThanOrEqual(4);
     }
     await expect(page.locator('.pr-badge')).toHaveCount(1);
@@ -56,8 +56,11 @@ test.describe('pricing page', () => {
     await expect(page.locator('.pr-lead')).toHaveText(['Todo lo de Presencia, y además:', 'Todo lo de Agenda, y además:', 'Todo lo de Gestión, y además:']);
     await expect(page.locator('.pr-custom h2')).toHaveText('A medida');
     await expect(page.locator('.pr-custom .pr-amount')).toHaveText('A cotizar');
-    await expect(page.locator('.pr-notes')).toContainText('Sin costo de instalación · Permanencia mínima de 12 meses · Precios en COP + IVA (19 %)');
-    await expect(page.locator('.pr-notes')).toContainText('Paga el año completo y recibe 2 meses gratis.');
+    await expect(page.locator('.pr-notes')).toContainText('Sin costo de instalación · Permanencia mínima de 12 meses · Precios en COP, IVA (19 %) incluido');
+    // BF-W1: prices include VAT and the annual offer is gone.
+    await expect(page.locator('main')).not.toContainText('+ IVA');
+    await expect(page.locator('main')).not.toContainText('año completo');
+    await expect(page.locator('main')).not.toContainText('2 meses gratis');
     // Side by side on a wide screen.
     const tops = await page.locator('.pr-tier').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
     expect(new Set(tops).size).toBe(1);
@@ -71,7 +74,7 @@ test.describe('pricing page', () => {
     await expect(page.locator('.pr-since')).toHaveText(['Desde Presencia', 'Desde Agenda', 'Desde Gestión', 'Desde Agenda', 'Desde Gestión']);
     await expect(page.locator('.pr-addon h3')).toHaveText(['Asesorías financieras y tributarias', 'Falco, chatbot con IA']);
     await expect(page.locator('.pr-addon').first()).toContainText('contador público');
-    expect(clean(await page.locator('.pr-addon').nth(1).locator('.pr-price').textContent())).toBe('+ $ 150.000/ mes + IVA');
+    expect(clean(await page.locator('.pr-addon').nth(1).locator('.pr-price').textContent())).toBe('+ $ 150.000/ mes, IVA incluido');
     await expect(page.locator('.pr-promise h3')).toHaveText(['Puesta en marcha gratis', 'Soporte de primer nivel', 'Si te vas, te llevas tus datos']);
     await expect(page.locator('.pr-q')).toHaveCount(7);
     await expect(page.locator('.pr-cta a')).toHaveText([/^Agendar una demostración/, /^Hablar con nosotros/]);
@@ -134,7 +137,7 @@ test.describe('pricing page', () => {
 
   test('on a phone every category fits: the functions are buttons above the description and the picture', async ({ page }) => {
     test.setTimeout(90_000);
-    for (const url of ['/precios?lang=es', '/precios?lang=en']) {
+    for (const url of ['/precios?lang=es', '/precios?lang=en', '/precios?lang=fr']) {
       await open(page, url, 360);
       for (const code of ['web', 'agenda', 'finanzas', 'clientes', 'gestion']) {
         const cat = page.locator(`.pr-cat[data-cat="${code}"]`);
@@ -189,7 +192,7 @@ test.describe('pricing page', () => {
     await expect(page.locator('#request-message')).toHaveValue('Quiero agendar una demostración.');
   });
 
-  test('every button is a WhatsApp link to our number with its own message, in Spanish and in English', async ({ page }) => {
+  test('every button is a WhatsApp link to our number with its own message, in Spanish, English and French', async ({ page }) => {
     await open(page);
     const buttons = { presencia: '.pr-tier[data-tier="presencia"] a.btn', agenda: '.pr-tier[data-tier="agenda"] a.btn', gestion: '.pr-tier[data-tier="gestion"] a.btn',
       completo: '.pr-tier[data-tier="completo"] a.btn', medida: '.pr-custom a.btn', demo: '.pr-cta a.btn >> nth=0', chat: '.pr-cta a.btn >> nth=1' };
@@ -203,6 +206,17 @@ test.describe('pricing page', () => {
     for (const [key, selector] of Object.entries(buttons)) {
       await expect(page.locator(selector), key).toHaveAttribute('href', whatsappLink(config, PRICES_MESSAGES[key].en));
     }
+    await page.locator('[data-lang-current]').click();
+    await page.locator('.lang-menu [data-lang="fr"]').click();
+    for (const [key, selector] of Object.entries(buttons)) {
+      await expect(page.locator(selector), key).toHaveAttribute('href', whatsappLink(config, PRICES_MESSAGES[key].fr));
+    }
+    expect(decodeURIComponent(whatsappLink(config, PRICES_MESSAGES.agenda.fr))).toContain('?text=Bonjour, la formule Agenda m\'intéresse (gtl-ai.com)');
+    await page.locator('[data-lang-current]').click();
+    await page.locator('.lang-menu [data-lang="es"]').click();
+    for (const [key, selector] of Object.entries(buttons)) {
+      await expect(page.locator(selector), key).toHaveAttribute('href', whatsappLink(config, PRICES_MESSAGES[key].es));
+    }
   });
 
   test('in English every text is English, with nothing left over, and Spanish comes back exactly', async ({ page }) => {
@@ -212,7 +226,7 @@ test.describe('pricing page', () => {
     await page.locator('.lang-menu [data-lang="en"]').click();
     await expect(page.locator('h1')).toHaveText('Simple pricing for growing businesses');
     await expect(page.locator('.pr-tier h2')).toHaveText(['Presence', 'Calendar', 'Management', 'Complete']);
-    await expect(page.locator('.pr-tier[data-tier="agenda"] .pr-unit')).toHaveText('/ month + VAT');
+    await expect(page.locator('.pr-tier[data-tier="agenda"] .pr-unit')).toHaveText('/ month, VAT included');
     await expect(page.locator('.pr-promise h3')).toHaveText(['Free onboarding', 'Top-tier support', 'If you leave, you take your data with you']);
     await expect(page.locator('.pr-cat-title')).toHaveText(['Landing page & SEO', 'Scheduling & payments', 'Finance & accounting', 'Client relationships', 'Management']);
     await page.locator('#fn-web-2').click();
@@ -231,9 +245,43 @@ test.describe('pricing page', () => {
     expect(await page.locator('main').innerText()).toBe(spanish);
   });
 
-  for (const width of [320, 360, 390, 768, 1024, 1440]) {
-    test(`at ${width} px nothing scrolls sideways, the header fits and the buttons are easy to tap, in both languages`, async ({ page }) => {
-      for (const url of ['/precios?lang=es', '/precios?lang=en']) {
+  test('in French every text is French, the prices are the same with Colombian VAT included, and Spanish comes back exactly', async ({ page }) => {
+    await open(page);
+    const spanish = await page.locator('main').innerText();
+    await page.locator('[data-lang-current]').click();
+    await page.locator('.lang-menu [data-lang="fr"]').click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
+    await expect(page.locator('h1')).toHaveText('Des tarifs simples pour les entreprises qui grandissent');
+    await expect(page.locator('.pr-tier h2')).toHaveText(TIERS.map((t) => t[3]));
+    for (const [code, , price] of TIERS) {
+      const card = page.locator(`.pr-tier[data-tier="${code}"]`);
+      expect(clean(await card.locator('.pr-amount').textContent())).toBe(price);
+      await expect(card.locator('.pr-unit')).toHaveText('/ mois, TVA colombienne (IVA) incluse');
+    }
+    await expect(page.locator('.pr-custom .pr-amount')).toHaveText('Sur devis');
+    await expect(page.locator('.pr-notes')).toContainText('Sans frais d’installation · Engagement minimum de 12 mois · Prix en COP, TVA colombienne (IVA, 19 %) incluse');
+    expect(clean(await page.locator('.pr-addon').nth(1).locator('.pr-price').textContent())).toBe('+ $ 150.000/ mois, TVA colombienne (IVA) incluse');
+    await expect(page.locator('.feat-soon')).toHaveText(['Bientôt disponible', 'Bientôt disponible']);
+    await expect(page.locator('.pr-cta h2')).toHaveText('GTL AI est-il fait pour vous ?');
+    await expect(page.locator('main')).not.toContainText('IVA incluido');
+    expect(await page.title()).toBe('Tarifs | GTL AI');
+    expect(await page.locator('meta[name="description"]').getAttribute('content')).toContain('Formules mensuelles sans frais d’installation');
+    expect(await page.evaluate(() => window.gtlI18n.missing)).toEqual([]);
+    // A plan's button notes the plan in the form's message, in French.
+    await page.locator('.pr-tier[data-tier="agenda"] a.btn').click();
+    await expect(page.locator('#request-message')).toHaveValue('La formule Agenda m’intéresse.');
+    await page.keyboard.press('Escape');
+    // The choice carries over from page to page.
+    await page.goto('/precios');
+    await expect(page.locator('h1')).toHaveText('Des tarifs simples pour les entreprises qui grandissent');
+    await page.locator('[data-lang-current]').click();
+    await page.locator('.lang-menu [data-lang="es"]').click();
+    expect(await page.locator('main').innerText()).toBe(spanish);
+  });
+
+  for (const width of [320, 360, 390, 768, 1024, 1280, 1440]) {
+    test(`at ${width} px nothing scrolls sideways, the header fits and the buttons are easy to tap, in every language`, async ({ page }) => {
+      for (const url of ['/precios?lang=es', '/precios?lang=en', '/precios?lang=fr']) {
         await open(page, url, width);
         await page.locator('.pr-cta').scrollIntoViewIfNeeded();
         expect(await page.evaluate(() => document.documentElement.scrollWidth), url).toBeLessThanOrEqual(width);
@@ -245,6 +293,13 @@ test.describe('pricing page', () => {
         // No price or plan name is cut off.
         const cut = await page.locator('.pr-tier h2, .pr-amount, .pr-unit').evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent));
         expect(cut, url).toEqual([]);
+        // And none reaches past its card: a long unit (the French one) wraps inside it.
+        const out = await page.locator('.pr-tier, .pr-addon, .pr-custom').evaluateAll((cards) => cards.flatMap((card) => {
+          const edge = card.getBoundingClientRect().right - parseFloat(getComputedStyle(card).paddingRight);
+          return [...card.querySelectorAll('h2, h3, .pr-amount, .pr-unit, .btn')].filter((e) => e.getBoundingClientRect().right > edge + 0.5)
+            .map((e) => e.textContent.trim());
+        }));
+        expect(out, url).toEqual([]);
       }
     });
   }
@@ -255,8 +310,8 @@ test.describe('pricing page', () => {
     expect(new Set(lefts).size).toBe(1);
   });
 
-  test('axe finds no serious or critical violations on the whole page, with a question open, in both languages', async ({ page }) => {
-    for (const url of ['/precios?lang=es', '/precios?lang=en']) {
+  test('axe finds no serious or critical violations on the whole page, with a question open, in every language', async ({ page }) => {
+    for (const url of ['/precios?lang=es', '/precios?lang=en', '/precios?lang=fr']) {
       await open(page, url);
       await page.locator('.pr-q summary').first().click();
       const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();

@@ -560,6 +560,36 @@ test.describe('the request form', () => {
     await expect(page.locator('[data-config="privacyPolicyVersion"]')).toHaveText(requests[0].body.policyVersion);
   });
 
+  // BF-W1, criterion 8: the page's language changes what the visitor reads, never what the API receives.
+  test('a form sent from the French page posts the same fields and the same policy version as one sent in Spanish', async ({ page }) => {
+    const { requests, real } = await setup(page, created);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    for (const url of ['/?lang=es', '/?lang=fr']) {
+      await page.goto(url);
+      await waitForFonts(page);
+      await openDialog(page);
+      await fill(page);
+      await submit(page);
+      await expect(page.locator(SEL.success)).toBeVisible();
+    }
+    expect(requests).toHaveLength(2);
+    const [es, fr] = requests;
+    expect(Object.keys(fr.body)).toEqual(KEYS);
+    expect(Object.keys(fr.body)).toEqual(Object.keys(es.body));
+    expect(fr.body).toEqual(es.body);
+    expect(fr.body).toEqual({ ...GENERAL, ...LEAD, consent: true, policyVersion: config.privacyPolicyVersion, nickname: '' });
+    expect(fr.body.policyVersion).toBe('1.2');
+    expect(fr.method).toBe(es.method);
+    expect(fr.contentType).toBe(es.contentType);
+    expect(fr.key).toMatch(UUID_V4);
+    expect(fr.key).not.toBe(es.key);
+    // What the visitor reads is French: the success view and its WhatsApp message.
+    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
+    await expect(page.locator('#request-success-title')).toHaveText('Nous avons bien reçu votre demande');
+    await expect(page.locator(`${SEL.success} [data-request-whatsapp]`)).toHaveAttribute('href', WA('Bonjour, je souhaite en savoir plus sur GTL AI (gtl-ai.com)'));
+    expect(real).toEqual([]);
+  });
+
   test('the key is a v4 UUID even without crypto.randomUUID', async ({ page }) => {
     await page.addInitScript(() => { Object.defineProperty(Crypto.prototype, 'randomUUID', { value: undefined, configurable: true }); });
     const { requests } = await setup(page, created);

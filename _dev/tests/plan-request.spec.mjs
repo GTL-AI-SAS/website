@@ -65,14 +65,17 @@ async function checkEveryLink(page, js) {
     }
   }
   // Every link that opens a new tab, anywhere on the page, carries a notice: the four in Quiero saber más, the
-  // founders' two LinkedIn links and, in form mode, the dialog's two WhatsApp links and its privacy link.
+  // founders' two LinkedIn links, the footer's Instagram link (BF-W1), with release 2 the demos' links and, in form
+  // mode, the dialog's two WhatsApp links and its privacy link.
   const blank = page.locator('a[target="_blank"]');
-  expect(await blank.count()).toBe(FORM ? 9 : 6);
+  const demos = config.launch.enabled ? config.launch.demos.length : 0;
+  expect(await blank.count()).toBe((FORM ? 10 : 7) + demos);
   for (const a of await blank.all()) {
     const expected = (await a.getAttribute('data-request')) !== null ? buttonNotice
       : (await a.getAttribute('data-request-whatsapp')) !== null || (await a.getAttribute('data-contact')) === 'whatsapp' ? NEW_TAB_TEXT
         : NEW_TAB_TEXT_GENERIC;
-    await expect(a.locator('.visually-hidden')).toHaveText(expected);
+    // The notice is the link's last hidden text (the Instagram link, an icon, also hides its name before it).
+    await expect(a.locator('.visually-hidden').last()).toHaveText(expected);
   }
 }
 

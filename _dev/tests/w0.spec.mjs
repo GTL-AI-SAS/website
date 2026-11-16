@@ -38,7 +38,10 @@ test.describe('W0 current-site hotfix', () => {
     for (const card of await page.locator('#team .member-card').all()) {
       await expect(card.locator('h3')).toHaveCount(1);
       await expect(card.locator('.role')).toHaveCount(1);
-      await expect(card.locator('.member-bio')).toHaveCount(1);
+      // BF-W1: Gary Mendez's description is four lines; the others have a short bio.
+      const gary = (await card.locator('h3').textContent()) === 'Gary Mendez';
+      await expect(card.locator('.member-bio')).toHaveCount(gary ? 0 : 1);
+      if (gary) await expect(card.locator('.member-points li')).toHaveCount(4);
       await expect(card.locator('h4')).toHaveCount(0);
     }
   });

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { waitForFonts } from './helpers.mjs';
+import { SECTIONS, waitForFonts } from './helpers.mjs';
 
 // The page as a whole, since the plans section was retired (each offer is now tailored): the order of the sections,
 // the header, no layout shift on load and no sideways scroll at any width.
@@ -14,7 +14,7 @@ test.describe('page layout', () => {
   test('the sections come in order, the plans live on their own page, and the header links reach their sections', async ({ page }) => {
     await open(page);
     expect(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id || s.className)))
-      .toEqual(['hero', 'features', 'clients', 'stories', 'falco', 'team', 'contact']);
+      .toEqual(SECTIONS);
     await expect(page.locator('#planes')).toHaveCount(0);
     await expect(page.locator('a[href$="#planes"]')).toHaveCount(0);
     // The plans are on precios.html; the home page only has one line that points there.
@@ -120,8 +120,8 @@ test.describe('page layout', () => {
   });
 
   for (const width of [320, 360, 390, 768, 1024, 1440]) {
-    test(`at ${width} px the header fits on one line and nothing scrolls sideways, in both languages`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+    test(`at ${width} px the header fits on one line and nothing scrolls sideways, in every language`, async ({ page }) => {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, width, url);
         const m = await page.evaluate(() => {
           const inner = document.querySelector('.header-inner');
@@ -144,8 +144,8 @@ test.describe('page layout', () => {
     });
   }
 
-  test('axe finds no serious or critical violations in Por qué nosotros, in both languages', async ({ page }) => {
-    for (const url of ['/?lang=es', '/?lang=en']) {
+  test('axe finds no serious or critical violations in Por qué nosotros, in every language', async ({ page }) => {
+    for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
       await open(page, 1440, url);
       const r = await new AxeBuilder({ page }).include('#team').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
@@ -156,9 +156,16 @@ test.describe('page layout', () => {
   test('Por qué nosotros in English, with the founders\' LinkedIn opening in a new tab', async ({ page }) => {
     await open(page, 1440, '/?lang=en');
     await expect(page.locator('#team-title')).toHaveText('Why us');
-    await expect(page.locator('#team .why-lead')).toContainText('professional software engineers and accountants');
+    await expect(page.locator('#team .why-heading')).toHaveText('Expertise-as-Software: the evolution of SaaS');
+    await expect(page.locator('#team .why-text')).toHaveCount(3);
+    await expect(page.locator('#team .why-text').first()).toContainText('With Expertise-as-Software, your knowledge becomes the software.');
+    await expect(page.locator('#team .why-text').nth(1)).toContainText('Presence, your website, with search positioning on Google');
+    await expect(page.locator('#team .why-text').nth(2)).toContainText('with offices in Bogotá and Paris');
     await expect(page.locator('#team .member-card h3')).toHaveText(['Gary Mendez', 'Daniel Rengifo', 'Jesus David Garcia, CFA', 'David Andres Ramirez']);
-    await expect(page.locator('#team .role')).toHaveText(['Chief Executive Officer', 'Chief Technology Officer', 'Chief Financial Officer', 'Chief Data Officer']);
+    await expect(page.locator('#team .role')).toHaveText(['Chief Executive Officer', 'Chief Operating Officer', 'Chief Financial Officer', 'Chief Technology Officer']);
+    await expect(page.locator('#team .member-card').first().locator('.member-points li')).toHaveText(['AI product researcher and developer',
+      'PhD in AI conversational design architecture', 'Serial entrepreneur', 'Former squash player on the PSA Challenger Tour']);
+    await expect(page.locator('#team .member-card').nth(1).locator('.member-bio')).toContainText('He leads our Paris office');
     const links = page.locator('#team .member-link');
     await expect(links).toHaveCount(2);
     await expect(links.nth(0)).toHaveAttribute('href', 'https://www.linkedin.com/in/dfrengifo/');

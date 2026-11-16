@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { waitForFonts } from './helpers.mjs';
+import { SECTIONS, waitForFonts } from './helpers.mjs';
 
 // Falco, the AI receptionist (#falco): a pixel-art carrier pigeon takes an envelope from side to side until Pause, and three chats
 // play once when the section comes into view.
@@ -17,7 +17,8 @@ test.describe('Falco', () => {
   test('sits between the customer stories and Por qué nosotros, with its title, text and three chats', async ({ page }) => {
     await open(page);
     const order = await page.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id));
-    expect(order.slice(order.indexOf('stories'), order.indexOf('team') + 1)).toEqual(['stories', 'falco', 'team']);
+    // After the stories (and, with release 2, the demos), right before Por qué nosotros.
+    expect(order.slice(order.indexOf('stories'), order.indexOf('team') + 1)).toEqual(SECTIONS.slice(SECTIONS.indexOf('stories'), SECTIONS.indexOf('team') + 1));
     await expect(section(page).locator('h2')).toHaveText('Un recepcionista con IA para tu negocio que organiza la agenda y hace reservas automáticas');
     await expect(section(page).locator('.falco-lead')).toContainText('Es tu asistente personal para tu negocio.');
     await expect(section(page).locator('.falco-card h3')).toHaveText(['Atiende a tus clientes', 'Te resume tu día', 'Te da la agenda']);
@@ -106,8 +107,8 @@ test.describe('Falco', () => {
   });
 
   for (const width of [320, 390, 768, 1440]) {
-    test(`at ${width} px nothing scrolls sideways, in both languages`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+    test(`at ${width} px nothing scrolls sideways, in every language`, async ({ page }) => {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, url, width);
         await section(page).scrollIntoViewIfNeeded();
         await expect(steps(page).last()).toBeVisible({ timeout: 8000 });
@@ -116,8 +117,10 @@ test.describe('Falco', () => {
     });
   }
 
-  test('axe finds no serious or critical violations once the chats have played, in both languages', async ({ page }) => {
-    for (const url of ['/?lang=es', '/?lang=en']) {
+  // One test per language (BF-W1 review, M1): three languages in one test ran close to the 30 s limit under load.
+  for (const lang of ['es', 'en', 'fr']) {
+    test(`axe finds no serious or critical violations once the chats have played, in ${lang}`, async ({ page }) => {
+      const url = `/?lang=${lang}`;
       await open(page, url);
       await section(page).scrollIntoViewIfNeeded();
       await expect(steps(page).last()).toBeVisible({ timeout: 8000 });
@@ -126,8 +129,8 @@ test.describe('Falco', () => {
       const r = await new AxeBuilder({ page }).include('#falco').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
       expect(bad.map((v) => `${url} ${v.id}: ${v.nodes.map((n) => n.target).join(' | ')}`)).toEqual([]);
-    }
-  });
+    });
+  }
 });
 
 // The demo chat: a scripted sample (no AI). Eight questions; each gets one of its five answers at random.
@@ -232,7 +235,7 @@ test.describe('Falco demo chat', () => {
 
   for (const width of [320, 390, 768]) {
     test(`at ${width} px the demo fits, the questions are easy to tap and nothing scrolls sideways`, async ({ page }) => {
-      for (const url of ['/?lang=es', '/?lang=en']) {
+      for (const url of ['/?lang=es', '/?lang=en', '/?lang=fr']) {
         await open(page, url, width);
         await ask(page, 'taxes');
         await ask(page, 'new');
@@ -246,8 +249,10 @@ test.describe('Falco demo chat', () => {
     });
   }
 
-  test('works by keyboard, and axe finds no serious or critical violations after a few answers, in both languages', async ({ page }) => {
-    for (const url of ['/?lang=es', '/?lang=en']) {
+  // One test per language (BF-W1 review, M1), as above.
+  for (const lang of ['es', 'en', 'fr']) {
+    test(`works by keyboard, and axe finds no serious or critical violations after a few answers, in ${lang}`, async ({ page }) => {
+      const url = `/?lang=${lang}`;
       await open(page, url);
       await demo(page).locator('[data-q="friday"]').focus();
       await page.keyboard.press('Enter');
@@ -258,8 +263,8 @@ test.describe('Falco demo chat', () => {
       const r = await new AxeBuilder({ page }).include('[data-falco-demo]').withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const bad = r.violations.filter((v) => ['serious', 'critical'].includes(v.impact));
       expect(bad.map((v) => `${url} ${v.id}: ${v.nodes.map((n) => n.target).join(' | ')}`)).toEqual([]);
-    }
-  });
+    });
+  }
 });
 
 test.describe('Falco without JavaScript', () => {
